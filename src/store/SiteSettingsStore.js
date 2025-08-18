@@ -1,8 +1,18 @@
+import dataStorage from '../utils/dataStorage';
+
 class SiteSettingsStore {
   constructor() {
-    this.settings = this.loadFromStorage();
+    this.settings = {};
     this.listeners = [];
+    this.storageKey = 'princept-site-settings';
+    this.initialized = false;
+    this.initializeStore();
+  }
+
+  async initializeStore() {
+    await this.loadFromStorage();
     this.initializeDefaultSettings();
+    this.initialized = true;
   }
 
   initializeDefaultSettings() {
@@ -221,19 +231,21 @@ Envoyé depuis {{siteName}}
     this.saveToStorage();
   }
 
-  loadFromStorage() {
+  async loadFromStorage() {
     try {
-      const stored = localStorage.getItem('princept-site-settings');
-      return stored ? JSON.parse(stored) : {};
+      const settings = await dataStorage.load(this.storageKey) || {};
+      this.settings = settings;
+      return settings;
     } catch (error) {
       console.error('Error loading site settings from storage:', error);
+      this.settings = {};
       return {};
     }
   }
 
-  saveToStorage() {
+  async saveToStorage() {
     try {
-      localStorage.setItem('princept-site-settings', JSON.stringify(this.settings));
+      await dataStorage.save(this.storageKey, this.settings);
       this.updateFavicon();
     } catch (error) {
       console.error('Error saving site settings to storage:', error);
@@ -255,15 +267,15 @@ Envoyé depuis {{siteName}}
     return { ...this.settings };
   }
 
-  updateSettings(updates) {
+  async updateSettings(updates) {
     this.settings = { ...this.settings, ...updates };
-    this.saveToStorage();
+    await this.saveToStorage();
     this.notify();
   }
 
-  updateSetting(key, value) {
+  async updateSetting(key, value) {
     this.settings[key] = value;
-    this.saveToStorage();
+    await this.saveToStorage();
     this.notify();
   }
 
@@ -353,10 +365,10 @@ Envoyé depuis {{siteName}}
   }
 
   // Reset to defaults
-  resetToDefaults() {
-    localStorage.removeItem('princept-site-settings');
+  async resetToDefaults() {
     this.settings = {};
     this.initializeDefaultSettings();
+    await this.saveToStorage();
     this.notify();
   }
 }

@@ -1,10 +1,19 @@
 import { v4 as uuidv4 } from 'uuid';
+import dataStorage from '../utils/dataStorage';
 
 class SectionStore {
   constructor() {
-    this.sections = this.loadFromStorage();
+    this.sections = [];
     this.listeners = [];
+    this.storageKey = 'onepress-sections';
+    this.initialized = false;
+    this.initializeStore();
+  }
+
+  async initializeStore() {
+    await this.loadFromStorage();
     this.initializeDefaultSections();
+    this.initialized = true;
   }
 
   initializeDefaultSections() {
@@ -80,22 +89,23 @@ class SectionStore {
     }
   }
 
-  loadFromStorage() {
+  async loadFromStorage() {
     try {
-      const stored = localStorage.getItem('onepress-sections');
-      const sections = stored ? JSON.parse(stored) : [];
-      console.log('📦 SectionStore - Sections chargées depuis localStorage:', sections.length, 'sections');
+      const sections = await dataStorage.load(this.storageKey) || [];
+      this.sections = sections;
+      console.log('📦 SectionStore - Sections chargées:', sections.length, 'sections');
       console.log('📦 IDs chargés:', sections.map(s => ({ id: s.id, type: s.type })));
       return sections;
     } catch (error) {
       console.error('Error loading sections from storage:', error);
+      this.sections = [];
       return [];
     }
   }
 
-  saveToStorage() {
+  async saveToStorage() {
     try {
-      localStorage.setItem('onepress-sections', JSON.stringify(this.sections));
+      await dataStorage.save(this.storageKey, this.sections);
     } catch (error) {
       console.error('Error saving sections to storage:', error);
     }
@@ -120,7 +130,7 @@ class SectionStore {
     return this.getSections().filter(section => section.enabled);
   }
 
-  addSection(sectionData) {
+  async addSection(sectionData) {
     const newSection = {
       id: uuidv4(),
       position: this.sections.length,
@@ -132,44 +142,44 @@ class SectionStore {
     };
 
     this.sections.push(newSection);
-    this.saveToStorage();
+    await this.saveToStorage();
     this.notify();
     return newSection;
   }
 
-  updateSection(id, updates) {
+  async updateSection(id, updates) {
     const index = this.sections.findIndex(section => section.id === id);
     if (index !== -1) {
       this.sections[index] = { ...this.sections[index], ...updates };
-      this.saveToStorage();
+      await this.saveToStorage();
       this.notify();
     }
   }
 
-  deleteSection(id) {
+  async deleteSection(id) {
     this.sections = this.sections.filter(section => section.id !== id);
     this.reorderPositions();
-    this.saveToStorage();
+    await this.saveToStorage();
     this.notify();
   }
 
-  toggleSection(id) {
+  async toggleSection(id) {
     const index = this.sections.findIndex(section => section.id === id);
     if (index !== -1) {
       this.sections[index].enabled = !this.sections[index].enabled;
-      this.saveToStorage();
+      await this.saveToStorage();
       this.notify();
     }
   }
 
-  reorderSections(newOrder) {
+  async reorderSections(newOrder) {
     newOrder.forEach((id, index) => {
       const section = this.sections.find(s => s.id === id);
       if (section) {
         section.position = index;
       }
     });
-    this.saveToStorage();
+    await this.saveToStorage();
     this.notify();
   }
 
