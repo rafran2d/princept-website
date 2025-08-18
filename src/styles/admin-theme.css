@@ -1,0 +1,235 @@
+/* Styles pour le thème d'administration indépendant */
+
+/* Variables CSS pour les couleurs d'admin */
+:root {
+  /* Mode clair (par défaut) */
+  --admin-bg-primary: #ffffff;
+  --admin-bg-secondary: #f8fafc;
+  --admin-bg-tertiary: #f1f5f9;
+  --admin-text-primary: #1e293b;
+  --admin-text-secondary: #64748b;
+  --admin-text-muted: #94a3b8;
+  --admin-border: #e2e8f0;
+  --admin-border-light: #f1f5f9;
+  --admin-shadow: rgba(0, 0, 0, 0.1);
+  --admin-shadow-lg: rgba(0, 0, 0, 0.15);
+  --admin-accent: #3b82f6;
+  --admin-accent-hover: #2563eb;
+  --admin-success: #10b981;
+  --admin-warning: #f59e0b;
+  --admin-error: #ef4444;
+}
+
+/* Mode sombre */
+.admin-dark {
+  --admin-bg-primary: #0f172a;
+  --admin-bg-secondary: #1e293b;
+  --admin-bg-tertiary: #334155;
+  --admin-text-primary: #f8fafc;
+  --admin-text-secondary: #cbd5e1;
+  --admin-text-muted: #94a3b8;
+  --admin-border: #334155;
+  --admin-border-light: #475569;
+  --admin-shadow: rgba(0, 0, 0, 0.3);
+  --admin-shadow-lg: rgba(0, 0, 0, 0.4);
+  --admin-accent: #60a5fa;
+  --admin-accent-hover: #3b82f6;
+  --admin-success: #34d399;
+  --admin-warning: #fbbf24;
+  --admin-error: #f87171;
+}
+
+/* Styles de base pour l'admin */
+.admin-container {
+  background-color: var(--admin-bg-secondary) !important;
+  color: var(--admin-text-primary) !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Styles globaux pour les textes en mode sombre */
+.admin-dark .admin-container *,
+.admin-dark .admin-header *,
+.admin-dark .admin-sidebar *,
+.admin-dark .admin-card * {
+  color: var(--admin-text-primary) !important;
+}
+
+/* Exceptions pour certains éléments */
+.admin-dark .admin-text-muted {
+  color: var(--admin-text-muted) !important;
+}
+
+.admin-dark .admin-text-secondary {
+  color: var(--admin-text-secondary) !important;
+}
+
+/* Forcer les couleurs sur les gradients et éléments spéciaux */
+.admin-dark h1,
+.admin-dark h2,
+.admin-dark h3,
+.admin-dark h4,
+.admin-dark h5,
+.admin-dark h6 {
+  color: var(--admin-text-primary) !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--admin-text-primary) !important;
+}
+
+.admin-dark span,
+.admin-dark p,
+.admin-dark div {
+  color: var(--admin-text-primary) !important;
+}
+
+.admin-header {
+  background-color: var(--admin-bg-primary) !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+  box-shadow: 0 1px 3px var(--admin-shadow) !important;
+  background-image: none !important;
+}
+
+.admin-header * {
+  color: var(--admin-text-primary) !important;
+}
+
+.admin-sidebar {
+  background-color: var(--admin-bg-primary) !important;
+  border-right: 1px solid var(--admin-border) !important;
+}
+
+.admin-sidebar * {
+  color: var(--admin-text-primary);
+}
+
+.admin-card {
+  background-color: var(--admin-bg-primary) !important;
+  border: 1px solid var(--admin-border) !important;
+  box-shadow: 0 1px 3px var(--admin-shadow) !important;
+  border-radius: 0.5rem;
+}
+
+.admin-card * {
+  color: var(--admin-text-primary);
+}
+
+.admin-card:hover {
+  box-shadow: 0 4px 6px var(--admin-shadow-lg);
+}
+
+.admin-input {
+  background-color: var(--admin-bg-primary);
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text-primary);
+}
+
+.admin-input:focus {
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.admin-button-primary {
+  background-color: var(--admin-accent) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.admin-button-primary:hover {
+  background-color: var(--admin-accent-hover);
+}
+
+.admin-button-secondary {
+  background-color: var(--admin-bg-tertiary);
+  color: var(--admin-text-primary);
+  border: 1px solid var(--admin-border);
+}
+
+.admin-button-secondary:hover {
+  background-color: var(--admin-border);
+}
+
+.admin-text-muted {
+  color: var(--admin-text-muted) !important;
+}
+
+.admin-text-secondary {
+  color: var(--admin-text-secondary) !important;
+}
+
+.admin-text-primary {
+  color: var(--admin-text-primary) !important;
+}
+
+/* Styles spécifiques pour les composants d'admin */
+.admin-section-card {
+  background: var(--admin-bg-primary) !important;
+  border: 1px solid var(--admin-border) !important;
+  transition: all 0.2s ease;
+}
+
+.admin-section-card * {
+  color: var(--admin-text-primary);
+}
+
+.admin-section-card:hover {
+  border-color: var(--admin-accent);
+  box-shadow: 0 4px 12px var(--admin-shadow-lg);
+}
+
+.admin-nav-item {
+  color: var(--admin-text-secondary) !important;
+  transition: color 0.2s ease;
+}
+
+.admin-nav-item:hover {
+  color: var(--admin-accent) !important;
+  background-color: var(--admin-bg-tertiary) !important;
+}
+
+.admin-nav-item.active {
+  color: var(--admin-accent) !important;
+  background-color: var(--admin-bg-tertiary) !important;
+}
+
+.admin-nav-item * {
+  color: inherit !important;
+}
+
+/* Styles spécifiques pour les éléments de navigation */
+.admin-bg-tertiary {
+  background-color: var(--admin-bg-tertiary) !important;
+}
+
+/* Forcer la visibilité des textes de navigation en mode sombre */
+.admin-dark .admin-nav-item {
+  color: var(--admin-text-secondary) !important;
+}
+
+.admin-dark .admin-nav-item:hover {
+  color: var(--admin-accent) !important;
+}
+
+.admin-dark .admin-nav-item span {
+  color: inherit !important;
+}
+
+.admin-dark .admin-nav-item svg {
+  color: inherit !important;
+}
+
+/* Scrollbar pour mode sombre */
+.admin-dark ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admin-dark ::-webkit-scrollbar-track {
+  background: var(--admin-bg-secondary);
+}
+
+.admin-dark ::-webkit-scrollbar-thumb {
+  background: var(--admin-border);
+  border-radius: 4px;
+}
+
+.admin-dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--admin-border-light);
+}
