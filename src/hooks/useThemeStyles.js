@@ -3,12 +3,12 @@ import { getThemeStyles, getThemeClasses, getThemeInlineStyles, getThemeAnimatio
 
 export const useThemeStyles = () => {
   const [activeTheme, setActiveTheme] = useState(() => {
-    return localStorage.getItem('activeTheme') || 'github';
+    return localStorage.getItem('activeTheme') || 'default';
   });
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const newTheme = localStorage.getItem('activeTheme') || 'github';
+      const newTheme = localStorage.getItem('activeTheme') || 'default';
       setActiveTheme(newTheme);
     };
 

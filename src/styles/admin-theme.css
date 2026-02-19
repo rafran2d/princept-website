@@ -92,6 +92,17 @@
   color: var(--admin-text-primary) !important;
 }
 
+/* Exception pour les boutons gradient - forcer le texte blanc */
+.admin-header button[class*="bg-gradient"] *,
+.admin-header a[class*="bg-gradient"] * {
+  color: white !important;
+}
+
+.admin-header button[class*="bg-gradient"],
+.admin-header a[class*="bg-gradient"] {
+  color: white !important;
+}
+
 .admin-sidebar {
   background-color: var(--admin-bg-primary) !important;
   border-right: 1px solid var(--admin-border) !important;

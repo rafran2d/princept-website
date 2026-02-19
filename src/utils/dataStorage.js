@@ -1,8 +1,24 @@
 // Système de gestion de données avec support JSON et localStorage
 class DataStorage {
   constructor() {
-    this.storageType = 'localStorage'; // 'localStorage' ou 'json'
+    this.storageType = 'localStorage'; // Retour à localStorage temporaire
     this.jsonEndpoint = '/api/data'; // Endpoint pour les opérations JSON
+    // this.initializeStorage(); // Désactivé temporairement
+  }
+
+  // Initialiser le stockage et migrer les données si nécessaire
+  async initializeStorage() {
+    // Vérifier si l'API JSON est disponible
+    const jsonAvailable = await this.checkJSONAvailability();
+    
+    if (!jsonAvailable) {
+      console.warn('API JSON non disponible, utilisation de localStorage');
+      this.storageType = 'localStorage';
+      return;
+    }
+
+    // Migrer les données existantes de localStorage vers JSON
+    await this.autoMigrateFromLocalStorage();
   }
 
   // Définir le type de stockage
@@ -235,6 +251,35 @@ class DataStorage {
     } catch (error) {
       console.log('API JSON non disponible, utilisation de localStorage');
       return false;
+    }
+  }
+
+  // Migration automatique depuis localStorage vers JSON
+  async autoMigrateFromLocalStorage() {
+    const keys = ['onepress-sections', 'princept-site-settings'];
+    
+    for (const key of keys) {
+      try {
+        // Vérifier si les données existent déjà en JSON
+        const jsonData = await this.loadFromJSON(key);
+        if (jsonData) {
+          console.log(`Données ${key} déjà présentes en JSON, migration ignorée`);
+          continue;
+        }
+
+        // Vérifier si des données existent en localStorage
+        const localData = this.loadFromLocalStorage(key);
+        if (localData) {
+          const success = await this.saveToJSON(key, localData);
+          if (success) {
+            console.log(`Migration automatique réussie pour ${key}`);
+          } else {
+            console.warn(`Échec de la migration automatique pour ${key}`);
+          }
+        }
+      } catch (error) {
+        console.warn(`Erreur lors de la migration automatique de ${key}:`, error);
+      }
     }
   }
 }

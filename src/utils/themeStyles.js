@@ -1,6 +1,28 @@
 // Styles spécifiques pour chaque thème
 export const getThemeStyles = (themeId) => {
   const themeStyles = {
+    default: {
+      heroStyle: {
+        layout: 'centered',
+        backgroundStyle: 'clean',
+        buttonStyle: 'rounded-lg',
+        textAlign: 'center',
+        spacing: 'comfortable',
+        animation: 'subtle'
+      },
+      sectionStyle: {
+        padding: 'normal',
+        borderRadius: 'small',
+        shadowLevel: 'subtle',
+        borderStyle: 'none'
+      },
+      cardStyle: {
+        style: 'flat',
+        hover: 'lift',
+        borderRadius: 'lg'
+      }
+    },
+
     github: {
       // Style GitHub - Clean et technique
       heroStyle: {
@@ -244,7 +266,7 @@ export const getThemeStyles = (themeId) => {
     }
   };
 
-  return themeStyles[themeId] || themeStyles.github;
+  return themeStyles[themeId] || themeStyles.default;
 };
 
 // Fonction pour générer les classes CSS basées sur le style du thème
@@ -378,6 +400,18 @@ export const getThemeInlineStyles = (themeId, component = 'section') => {
         overflow: 'hidden',
         width: '100vw',
         minHeight: '100vh'
+      },
+      'agency-gradient': {
+        background: `linear-gradient(160deg, #0F172A 0%, #1E1B4B 35%, #312E81 70%, #0F172A 100%)`,
+        backgroundSize: '400% 400%',
+        animation: 'agency-gradient-shift 20s ease infinite',
+        position: 'relative',
+        overflow: 'hidden'
+      },
+      'hairnet-clean': {
+        background: '#FFFFFF',
+        position: 'relative',
+        overflow: 'hidden'
       }
     };
     
@@ -390,7 +424,7 @@ export const getThemeInlineStyles = (themeId, component = 'section') => {
 // Fonction pour obtenir les classes d'animation
 export const getThemeAnimations = (themeId) => {
   const styles = getThemeStyles(themeId);
-  const animationType = styles.heroStyle.animation;
+  const animationType = styles?.heroStyle?.animation;
   
   const animations = {
     subtle: 'transition-all duration-300 ease-in-out',
@@ -401,7 +435,9 @@ export const getThemeAnimations = (themeId) => {
     elegant: 'transition-all duration-400 ease-out',
     energetic: 'transition-all duration-150 ease-in',
     playful: 'transition-all duration-300 ease-bounce',
-    gentle: 'transition-all duration-400 ease-in-out'
+    gentle: 'transition-all duration-400 ease-in-out',
+    agency: 'transition-all duration-500 cubic-bezier(0.22, 1, 0.36, 1)',
+    'slack-smooth': 'transition-all duration-500 ease-out'
   };
   
   return animations[animationType] || animations.subtle;

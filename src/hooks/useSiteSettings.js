@@ -1,8 +1,32 @@
 import { useState, useEffect } from 'react';
-import siteSettingsStore from '../store/SiteSettingsStore';
+import siteSettingsStore from '../store/SiteSettingsStoreAPI';
 
 export const useSiteSettings = () => {
   const [settings, setSettings] = useState(siteSettingsStore.getSettings());
+  
+  // Détecter la langue actuelle depuis l'URL ou localStorage
+  const getCurrentLanguage = () => {
+    // Essayer de détecter depuis l'URL (format /en/page ou ?lang=en)
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      const langFromPath = path.split('/')[1];
+      if (langFromPath && ['fr', 'en', 'es', 'de', 'it'].includes(langFromPath)) {
+        return langFromPath;
+      }
+      
+      // Essayer depuis les paramètres URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const langFromQuery = urlParams.get('lang');
+      if (langFromQuery && ['fr', 'en', 'es', 'de', 'it'].includes(langFromQuery)) {
+        return langFromQuery;
+      }
+    }
+    
+    // Fallback vers français
+    return 'fr';
+  };
+  
+  const currentLanguage = getCurrentLanguage();
 
   useEffect(() => {
     const unsubscribe = siteSettingsStore.subscribe((updatedSettings) => {
@@ -75,18 +99,34 @@ export const useSiteSettings = () => {
     });
   };
 
+  // Fonction utilitaire pour extraire les valeurs multilingues
+  const getMultilingualValue = (value, fallbackLanguage = currentLanguage) => {
+    if (typeof value === 'string') {
+      return value;
+    }
+    
+    if (typeof value === 'object' && value !== null) {
+      // Utiliser d'abord la langue actuelle, puis les fallbacks
+      return value[fallbackLanguage] || value['fr'] || value['en'] || Object.values(value)[0] || '';
+    }
+    
+    return '';
+  };
+
   return {
     settings: {
       ...settings,
       socialUrls: getSocialUrls()
     },
-    updateSettings: (updates) => siteSettingsStore.updateSettings(updates),
+    updateSettings: (updates) => siteSettingsStore.updateSettingsLocal(updates),
     updateSetting: (key, value) => siteSettingsStore.updateSetting(key, value),
     updateNestedSetting,
     resetToDefaults: () => siteSettingsStore.resetToDefaults(),
     applyMetaUpdates: () => siteSettingsStore.applyMetaUpdates(),
+    saveAllSettings: () => siteSettingsStore.saveAllSettings(),
     getVisibleSocialNetworks,
     getSocialUrls,
+    getMultilingualValue,
     exportSettings,
     importSettings
   };

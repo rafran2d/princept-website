@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: princept-website-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword456
+      MYSQL_DATABASE: princept_website
+      MYSQL_USER: princept_website_user
+      MYSQL_PASSWORD: princept_website_pass456
+    ports:
+      - "3310:3306"
+    volumes:
+      - princept_website_mysql_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: princept-website-phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: princept_website_user
+      PMA_PASSWORD: princept_website_pass456
+    ports:
+      - "8084:80"
+    depends_on:
+      - mysql
+
+volumes:
+  princept_website_mysql_data:

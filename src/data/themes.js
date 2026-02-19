@@ -1,24 +1,24 @@
 // Collection de thèmes inspirés de sites populaires
 export const predefinedThemes = {
-  // Thème Default - Design actuel
+  // Thème Default - Design hairnet.fr (copie conforme)
   default: {
     id: 'default',
     name: 'Default',
-    description: 'Thème par défaut avec design moderne et équilibré',
+    description: 'Thème professionnel inspiré de hairnet.fr : design épuré et moderne',
     category: 'Standard',
     colors: {
-      primary: '#3B82F6',
-      secondary: '#64748B',
-      accent: '#F59E0B',
+      primary: '#3f6ff7',
+      secondary: '#333333',
+      accent: '#3f6ff7',
       success: '#10B981',
       warning: '#F59E0B',
       error: '#EF4444',
-      background: '#F8FAFC',
+      background: '#FFFFFF',
       surface: '#FFFFFF',
       text: {
-        primary: '#1E293B',
-        secondary: '#64748B',
-        light: '#94A3B8'
+        primary: '#1a1a1a',
+        secondary: '#666666',
+        light: '#999999'
       }
     },
     typography: {
@@ -45,7 +45,7 @@ export const predefinedThemes = {
         '2xl': '4rem'
       },
       borderRadius: {
-        sm: '0.375rem',
+        sm: '0.25rem',
         base: '0.5rem',
         lg: '0.75rem',
         xl: '1rem'
