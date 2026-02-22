@@ -6,13 +6,25 @@ require('dotenv').config();
 
 const database = require('./config/database');
 const languageRoutes = require('./routes/languages');
+const authRoutes = require('./routes/auth');
+const sectionsRoutes = require('./routes/sections');
+const siteSettingsRoutes = require('./routes/siteSettings');
+const pagesRoutes = require('./routes/pages');
+const themesRoutes = require('./routes/themes');
+const designSettingsRoutes = require('./routes/designSettings');
+const userPreferencesRoutes = require('./routes/userPreferences');
 
+const path = require('path');
 const app = express();
 const PORT = process.env.API_PORT || 3003;
 
 // Middlewares de sécurité
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: false,
+  crossOriginOpenerPolicy: false,
+  originAgentCluster: false,
+  hsts: false
 }));
 
 // Configuration CORS
@@ -35,7 +47,40 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Routes API
+app.use('/api/auth', authRoutes);
 app.use('/api/languages', languageRoutes);
+app.use('/api/sections', sectionsRoutes);
+app.use('/api/site-settings', siteSettingsRoutes);
+app.use('/api/pages', pagesRoutes);
+app.use('/api/themes', themesRoutes);
+app.use('/api/design-settings', designSettingsRoutes);
+app.use('/api/user-preferences', userPreferencesRoutes);
+
+// Check default admin
+app.get('/api/check-default-admin', async (req, res) => {
+  try {
+    const users = await database.query('SELECT id, is_default_password FROM users WHERE username = ? AND is_active = 1', ['admin']);
+    res.json({ isDefaultAdmin: users.length > 0 && users[0].is_default_password === 1 });
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Monitoring
+app.get('/api/monitoring', async (req, res) => {
+  try {
+    const dbConnected = await database.testConnection();
+    res.json({
+      status: 'OK',
+      database: dbConnected ? 'Connected' : 'Disconnected',
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'ERROR', error: error.message });
+  }
+});
 
 // Route de santé
 app.get('/api/health', async (req, res) => {
@@ -56,10 +101,21 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Middleware de gestion des erreurs 404
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Route non trouvée' });
-});
+// En production, servir le build React
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, '..', 'build');
+  app.use(express.static(buildPath));
+
+  // SPA fallback : toutes les routes non-API renvoient index.html
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+} else {
+  // En dev, 404 pour les routes non trouvées
+  app.use('*', (req, res) => {
+    res.status(404).json({ error: 'Route non trouvée' });
+  });
+}
 
 // Middleware de gestion des erreurs globales
 app.use((error, req, res, next) => {
