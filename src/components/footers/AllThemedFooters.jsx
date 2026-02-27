@@ -78,12 +78,28 @@ export const DefaultFooter = ({ theme, settings, navigationItems, scrollToSectio
 
   const getText = (value, fallback = '') => {
     if (!value) return fallback;
-    if (typeof value === 'string') return value;
+    if (typeof value === 'string') {
+      try {
+        const parsed = JSON.parse(value);
+        if (parsed && typeof parsed === 'object') {
+          return parsed[currentLangCode] || parsed.fr || parsed.en || Object.values(parsed)[0] || fallback;
+        }
+      } catch {}
+      return value;
+    }
     if (typeof value === 'object') {
-      return value.fr || value.en || Object.values(value)[0] || fallback;
+      return value[currentLangCode] || value.fr || value.en || Object.values(value)[0] || fallback;
     }
     return String(value);
   };
+
+  const legalSectionTitle = {
+    fr: 'Informations légales',
+    en: 'Legal Information',
+    es: 'Información Legal',
+    it: 'Informazioni Legali',
+    de: 'Rechtliches'
+  }[currentLangCode] || 'Informations légales';
 
   // Vérifier si une page "Informations légales" existe
   const hasLegalPages = pages.length > 0;
@@ -236,7 +252,7 @@ export const DefaultFooter = ({ theme, settings, navigationItems, scrollToSectio
             {/* Column 3: Informations légales / Politique */}
             {hasLegalPages ? (
               <div>
-                <h4 className="footer-column-title">Informations légales</h4>
+                <h4 className="footer-column-title">{legalSectionTitle}</h4>
                 <ul className="footer-column-list">
                   {pages.map((page) => (
                     <li key={page.id}>

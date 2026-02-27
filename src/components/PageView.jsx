@@ -50,10 +50,22 @@ const PageView = () => {
 
   const getText = (value, fallback = '') => {
     if (!value) return fallback;
-    if (typeof value === 'string') return value;
+    if (typeof value === 'string') {
+      // Tenter de parser comme JSON si ça ressemble à un objet multilangue
+      try {
+        const parsed = JSON.parse(value);
+        if (parsed && typeof parsed === 'object') {
+          const langCode = getActiveLanguages().find(l => l.id === currentLanguage)?.code || 'fr';
+          return parsed[langCode] || parsed.fr || parsed.en || Object.values(parsed)[0] || fallback;
+        }
+      } catch (e) {
+        // Pas du JSON, retourner tel quel
+      }
+      return value;
+    }
     if (typeof value === 'object') {
-      const lang = currentLanguage === 'en' ? 'en' : 'fr';
-      return value[lang] || value.fr || value.en || Object.values(value)[0] || fallback;
+      const langCode = getActiveLanguages().find(l => l.id === currentLanguage)?.code || 'fr';
+      return value[langCode] || value.fr || value.en || Object.values(value)[0] || fallback;
     }
     return String(value);
   };
