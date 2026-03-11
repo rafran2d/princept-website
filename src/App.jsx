@@ -6,7 +6,6 @@ import { useDesignSettings } from './hooks/useDesignSettings';
 import { LanguageProvider } from './contexts/LanguageContextDB';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ForcePasswordChange from './components/admin/ForcePasswordChange';
-import './utils/dataRecovery'; // Outils de récupération des données
 import './styles/inline-editor.css'; // Styles pour l'éditeur inline
 
 
