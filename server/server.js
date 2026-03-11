@@ -64,11 +64,12 @@ app.use('/api/backup', backupRoutes);
 app.use('/api/stats', statsRoutes);
 app.post('/api/send-email', EmailController.sendEmail);
 
-// Check default admin
+// Check default admin (compatibilité ancien backend: hasDefaultPassword + isDefaultAdmin)
 app.get('/api/check-default-admin', async (req, res) => {
   try {
     const users = await database.query('SELECT id, is_default_password FROM users WHERE username = ? AND is_active = 1', ['admin']);
-    res.json({ isDefaultAdmin: users.length > 0 && users[0].is_default_password === 1 });
+    const hasDefault = users.length > 0 && users[0].is_default_password === 1;
+    res.json({ hasDefaultPassword: hasDefault, isDefaultAdmin: hasDefault });
   } catch (error) {
     res.status(500).json({ error: 'Erreur serveur' });
   }

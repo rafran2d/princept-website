@@ -343,16 +343,19 @@ class UnifiedEmailService {
     }
   }
 
-  // Utilitaires
+  // Utilitaires — accepte string ou objet i18n { fr, en }
   replaceTemplateVariables(template, variables) {
-    if (!template) return '';
-    
-    let result = template;
+    if (template == null) return '';
+    let str = template;
+    if (typeof template === 'object') {
+      str = template.fr ?? template.en ?? Object.values(template).find(v => typeof v === 'string') ?? '';
+    }
+    if (typeof str !== 'string') return '';
+    let result = str;
     Object.entries(variables).forEach(([key, value]) => {
       const regex = new RegExp(`{{${key}}}`, 'g');
-      result = result.replace(regex, value || '');
+      result = result.replace(regex, value ?? '');
     });
-    
     return result;
   }
 

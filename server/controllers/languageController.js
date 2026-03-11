@@ -2,11 +2,11 @@ const Language = require('../models/Language');
 const database = require('../config/database');
 
 class LanguageController {
-  // GET /api/languages - Récupérer toutes les langues
+  // GET /api/languages - Récupérer toutes les langues (compat ancien: { data, meta })
   static async getAllLanguages(req, res) {
     try {
       const languages = await Language.findAll();
-      res.json(languages);
+      res.json({ data: languages, meta: { count: languages.length } });
     } catch (error) {
       res.status(500).json({ error: 'Erreur serveur' });
     }
@@ -16,7 +16,7 @@ class LanguageController {
   static async getActiveLanguages(req, res) {
     try {
       const languages = await Language.findActive();
-      res.json(languages);
+      res.json({ data: languages });
     } catch (error) {
       res.status(500).json({ error: 'Erreur serveur' });
     }
@@ -29,7 +29,7 @@ class LanguageController {
       if (!language) {
         return res.status(404).json({ error: 'Aucune langue par défaut trouvée' });
       }
-      res.json(language);
+      res.json({ data: language });
     } catch (error) {
       res.status(500).json({ error: 'Erreur serveur' });
     }
@@ -87,7 +87,7 @@ class LanguageController {
       };
 
       const newLanguage = await Language.create(languageData);
-      res.status(201).json(newLanguage);
+      res.status(201).json({ data: newLanguage });
     } catch (error) {
       res.status(500).json({ error: 'Erreur serveur' });
     }

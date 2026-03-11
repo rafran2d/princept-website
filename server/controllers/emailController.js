@@ -21,8 +21,8 @@ async function sendWithMailjet(config, email) {
             }
           ],
           Subject: email.subject,
-          TextPart: email.text,
-          HTMLPart: email.html || email.text.replace(/\n/g, '<br>'),
+          TextPart: typeof email.text === 'string' ? email.text : String(email.text || ''),
+          HTMLPart: email.html || (typeof email.text === 'string' ? email.text : String(email.text || '')).replace(/\n/g, '<br>'),
           ReplyTo: email.replyTo ? {
             Email: email.replyTo,
             Name: email.from.name || 'Website'
@@ -48,8 +48,8 @@ async function sendWithSendGrid(config, email) {
       name: config.senderName || 'Website'
     },
     subject: email.subject,
-    text: email.text,
-    html: email.html || email.text.replace(/\n/g, '<br>'),
+    text: typeof email.text === 'string' ? email.text : String(email.text || ''),
+    html: email.html || (typeof email.text === 'string' ? email.text : String(email.text || '')).replace(/\n/g, '<br>'),
     replyTo: config.replyTo || email.replyTo
   };
 
@@ -97,8 +97,8 @@ async function sendWithSMTP(config, email, provider) {
     },
     to: email.to,
     subject: email.subject,
-    text: email.text,
-    html: email.html || (email.text ? email.text.replace(/\n/g, '<br>') : undefined),
+    text: typeof email.text === 'string' ? email.text : String(email.text || ''),
+    html: email.html || (email.text != null ? String(email.text).replace(/\n/g, '<br>') : undefined),
     replyTo: config.replyTo || email.replyTo
   };
 
