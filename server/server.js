@@ -13,6 +13,10 @@ const pagesRoutes = require('./routes/pages');
 const themesRoutes = require('./routes/themes');
 const designSettingsRoutes = require('./routes/designSettings');
 const userPreferencesRoutes = require('./routes/userPreferences');
+const emailRoutes = require('./routes/email');
+const backupRoutes = require('./routes/backup');
+const statsRoutes = require('./routes/stats');
+const EmailController = require('./controllers/emailController');
 
 const path = require('path');
 const app = express();
@@ -55,6 +59,10 @@ app.use('/api/pages', pagesRoutes);
 app.use('/api/themes', themesRoutes);
 app.use('/api/design-settings', designSettingsRoutes);
 app.use('/api/user-preferences', userPreferencesRoutes);
+app.use('/api/email', emailRoutes);
+app.use('/api/backup', backupRoutes);
+app.use('/api/stats', statsRoutes);
+app.post('/api/send-email', EmailController.sendEmail);
 
 // Check default admin
 app.get('/api/check-default-admin', async (req, res) => {

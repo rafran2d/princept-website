@@ -7,6 +7,7 @@ router.get('/', LanguageController.getAllLanguages);
 router.get('/active', LanguageController.getActiveLanguages);
 router.get('/default', LanguageController.getDefaultLanguage);
 router.put('/reorder', LanguageController.reorderLanguages);
+router.post('/fix-encoding', LanguageController.fixEncoding);
 router.get('/:id', LanguageController.getLanguageById);
 router.post('/', LanguageController.createLanguage);
 router.put('/:id', LanguageController.updateLanguage);

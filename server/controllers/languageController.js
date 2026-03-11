@@ -1,4 +1,5 @@
 const Language = require('../models/Language');
+const database = require('../config/database');
 
 class LanguageController {
   // GET /api/languages - Récupérer toutes les langues
@@ -171,6 +172,49 @@ class LanguageController {
         return res.status(400).json({ error: error.message });
       }
       res.status(500).json({ error: 'Erreur serveur' });
+    }
+  }
+
+  // POST /api/languages/fix-encoding - Corriger l'encodage des noms de langues
+  static async fixEncoding(req, res) {
+    try {
+      const correctNames = {
+        'fr': 'Français',
+        'es': 'Español',
+        'pt': 'Português',
+        'ar': 'العربية'
+      };
+
+      // Corriger le charset de la table si nécessaire
+      try {
+        const tableInfo = await database.query('SHOW CREATE TABLE languages');
+        if (tableInfo.length > 0) {
+          const createTable = tableInfo[0]['Create Table'];
+          if (!createTable.includes('utf8mb4')) {
+            await database.run('ALTER TABLE languages CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+          }
+        }
+      } catch {}
+
+      // Corriger les données mal encodées
+      const languages = await database.query('SELECT * FROM languages');
+      for (const lang of languages) {
+        const correctName = correctNames[lang.code];
+        if (correctName && lang.name !== correctName) {
+          if (lang.name.includes('Ã') || lang.name.includes('FranAgais') || lang.name.includes('Ø') || lang.name.includes('Õ')) {
+            await database.run('UPDATE languages SET name = ? WHERE id = ?', [correctName, lang.id]);
+          }
+        }
+      }
+
+      const updated = await database.query('SELECT * FROM languages ORDER BY sort_order ASC');
+      res.json({
+        success: true,
+        message: 'Encodage corrigé avec succès',
+        data: updated
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Erreur serveur', details: error.message });
     }
   }
 

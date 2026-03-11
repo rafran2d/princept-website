@@ -107,6 +107,24 @@ const AuthController = {
     }
   },
 
+  // GET /api/auth/profile
+  async getProfile(req, res) {
+    try {
+      const users = await database.query(
+        'SELECT id, username, email, role, created_at, last_login FROM users WHERE id = ?',
+        [req.user.id]
+      );
+
+      if (!users || users.length === 0) {
+        return res.status(404).json({ error: 'Utilisateur non trouvé' });
+      }
+
+      res.json({ user: users[0] });
+    } catch (error) {
+      res.status(500).json({ error: 'Erreur serveur' });
+    }
+  },
+
   // POST /api/auth/update-profile
   async updateProfile(req, res) {
     try {

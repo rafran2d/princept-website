@@ -9,6 +9,7 @@ router.post('/login', AuthController.login);
 // Routes protégées
 router.post('/logout', authMiddleware, AuthController.logout);
 router.get('/verify', authMiddleware, AuthController.verify);
+router.get('/profile', authMiddleware, AuthController.getProfile);
 router.post('/change-password', authMiddleware, AuthController.changePassword);
 router.post('/update-profile', authMiddleware, AuthController.updateProfile);
 
