@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Menu, X, ArrowUp } from 'lucide-react';
 import { useSections } from '../hooks/useSections';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import SectionRenderer from './SectionRenderer';
@@ -23,6 +23,8 @@ const Frontend = () => {
   const { isTheme } = useThemeStyles();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   
   // Obtenir le thème actif et les composants thématiques
   const activeThemeId = localStorage.getItem('activeTheme') || 'default';
@@ -53,6 +55,23 @@ const Frontend = () => {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, [homepageSections]);
+
+  // Scroll progress bar + back-to-top (thème default)
+  useEffect(() => {
+    if (activeThemeId !== 'default') return;
+    const handleProgress = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
+      setShowBackToTop(scrollTop > 500);
+    };
+    window.addEventListener('scroll', handleProgress, { passive: true });
+    return () => window.removeEventListener('scroll', handleProgress);
+  }, [activeThemeId]);
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   // Révélation au scroll pour le thème default (agence)
   useEffect(() => {
@@ -152,6 +171,25 @@ const Frontend = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Scroll progress bar */}
+      {activeThemeId === 'default' && (
+        <div
+          className="agency-scroll-progress"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      )}
+
+      {/* Back to top */}
+      {activeThemeId === 'default' && (
+        <button
+          className={`agency-back-to-top ${showBackToTop ? 'visible' : ''}`}
+          onClick={scrollToTop}
+          aria-label="Retour en haut"
+        >
+          <ArrowUp size={22} strokeWidth={2.5} />
+        </button>
+      )}
+
       {/* Header thématique ou navigation par défaut */}
       {ThemedHeader ? (
         <ThemedHeader 

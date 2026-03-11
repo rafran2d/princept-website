@@ -56,13 +56,9 @@ const AboutSection = ({ section, useGlobalStyles }) => {
   const isDefaultTheme = isTheme('default');
 
   const aboutSectionRef = useRef(null);
-  const circularImageRef = useRef(null);
-  const cardRefs = useRef([]);
   const [stripsInView, setStripsInView] = useState(false);
   const [selectedFeature, setSelectedFeature] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [scrollRotation, setScrollRotation] = useState(0);
-  const [hoveredCardIndex, setHoveredCardIndex] = useState(null);
 
   useEffect(() => {
     const el = aboutSectionRef.current;
@@ -79,142 +75,17 @@ const AboutSection = ({ section, useGlobalStyles }) => {
     return () => observer.disconnect();
   }, [isDefaultTheme]);
 
-  // Détection de l'intersection entre l'ovale et les cartes
-  useEffect(() => {
-    if (!isDefaultTheme || !circularImageRef.current || !aboutSectionRef.current) return;
-
-    const checkIntersections = () => {
-      const circularElement = circularImageRef.current;
-      if (!circularElement) return;
-
-      const ovalRect = circularElement.getBoundingClientRect();
-      const ovalCenterX = ovalRect.left + ovalRect.width / 2;
-      const ovalCenterY = ovalRect.top + ovalRect.height / 2;
-      const ovalRadiusX = ovalRect.width / 2;
-      const ovalRadiusY = ovalRect.height / 2;
-
-      // Convertir la rotation en radians
-      const rotationRad = (scrollRotation * Math.PI) / 180;
-      
-      // Point de référence sur le périmètre de l'ovale (bord droit avant rotation)
-      // On utilise un point sur le bord de l'ovale qui tourne avec lui
-      const referenceAngle = rotationRad;
-      const refX = ovalCenterX + Math.cos(referenceAngle) * ovalRadiusX * 0.9;
-      const refY = ovalCenterY + Math.sin(referenceAngle) * ovalRadiusY * 0.9;
-
-      let closestIndex = null;
-      let minDistance = Infinity;
-
-      cardRefs.current.forEach((cardRef, index) => {
-        if (!cardRef) return;
-
-        const cardRect = cardRef.getBoundingClientRect();
-        const cardCenterX = cardRect.left + cardRect.width / 2;
-        const cardCenterY = cardRect.top + cardRect.height / 2;
-
-        // Distance entre le centre de la carte et le point de référence sur l'ovale
-        const dx = cardCenterX - refX;
-        const dy = cardCenterY - refY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        // Vérifier aussi si la carte est dans l'ovale
-        const dxFromCenter = (cardCenterX - ovalCenterX) / ovalRadiusX;
-        const dyFromCenter = (cardCenterY - ovalCenterY) / ovalRadiusY;
-        const isInsideOval = (dxFromCenter * dxFromCenter + dyFromCenter * dyFromCenter) <= 1.2;
-
-        // Trouver la carte la plus proche du point de référence ET dans l'ovale
-        if (isInsideOval && distance < minDistance) {
-          minDistance = distance;
-          closestIndex = index;
-        }
-      });
-
-      setHoveredCardIndex(closestIndex);
-    };
-
-    const handleScroll = () => {
-      checkIntersections();
-    };
-
-    const handleResize = () => {
-      checkIntersections();
-    };
-
-    // Vérifier initialement et à chaque scroll/resize
-    checkIntersections();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize);
-    
-    // Vérifier aussi périodiquement pour la rotation (plus fréquent pour une transition fluide)
-    const interval = setInterval(checkIntersections, 50);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-      clearInterval(interval);
-    };
-  }, [isDefaultTheme, scrollRotation]);
-
-  // Animation de rotation au scroll pour l'image circulaire
-  useEffect(() => {
-    if (!isDefaultTheme || !circularImageRef.current || !aboutSectionRef.current) return;
-
-    const handleScroll = () => {
-      const sectionElement = aboutSectionRef.current;
-      const circularElement = circularImageRef.current;
-      if (!sectionElement || !circularElement) return;
-
-      const sectionRect = sectionElement.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      
-      // Calculer quand la section entre et sort de la vue
-      const sectionTop = sectionRect.top;
-      const sectionBottom = sectionRect.bottom;
-      const sectionHeight = sectionRect.height;
-      
-      // Rotation basée sur le scroll dans la section
-      // Commence à tourner quand la section entre dans la vue
-      // Continue à tourner pendant tout le scroll de la section
-      const scrollStart = windowHeight; // Quand la section commence à entrer
-      const scrollEnd = -sectionHeight; // Quand la section sort complètement
-      const scrollRange = scrollStart - scrollEnd;
-      
-      // Position actuelle de la section
-      const currentScroll = sectionTop;
-      
-      // Calculer le pourcentage de scroll (0 à 1)
-      const scrollProgress = Math.max(0, Math.min(1, (scrollStart - currentScroll) / scrollRange));
-      
-      // Rotation complète (360 degrés) pendant le scroll de la section
-      const maxRotation = 720; // 2 tours complets pour un effet plus visible
-      const rotation = scrollProgress * maxRotation;
-      
-      setScrollRotation(rotation);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
-    handleScroll(); // Appel initial
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
-  }, [isDefaultTheme]);
-
   const stripDelayStep = 2.4;
 
-  // Composant modal réutilisable avec design 3D (défini AVANT les returns pour être accessible partout)
+  // Composant modal réutilisable (défini AVANT les returns pour être accessible partout)
   const ModalContent = () => {
     if (!isModalOpen || !selectedFeature) return null;
-    
+
     const modalElement = (
-      <div 
-        onClick={() => {
-          setIsModalOpen(false);
-        }}
+      <div
+        onClick={() => setIsModalOpen(false)}
         className="agency-modal-backdrop"
-        style={{ 
+        style={{
           position: 'fixed',
           top: 0,
           left: 0,
@@ -227,16 +98,13 @@ const AboutSection = ({ section, useGlobalStyles }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '1rem',
-          perspective: '2000px'
+          padding: '1rem'
         }}
       >
-        <div 
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
+        <div
+          onClick={(e) => e.stopPropagation()}
           className="agency-modal-3d"
-          style={{ 
+          style={{
             backgroundColor: '#FFFFFF',
             borderRadius: '1.5rem',
             maxWidth: '48rem',
@@ -245,34 +113,20 @@ const AboutSection = ({ section, useGlobalStyles }) => {
             overflowY: 'auto',
             position: 'relative',
             zIndex: 100000,
-            transform: 'perspective(2000px) rotateY(-2deg) rotateX(4deg)',
-            transformStyle: 'preserve-3d',
-            boxShadow: 
-              '0 30px 80px rgba(0, 0, 0, 0.4), ' +
-              '0 0 0 1px rgba(255, 255, 255, 0.1), ' +
-              '-20px 0 60px rgba(0, 0, 0, 0.3), ' +
-              '0 20px 60px rgba(0, 0, 0, 0.2)',
-            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.3)',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'perspective(2000px) rotateY(0deg) rotateX(0deg) translateY(-8px) scale(1.02)';
-            e.currentTarget.style.boxShadow = 
-              '0 40px 100px rgba(0, 0, 0, 0.5), ' +
-              '0 0 0 1px rgba(63, 111, 247, 0.2), ' +
-              '-25px 0 80px rgba(0, 0, 0, 0.4), ' +
-              '0 25px 80px rgba(0, 0, 0, 0.3)';
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 30px 70px rgba(0, 0, 0, 0.35)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'perspective(2000px) rotateY(-2deg) rotateX(4deg)';
-            e.currentTarget.style.boxShadow = 
-              '0 30px 80px rgba(0, 0, 0, 0.4), ' +
-              '0 0 0 1px rgba(255, 255, 255, 0.1), ' +
-              '-20px 0 60px rgba(0, 0, 0, 0.3), ' +
-              '0 20px 60px rgba(0, 0, 0, 0.2)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.3)';
           }}
         >
-          {/* Header avec effet 3D */}
-          <div 
+          {/* Header */}
+          <div
             className="sticky top-0 bg-gradient-to-br from-white to-gray-50 border-b border-gray-200 px-8 py-6 flex items-center justify-between z-10"
             style={{
               borderRadius: '1.5rem 1.5rem 0 0',
@@ -283,39 +137,29 @@ const AboutSection = ({ section, useGlobalStyles }) => {
               {(() => {
                 const IconComponent = iconMap[selectedFeature.icon] || Star;
                 return (
-                  <div 
-                    className="agency-modal-icon-3d"
-                    style={{ 
+                  <div
+                    style={{
                       width: '56px',
                       height: '56px',
                       borderRadius: '1rem',
-                      background: 'linear-gradient(135deg, #3f6ff7 0%, #2d5ae6 100%)',
+                      background: 'var(--gradient-primary, linear-gradient(135deg, #2563EB, #3B82F6))',
                       color: '#FFFFFF',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: '0 8px 24px rgba(63, 111, 247, 0.3), 0 0 0 4px rgba(63, 111, 247, 0.1)',
-                      transform: 'translateZ(20px)',
-                      transformStyle: 'preserve-3d'
+                      boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
                     }}
                   >
                     <IconComponent size={28} strokeWidth={2} />
                   </div>
                 );
               })()}
-              <h3 
-                className="text-2xl font-bold text-gray-900"
-                style={{
-                  transform: 'translateZ(10px)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
+              <h3 className="text-2xl font-bold text-gray-900">
                 {t(selectedFeature.title, selectedFeature.title)}
               </h3>
             </div>
             <button
               onClick={() => setIsModalOpen(false)}
-              className="agency-modal-close-btn"
               style={{
                 width: '40px',
                 height: '40px',
@@ -326,88 +170,58 @@ const AboutSection = ({ section, useGlobalStyles }) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.3s ease',
-                border: '1px solid rgba(0, 0, 0, 0.1)',
-                transform: 'translateZ(10px)',
-                transformStyle: 'preserve-3d'
+                border: '1px solid rgba(0, 0, 0, 0.1)'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
                 e.currentTarget.style.color = '#EF4444';
-                e.currentTarget.style.transform = 'translateZ(15px) rotate(90deg)';
-                e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                e.currentTarget.style.transform = 'rotate(90deg)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
                 e.currentTarget.style.color = '#6B7280';
-                e.currentTarget.style.transform = 'translateZ(10px) rotate(0deg)';
-                e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.transform = 'rotate(0deg)';
               }}
               aria-label="Fermer"
             >
               <X size={20} strokeWidth={2.5} />
             </button>
           </div>
-          
-          {/* Contenu avec effet de profondeur */}
-          <div 
-            className="px-8 py-8"
-            style={{
-              transform: 'translateZ(5px)',
-              transformStyle: 'preserve-3d'
-            }}
-          >
+
+          {/* Contenu */}
+          <div className="px-8 py-8">
             <div className="prose prose-lg max-w-none">
-              <p 
-                className="text-gray-700 leading-relaxed mb-6 text-lg"
-                style={{
-                  transform: 'translateZ(5px)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
+              <p className="text-gray-700 leading-relaxed mb-6 text-lg">
                 {t(selectedFeature.description, selectedFeature.description)}
               </p>
-              
+
               {selectedFeature.details && (
-                <div 
+                <div
                   className="mt-8 p-6 rounded-xl"
                   style={{
-                    backgroundColor: 'rgba(63, 111, 247, 0.05)',
-                    border: '1px solid rgba(63, 111, 247, 0.1)',
-                    transform: 'translateZ(10px)',
-                    transformStyle: 'preserve-3d',
-                    boxShadow: '0 4px 12px rgba(63, 111, 247, 0.1)'
+                    backgroundColor: 'rgba(37, 99, 235, 0.05)',
+                    border: '1px solid rgba(37, 99, 235, 0.1)',
+                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.08)'
                   }}
                 >
-                  <h4 
-                    className="text-xl font-bold text-gray-900 mb-4"
-                    style={{
-                      color: '#3f6ff7',
-                      transform: 'translateZ(5px)',
-                      transformStyle: 'preserve-3d'
-                    }}
+                  <h4
+                    className="text-xl font-bold mb-4"
+                    style={{ color: 'var(--color-primary, #2563EB)' }}
                   >
                     Détails
                   </h4>
-                  <div 
-                    className="text-gray-700 leading-relaxed whitespace-pre-line"
-                    style={{
-                      transform: 'translateZ(5px)',
-                      transformStyle: 'preserve-3d'
-                    }}
-                  >
+                  <div className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {t(selectedFeature.details, selectedFeature.details)}
                   </div>
                 </div>
               )}
             </div>
-            
-            {/* Bouton avec effet 3D */}
+
             <div className="mt-10 flex justify-end">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="agency-modal-btn-3d"
-                style={{ 
-                  backgroundColor: '#3f6ff7',
+                style={{
+                  background: 'var(--gradient-primary, linear-gradient(135deg, #2563EB, #3B82F6))',
                   color: 'white',
                   padding: '0.875rem 2rem',
                   borderRadius: '0.75rem',
@@ -415,20 +229,16 @@ const AboutSection = ({ section, useGlobalStyles }) => {
                   fontSize: '1rem',
                   border: 'none',
                   cursor: 'pointer',
-                  transform: 'translateZ(15px)',
-                  transformStyle: 'preserve-3d',
-                  boxShadow: '0 8px 24px rgba(63, 111, 247, 0.3), 0 0 0 4px rgba(63, 111, 247, 0.1)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                  boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)',
+                  transition: 'all 0.3s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateZ(20px) translateY(-2px) scale(1.05)';
-                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(63, 111, 247, 0.4), 0 0 0 6px rgba(63, 111, 247, 0.15)';
-                  e.currentTarget.style.backgroundColor = '#2d5ae6';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(37, 99, 235, 0.4)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateZ(15px) translateY(0) scale(1)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(63, 111, 247, 0.3), 0 0 0 4px rgba(63, 111, 247, 0.1)';
-                  e.currentTarget.style.backgroundColor = '#3f6ff7';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(37, 99, 235, 0.3)';
                 }}
               >
                 Fermer
@@ -439,7 +249,7 @@ const AboutSection = ({ section, useGlobalStyles }) => {
       </div>
     );
 
-    return typeof document !== 'undefined' 
+    return typeof document !== 'undefined'
       ? createPortal(modalElement, document.body)
       : modalElement;
   };
@@ -458,110 +268,7 @@ const AboutSection = ({ section, useGlobalStyles }) => {
           overflow: 'hidden'
         }}
       >
-        <div className="container mx-auto px-6 agency-about-v2" style={{ position: 'relative', zIndex: 1, minHeight: '600px' }}>
-          {/* Image circulaire rotative avec effet arc-en-ciel - Fond complet de la section */}
-          <div 
-            ref={circularImageRef}
-            className="agency-about-circular-image"
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '140vw',
-              height: '80vw',
-              maxWidth: '1800px',
-              maxHeight: '1000px',
-              zIndex: 0,
-              pointerEvents: 'none',
-              opacity: 0
-            }}
-          >
-            <div
-              className="agency-circular-rainbow"
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: '50%',
-                transform: `rotate(${scrollRotation}deg)`,
-                transition: 'transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
-                position: 'relative',
-                overflow: 'visible'
-              }}
-            >
-              {/* Cercle extérieur avec bordure plus épaisse - invisible */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  borderRadius: '50%',
-                  background: 'transparent',
-                  border: '2px solid #6d96fc',
-                  opacity: 0,
-                  filter: 'drop-shadow(0 0 60px rgba(0, 0, 0, 0.08)) drop-shadow(0 0 120px rgba(0, 0, 0, 0.05)) drop-shadow(0 0 180px rgba(0, 0, 0, 0.03))'
-                }}
-              />
-              
-              {/* Cercle intermédiaire avec bordure plus épaisse - invisible */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: '5%',
-                  borderRadius: '50%',
-                  border: '2px solid #6d96fc',
-                  opacity: 0,
-                  filter: 'drop-shadow(0 0 40px rgba(0, 0, 0, 0.06)) drop-shadow(0 0 80px rgba(0, 0, 0, 0.04))'
-                }}
-              />
-              
-              {/* Cercle intérieur avec bordure plus épaisse - invisible */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: '10%',
-                  borderRadius: '50%',
-                  border: '1.5px solid #6d96fc',
-                  opacity: 0,
-                  filter: 'drop-shadow(0 0 30px rgba(0, 0, 0, 0.05))'
-                }}
-              />
-              
-              {/* Cercles supplémentaires avec bordures plus épaisses - invisibles */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: '15%',
-                  borderRadius: '50%',
-                  border: '1.5px solid #6d96fc',
-                  opacity: 0,
-                  filter: 'drop-shadow(0 0 25px rgba(0, 0, 0, 0.04))'
-                }}
-              />
-              
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: '20%',
-                  borderRadius: '50%',
-                  border: '1px solid #6d96fc',
-                  opacity: 0,
-                  filter: 'drop-shadow(0 0 20px rgba(0, 0, 0, 0.03))'
-                }}
-              />
-              
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: '25%',
-                  borderRadius: '50%',
-                  border: '1px solid #6d96fc',
-                  opacity: 0,
-                  filter: 'drop-shadow(0 0 15px rgba(0, 0, 0, 0.02))'
-                }}
-              />
-            </div>
-          </div>
-
+        <div className="container mx-auto px-6 agency-about-v2" style={{ position: 'relative', zIndex: 1 }}>
           <div className="agency-about-header" style={{ position: 'relative', zIndex: 1 }}>
             <h2 className="agency-about-title">{title}</h2>
             {description && (
@@ -576,11 +283,8 @@ const AboutSection = ({ section, useGlobalStyles }) => {
                 return (
                   <div
                     key={feature.id}
-                    ref={(el) => {
-                      if (el) cardRefs.current[index] = el;
-                    }}
-                    className={`agency-about-card ${hoveredCardIndex === index ? 'agency-about-card-oval-hover' : ''}`}
-                    style={{ animationDelay: `${index * stripDelayStep}s` }}
+                    className="agency-about-card"
+                    style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="agency-about-card-icon">
                       <IconComponent size={36} strokeWidth={2} />

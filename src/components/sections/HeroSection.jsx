@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Code, Globe, Zap, Shield, Smartphone, Star } from 'lucide-react';
 import { useThemeStyles } from '../../hooks/useThemeStyles';
 import { useSections } from '../../hooks/useSections';
 import { smartNavigate } from '../../utils/navigation';
@@ -150,9 +150,46 @@ const HeroSection = ({ section, useGlobalStyles }) => {
         />
       )}
       
-      {/* Overlay sombre */}
+      {/* Overlay sombre + gradient */}
       {isDefaultTheme && (
-        <div className="absolute inset-0 bg-black bg-opacity-50" style={{ zIndex: 1 }}></div>
+        <div className="absolute inset-0" style={{
+          background: 'linear-gradient(135deg, rgba(15,23,42,0.7) 0%, rgba(30,41,59,0.6) 50%, rgba(15,23,42,0.8) 100%)',
+          zIndex: 1
+        }}></div>
+      )}
+
+      {/* Grille décorative */}
+      {isDefaultTheme && (
+        <div className="agency-hero-grid-overlay"></div>
+      )}
+
+      {/* Particules flottantes */}
+      {isDefaultTheme && (
+        <>
+          <div className="agency-hero-particle agency-hero-particle--1"></div>
+          <div className="agency-hero-particle agency-hero-particle--2"></div>
+          <div className="agency-hero-particle agency-hero-particle--3"></div>
+          <div className="agency-hero-particle agency-hero-particle--4"></div>
+          <div className="agency-hero-particle agency-hero-particle--5"></div>
+        </>
+      )}
+
+      {/* Icônes lucide flottantes */}
+      {isDefaultTheme && (
+        <>
+          <div className="agency-hero-floating-icon agency-hero-floating-icon--1">
+            <Code size={48} strokeWidth={1} />
+          </div>
+          <div className="agency-hero-floating-icon agency-hero-floating-icon--2">
+            <Globe size={40} strokeWidth={1} />
+          </div>
+          <div className="agency-hero-floating-icon agency-hero-floating-icon--3">
+            <Zap size={36} strokeWidth={1} />
+          </div>
+          <div className="agency-hero-floating-icon agency-hero-floating-icon--4">
+            <Shield size={44} strokeWidth={1} />
+          </div>
+        </>
       )}
       
       {/* Theme-specific overlays - pas pour default theme car géré ci-dessus */}
@@ -277,7 +314,7 @@ const HeroSection = ({ section, useGlobalStyles }) => {
                   'text-white rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1'
                 } ${animations}`}
                 style={{
-                  backgroundColor: isDefaultTheme ? '#3f6ff7' : 'var(--color-primary)',
+                  backgroundColor: isDefaultTheme ? '#2563EB' : 'var(--color-primary)',
                   color: '#FFFFFF',
                   borderRadius: isDefaultTheme ? '0.5rem' : isTheme('notion') || isTheme('medium') ? '0.5rem' : 
                                isTheme('apple') ? '0.75rem' : 
@@ -285,14 +322,14 @@ const HeroSection = ({ section, useGlobalStyles }) => {
                 }}
                 onMouseEnter={(e) => {
                   if (isDefaultTheme) {
-                    e.target.style.backgroundColor = '#2d5ae6';
+                    e.target.style.backgroundColor = '#1D4ED8';
                   } else {
                     e.target.style.filter = 'brightness(0.9)';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (isDefaultTheme) {
-                    e.target.style.backgroundColor = '#3f6ff7';
+                    e.target.style.backgroundColor = '#2563EB';
                   } else {
                     e.target.style.filter = 'brightness(1)';
                   }
@@ -351,13 +388,14 @@ const HeroSection = ({ section, useGlobalStyles }) => {
       {/* Theme-adaptive scroll indicator */}
       {!isTheme('medium') && !isTheme('notion') && !isTheme('slack') && (
         <div className={`agency-hero-scroll absolute bottom-8 w-full flex justify-center ${getTextColor()} ${
-          isDefaultTheme ? '' : isTheme('discord') || isTheme('spotify') ? 'animate-pulse' : 'animate-bounce'
+          isDefaultTheme ? 'agency-hero-scroll-indicator' : isTheme('discord') || isTheme('spotify') ? 'animate-pulse' : 'animate-bounce'
         } z-10`}>
           <a href="#about" className={`flex flex-col items-center opacity-75 hover:opacity-100 transition-opacity ${animations}`}>
             <span className="text-sm mb-2 font-light text-center whitespace-nowrap">
-              {isTheme('airbnb') ? 'Découvrir' : 
-               isTheme('apple') ? 'Explorer' : 
-               isTheme('netflix') ? 'Voir plus' : 
+              {isDefaultTheme ? 'Découvrir' :
+               isTheme('airbnb') ? 'Découvrir' :
+               isTheme('apple') ? 'Explorer' :
+               isTheme('netflix') ? 'Voir plus' :
                'Scroll Down'}
             </span>
             <ChevronDown className="w-6 h-6" />

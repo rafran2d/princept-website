@@ -1,9 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0;300;400;500;600;700;800;1;400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
 
 /* Import des styles pour le thème admin */
 @import './styles/admin-theme.css';
@@ -12,10 +9,6 @@
 @import './styles/rtl.css';
 /* Thème default - design agence moderne + animations */
 @import './styles/theme-default.css';
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -27,20 +20,24 @@
 }
 
 :root {
-  --color-primary: #3f6ff7;
-  --color-primary-rgb: 63, 111, 247;
-  --color-secondary: #64748B;
-  --color-accent: #F59E0B;
+  --color-primary: #2563EB;
+  --color-primary-dark: #1D4ED8;
+  --color-primary-light: #3B82F6;
+  --color-primary-rgb: 37, 99, 235;
+  --color-secondary: #1E293B;
+  --color-accent: #8B5CF6;
+  --color-accent-cyan: #06B6D4;
   --color-success: #10B981;
   --color-warning: #F59E0B;
   --color-error: #EF4444;
-  --color-background: #F8FAFC;
-  --color-surface: #FFFFFF;
-  --color-text-primary: #1E293B;
-  --color-text-secondary: #64748B;
+  --color-background: #FFFFFF;
+  --color-surface: #F8FAFC;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
   --color-text-light: #94A3B8;
-  
-  --font-family: 'Inter';
+
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-heading: 'Plus Jakarta Sans', 'Inter', sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -49,7 +46,10 @@
   --font-size-2xl: 1.5rem;
   --font-size-3xl: 1.875rem;
   --font-size-4xl: 2.25rem;
-  
+
+  --gradient-primary: linear-gradient(135deg, #2563EB, #3B82F6);
+  --gradient-hero: linear-gradient(135deg, #0F172A, #1E293B);
+
   --container-max-width: 1280px;
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
@@ -57,12 +57,12 @@
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
   --spacing-2xl: 4rem;
-  
+
   --border-radius-sm: 0.25rem;
   --border-radius-base: 0.5rem;
   --border-radius-lg: 0.75rem;
   --border-radius-xl: 1rem;
-  
+
   --animation-duration: 300ms;
   --animation-easing: ease-in-out;
 }

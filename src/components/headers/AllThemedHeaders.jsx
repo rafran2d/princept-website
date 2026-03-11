@@ -58,13 +58,13 @@ export const DefaultHeader = ({ theme, settings, navigationItems, scrollToSectio
               </div>
             </div>
 
-            {/* Menu Navigation au centre - animation 3D */}
-            <nav className="agency-header-nav-3d hidden lg:flex items-center space-x-6 flex-1 justify-center">
+            {/* Menu Navigation au centre */}
+            <nav className="hidden lg:flex items-center space-x-6 flex-1 justify-center">
               {navigationItems?.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection?.(item.type, item.sectionId)}
-                  className="agency-header-nav-link-3d text-sm font-medium uppercase tracking-wide transition-all duration-300 whitespace-nowrap text-gray-300 hover:text-white"
+                  className="agency-nav-link text-sm font-medium uppercase tracking-wide transition-all duration-300 whitespace-nowrap text-gray-300 hover:text-white"
                 >
                   {item.label}
                 </button>
@@ -96,7 +96,7 @@ export const DefaultHeader = ({ theme, settings, navigationItems, scrollToSectio
           {/* Mobile Navigation */}
           {isMenuOpen && (
             <div className="md:hidden border-t border-gray-700">
-              <div className="agency-header-mobile-nav-3d px-6 py-4 bg-gray-900 space-y-2">
+              <div className="px-6 py-4 bg-gray-900 space-y-2">
                 {navigationItems?.map((item) => (
                   <button
                     key={item.id}
@@ -104,7 +104,7 @@ export const DefaultHeader = ({ theme, settings, navigationItems, scrollToSectio
                       scrollToSection?.(item.type, item.sectionId);
                       setIsMenuOpen(false);
                     }}
-                    className="agency-header-mobile-link-3d block w-full text-left px-4 py-3 text-base font-medium rounded-lg transition-all duration-300 uppercase tracking-wide text-gray-300 hover:text-white hover:bg-gray-800"
+                    className="block w-full text-left px-4 py-3 text-base font-medium rounded-lg transition-all duration-300 uppercase tracking-wide text-gray-300 hover:text-white hover:bg-gray-800"
                   >
                     {item.label}
                   </button>

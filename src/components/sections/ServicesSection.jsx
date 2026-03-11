@@ -70,7 +70,7 @@ const ServicesSection = ({ section, useGlobalStyles }) => {
     return () => observer.disconnect();
   }, [isDefaultTheme]);
 
-  const serviceCardDelay = 2;
+  const serviceCardDelay = 0.15;
 
   // Composant modal réutilisable (défini AVANT les returns pour être accessible partout)
   const ModalContent = () => {

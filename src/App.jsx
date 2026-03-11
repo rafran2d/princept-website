@@ -52,7 +52,7 @@ function App() {
     const getTheme = (themeId) => {
       const themes = {
         default: {
-          colors: { primary: '#3f6ff7', secondary: '#333333', accent: '#3f6ff7', background: '#FFFFFF', surface: '#FFFFFF', text: { primary: '#1a1a1a', secondary: '#666666', light: '#999999' } },
+          colors: { primary: '#2563EB', secondary: '#1E293B', accent: '#8B5CF6', background: '#FFFFFF', surface: '#F8FAFC', text: { primary: '#0F172A', secondary: '#475569', light: '#94A3B8' } },
           typography: { fontFamily: 'Plus Jakarta Sans', fontSizes: { xs: '0.75rem', sm: '0.875rem', base: '1rem', lg: '1.125rem', xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem', '4xl': '2.25rem' } },
           layout: { containerMaxWidth: '1280px', spacing: { xs: '0.5rem', sm: '1rem', md: '1.5rem', lg: '2rem', xl: '3rem', '2xl': '4rem' }, borderRadius: { sm: '0.5rem', base: '0.75rem', lg: '1rem', xl: '1.25rem' } }
         },
