@@ -244,3 +244,213 @@
 .admin-dark ::-webkit-scrollbar-thumb:hover {
   background: var(--admin-border-light);
 }
+
+/* ==========================================
+   DARK MODE: Override hardcoded light colors
+   ========================================== */
+
+/* --- Gradient backgrounds (from-*-50) → solid dark --- */
+.admin-dark [class~="from-gray-50"],
+.admin-dark [class~="from-slate-50"],
+.admin-dark [class~="from-blue-50"],
+.admin-dark [class~="from-indigo-50"],
+.admin-dark [class~="from-green-50"],
+.admin-dark [class~="from-emerald-50"],
+.admin-dark [class~="from-purple-50"],
+.admin-dark [class~="from-violet-50"],
+.admin-dark [class~="from-pink-50"],
+.admin-dark [class~="from-rose-50"],
+.admin-dark [class~="from-orange-50"],
+.admin-dark [class~="from-amber-50"],
+.admin-dark [class~="from-red-50"],
+.admin-dark [class~="from-cyan-50"],
+.admin-dark [class~="from-sky-50"],
+.admin-dark [class~="from-teal-50"],
+.admin-dark [class~="from-yellow-50"] {
+  background: var(--admin-bg-tertiary) !important;
+}
+
+/* --- Solid bg-white → dark primary --- */
+.admin-dark [class~="bg-white"] {
+  background-color: var(--admin-bg-primary) !important;
+}
+
+/* --- Semi-transparent white backgrounds --- */
+.admin-dark [class*="bg-white/"] {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* --- Solid neutral light backgrounds → dark --- */
+.admin-dark [class~="bg-gray-50"],
+.admin-dark [class~="bg-slate-50"],
+.admin-dark [class~="bg-gray-100"],
+.admin-dark [class~="bg-slate-100"] {
+  background-color: var(--admin-bg-tertiary) !important;
+}
+
+/* --- Colored light backgrounds → subtle tinted dark --- */
+.admin-dark [class~="bg-blue-50"],
+.admin-dark [class~="bg-blue-100"] {
+  background-color: rgba(96, 165, 250, 0.1) !important;
+}
+
+.admin-dark [class~="bg-indigo-50"],
+.admin-dark [class~="bg-indigo-100"] {
+  background-color: rgba(129, 140, 248, 0.1) !important;
+}
+
+.admin-dark [class~="bg-green-50"],
+.admin-dark [class~="bg-green-100"],
+.admin-dark [class~="bg-emerald-50"],
+.admin-dark [class~="bg-emerald-100"] {
+  background-color: rgba(52, 211, 153, 0.1) !important;
+}
+
+.admin-dark [class~="bg-red-50"],
+.admin-dark [class~="bg-red-100"] {
+  background-color: rgba(248, 113, 113, 0.1) !important;
+}
+
+.admin-dark [class~="bg-orange-50"],
+.admin-dark [class~="bg-orange-100"],
+.admin-dark [class~="bg-amber-50"],
+.admin-dark [class~="bg-amber-100"],
+.admin-dark [class~="bg-yellow-50"],
+.admin-dark [class~="bg-yellow-100"] {
+  background-color: rgba(251, 191, 36, 0.1) !important;
+}
+
+.admin-dark [class~="bg-purple-50"],
+.admin-dark [class~="bg-purple-100"],
+.admin-dark [class~="bg-violet-50"],
+.admin-dark [class~="bg-violet-100"] {
+  background-color: rgba(167, 139, 250, 0.1) !important;
+}
+
+.admin-dark [class~="bg-pink-50"],
+.admin-dark [class~="bg-pink-100"],
+.admin-dark [class~="bg-rose-50"],
+.admin-dark [class~="bg-rose-100"] {
+  background-color: rgba(244, 114, 182, 0.1) !important;
+}
+
+.admin-dark [class~="bg-cyan-50"],
+.admin-dark [class~="bg-sky-50"],
+.admin-dark [class~="bg-teal-50"],
+.admin-dark [class~="bg-cyan-100"],
+.admin-dark [class~="bg-sky-100"],
+.admin-dark [class~="bg-teal-100"] {
+  background-color: rgba(34, 211, 238, 0.1) !important;
+}
+
+/* --- Light borders → dark border --- */
+.admin-dark [class~="border-gray-100"],
+.admin-dark [class~="border-gray-200"],
+.admin-dark [class~="border-gray-300"],
+.admin-dark [class~="border-slate-100"],
+.admin-dark [class~="border-slate-200"],
+.admin-dark [class~="border-blue-100"],
+.admin-dark [class~="border-blue-200"],
+.admin-dark [class~="border-indigo-100"],
+.admin-dark [class~="border-indigo-200"],
+.admin-dark [class~="border-green-100"],
+.admin-dark [class~="border-green-200"],
+.admin-dark [class~="border-emerald-200"],
+.admin-dark [class~="border-orange-200"],
+.admin-dark [class~="border-amber-200"],
+.admin-dark [class~="border-red-200"],
+.admin-dark [class~="border-purple-200"],
+.admin-dark [class~="border-pink-200"],
+.admin-dark [class~="border-cyan-200"],
+.admin-dark [class~="border-teal-200"],
+.admin-dark [class~="border-yellow-200"] {
+  border-color: var(--admin-border) !important;
+}
+
+/* --- Hover states → dark hover --- */
+.admin-dark .hover\:bg-gray-50:hover,
+.admin-dark .hover\:bg-gray-100:hover,
+.admin-dark .hover\:bg-slate-50:hover {
+  background-color: var(--admin-bg-tertiary) !important;
+}
+
+.admin-dark .hover\:bg-blue-50:hover,
+.admin-dark .hover\:bg-blue-100:hover {
+  background-color: rgba(96, 165, 250, 0.15) !important;
+}
+
+.admin-dark .hover\:bg-green-50:hover,
+.admin-dark .hover\:bg-green-100:hover {
+  background-color: rgba(52, 211, 153, 0.15) !important;
+}
+
+.admin-dark .hover\:bg-red-50:hover,
+.admin-dark .hover\:bg-red-100:hover {
+  background-color: rgba(248, 113, 113, 0.15) !important;
+}
+
+/* --- Ring/focus colors --- */
+.admin-dark [class~="ring-gray-200"],
+.admin-dark .focus\:ring-gray-200:focus {
+  --tw-ring-color: var(--admin-border) !important;
+}
+
+/* --- border-t/b with light gray inheriting wrong color --- */
+.admin-dark [class~="border-t"][class~="border-gray-100"],
+.admin-dark [class~="border-t"][class~="border-gray-200"] {
+  border-color: var(--admin-border) !important;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+/* Sidebar overlay backdrop */
+.admin-sidebar-overlay {
+  animation: admin-fade-in 0.2s ease-out;
+}
+
+@keyframes admin-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Sidebar mobile transition */
+.admin-sidebar-mobile {
+  will-change: transform;
+}
+
+/* Focus visible for accessibility */
+.admin-container button:focus-visible,
+.admin-container a:focus-visible {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* Better hover states */
+.admin-nav-item {
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+}
+
+.admin-nav-item:active {
+  transform: scale(0.98);
+}
+
+/* Mobile cards */
+@media (max-width: 640px) {
+  .admin-card {
+    padding: 1rem;
+  }
+
+  .admin-section-card {
+    padding: 1rem;
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1023px) {
+  .admin-sidebar {
+    border-right: none !important;
+  }
+}

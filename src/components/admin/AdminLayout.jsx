@@ -13,7 +13,9 @@ import {
   User,
   Mail,
   FileText,
-  Database
+  Database,
+  Menu,
+  X
 } from 'lucide-react';
 import { useSections } from '../../hooks/useSections';
 import { AdminThemeProviderAPI, useAdminThemeAPI } from '../../contexts/AdminThemeContextAPI';
@@ -38,6 +40,7 @@ const AdminLayoutContent = () => {
   const { isDark } = useAdminThemeAPI();
   const { user, logout } = useAuth();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState(location.pathname);
   const [forceRender, setForceRender] = useState(0);
   
@@ -97,97 +100,78 @@ const AdminLayoutContent = () => {
     <div className={`min-h-screen admin-container ${isDark ? 'admin-dark' : ''}`} style={{ backgroundColor: 'var(--admin-bg-secondary)' }}>
       {/* Header */}
       <header className="admin-header">
-        <div className="flex items-center justify-between px-8 py-6">
-          <div className="flex items-center space-x-6">
-            <Link to="/fr" className="group flex items-center space-x-3 admin-text-secondary hover:admin-text-primary transition-all duration-200">
-              <div className="p-2 rounded-lg admin-card group-hover:bg-blue-100 transition-colors duration-200">
-                <Home size={18} className="group-hover:text-blue-600 transition-colors duration-200" />
+        <div className="flex items-center justify-between px-4 py-2.5 lg:px-6 lg:py-3">
+          {/* Left side */}
+          <div className="flex items-center space-x-3">
+            {/* Hamburger - mobile only */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 rounded-lg hover:admin-bg-tertiary transition-colors admin-text-secondary"
+              aria-label="Ouvrir le menu"
+            >
+              <Menu size={20} />
+            </button>
+
+            <div className="flex items-center space-x-2.5">
+              <div className="p-1.5 bg-blue-600 rounded-lg">
+                <LayoutGrid size={18} className="text-white" />
               </div>
-              <span className="font-medium admin-text-primary">Retour au site</span>
-            </Link>
-            <div className="h-8 w-px" style={{ backgroundColor: 'var(--admin-border)' }} />
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-lg">
-                <LayoutGrid size={20} className="text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold admin-text-primary">
-                  Administration
-                </h1>
-                <p className="text-xs admin-text-muted font-medium">Panneau de contrôle</p>
-              </div>
+              <h1 className="text-base lg:text-lg font-semibold admin-text-primary">
+                Admin<span className="hidden sm:inline">istration</span>
+              </h1>
             </div>
           </div>
-          
-          <div className="flex items-center space-x-3">
-            {/* Bouton Ajouter Section */}
+
+          {/* Right side */}
+          <div className="flex items-center space-x-1.5 lg:space-x-2">
+            {/* Retour au site */}
+            <Link
+              to="/fr"
+              className="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-lg admin-text-secondary hover:admin-bg-tertiary transition-colors text-sm"
+            >
+              <Home size={16} />
+              <span className="hidden lg:inline">Site</span>
+            </Link>
+
+            {/* Ajouter Section */}
             <button
               onClick={() => setShowAddModal(true)}
-              className="group relative flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden"
-              style={{ color: 'white !important' }}
+              className="flex items-center space-x-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative flex items-center space-x-2" style={{ color: 'white' }}>
-                <div className="p-1 bg-white/20 rounded-lg">
-                  <Plus size={18} className="transition-transform duration-200 group-hover:rotate-90" style={{ color: 'white' }} />
-                </div>
-                <span style={{ color: 'white' }}>Ajouter Section</span>
-              </div>
-              <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <Plus size={16} style={{ color: 'white' }} />
+              <span className="hidden lg:inline" style={{ color: 'white' }}>Ajouter</span>
             </button>
-            
-            {/* Bouton Aperçu */}
+
+            {/* Aperçu */}
             <Link
               to="/fr"
               target="_blank"
-              className="group relative flex items-center space-x-2 bg-gradient-to-r from-slate-500 to-slate-600 px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden"
-              style={{ color: 'white !important' }}
+              className="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-lg admin-text-secondary hover:admin-bg-tertiary transition-colors text-sm"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-600 to-slate-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative flex items-center space-x-2" style={{ color: 'white' }}>
-                <div className="p-1 bg-white/20 rounded-lg">
-                  <Eye size={18} className="transition-transform duration-200 group-hover:scale-110" style={{ color: 'white' }} />
-                </div>
-                <span style={{ color: 'white' }}>Aperçu</span>
-              </div>
-              <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <Eye size={16} />
+              <span className="hidden lg:inline">Aperçu</span>
             </Link>
 
-            {/* User Info & Logout */}
-            <div className="flex items-center space-x-3">
-              {/* User Info Button */}
-              <Link
-                to="/admin/user"
-                className="group relative flex items-center space-x-2 bg-gradient-to-r from-gray-500 to-gray-600 px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden"
-                style={{ color: 'white !important' }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-600 to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative flex items-center space-x-2" style={{ color: 'white' }}>
-                  <div className="p-1 bg-white/20 rounded-lg">
-                    <User size={18} className="transition-transform duration-200 group-hover:scale-110" style={{ color: 'white' }} />
-                  </div>
-                  <span style={{ color: 'white' }}>{user?.username}</span>
-                </div>
-                <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </Link>
-              
-              {/* Logout Button */}
-              <button
-                onClick={logout}
-                className="group relative flex items-center space-x-2 bg-gradient-to-r from-zinc-500 to-zinc-600 px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden"
-                title="Se déconnecter"
-                style={{ color: 'white !important' }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-zinc-600 to-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative flex items-center space-x-2" style={{ color: 'white' }}>
-                  <div className="p-1 bg-white/20 rounded-lg">
-                    <LogOut size={18} className="transition-transform duration-200 group-hover:rotate-12" style={{ color: 'white' }} />
-                  </div>
-                  <span style={{ color: 'white' }}>Déconnexion</span>
-                </div>
-                <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </button>
-            </div>
+            {/* Separator */}
+            <div className="hidden lg:block h-6 w-px mx-1" style={{ backgroundColor: 'var(--admin-border)' }} />
+
+            {/* User - desktop */}
+            <Link
+              to="/admin/user"
+              className="hidden lg:flex items-center space-x-1.5 px-3 py-2 rounded-lg admin-text-secondary hover:admin-bg-tertiary transition-colors text-sm"
+            >
+              <User size={16} />
+              <span>{user?.username}</span>
+            </Link>
+
+            {/* Logout - desktop */}
+            <button
+              onClick={logout}
+              className="hidden lg:flex items-center space-x-1.5 px-3 py-2 rounded-lg admin-text-secondary hover:admin-bg-tertiary hover:text-red-500 transition-colors text-sm"
+              title="Se déconnecter"
+            >
+              <LogOut size={16} />
+            </button>
 
             {/* Theme Toggle */}
             <ThemeToggle />
@@ -196,18 +180,38 @@ const AdminLayoutContent = () => {
       </header>
 
       <div className="flex">
+        {/* Mobile sidebar overlay backdrop */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden admin-sidebar-overlay"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <aside className="w-64 admin-sidebar shadow-sm min-h-screen">
-          <nav className="p-6">
-            <div className="mb-6">
-              <h2 className="text-xs font-bold admin-text-muted uppercase tracking-wider mb-4">Navigation</h2>
+        <aside className={`
+          fixed inset-y-0 left-0 z-50 w-72 admin-sidebar shadow-lg admin-sidebar-mobile
+          transform transition-transform duration-300 ease-in-out overflow-y-auto
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:static lg:translate-x-0 lg:w-64 lg:shadow-sm lg:min-h-screen lg:z-auto
+        `}>
+          <nav className="p-4 lg:p-6">
+            {/* Mobile close button + header */}
+            <div className="flex items-center justify-between mb-6 lg:mb-6">
+              <h2 className="text-xs font-bold admin-text-muted uppercase tracking-wider">Navigation</h2>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="lg:hidden p-1.5 rounded-lg admin-nav-item hover:admin-bg-tertiary transition-colors"
+                aria-label="Fermer le menu"
+              >
+                <X size={20} />
+              </button>
             </div>
             <ul className="space-y-3">
               {sidebarItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
-                
-                // Couleurs spécifiques pour chaque section
+
                 const getItemColors = (itemId) => {
                   const colorMap = {
                     sections: { bg: 'from-blue-50 to-indigo-50', border: 'border-blue-200', text: 'text-blue-700', icon: 'text-blue-600', shadow: 'shadow-blue-100' },
@@ -229,8 +233,8 @@ const AdminLayoutContent = () => {
                   <li key={item.id}>
                     <button
                       onClick={() => {
-                        // Simple navigation - useEffect will handle the state update
                         navigate(item.path, { replace: true });
+                        setSidebarOpen(false);
                       }}
                       className={`w-full text-left group relative flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                         active
@@ -238,38 +242,34 @@ const AdminLayoutContent = () => {
                           : 'admin-nav-item border border-transparent'
                       }`}
                     >
-                      {/* Indicateur actif */}
                       {active && (
                         <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 ${colors.icon.replace('text-', 'bg-')} rounded-r-full`} />
                       )}
-                      
-                      {/* Icône avec design amélioré */}
+
                       <div className={`flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 ${
-                        active 
-                          ? `bg-white/70 ${colors.icon} shadow-sm` 
+                        active
+                          ? `bg-white/70 ${colors.icon} shadow-sm`
                           : 'group-hover:admin-bg-tertiary admin-text-secondary'
                       }`}>
                         <Icon size={18} className="transition-transform duration-200 group-hover:scale-110" />
                       </div>
-                      
+
                       <span className={`text-sm transition-all duration-200 ${
                         active ? 'font-bold' : 'font-medium group-hover:font-semibold'
                       }`}>
                         {item.label}
                       </span>
 
-                      {/* Badge de notification si nécessaire */}
                       {item.id === 'sections' && sections.length > 0 && (
                         <div className={`ml-auto flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold ${
-                          active 
-                            ? 'bg-white text-blue-600 shadow-sm' 
+                          active
+                            ? 'bg-white text-blue-600 shadow-sm'
                             : 'bg-blue-100 text-blue-600'
                         }`}>
                           {sections.length}
                         </div>
                       )}
 
-                      {/* Effet de survol */}
                       <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-r from-white/10 to-white/5 pointer-events-none" />
                     </button>
                   </li>
@@ -285,9 +285,43 @@ const AdminLayoutContent = () => {
               </div>
               <div className="flex-1 border-t border-gray-200"></div>
             </div>
+
+            {/* Mobile-only: Aperçu, User, Logout */}
+            <div className="lg:hidden space-y-2 mb-6">
+              <Link
+                to="/fr"
+                target="_blank"
+                onClick={() => setSidebarOpen(false)}
+                className="flex items-center space-x-3 px-4 py-3 rounded-xl admin-nav-item border border-transparent transition-all duration-200"
+              >
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg admin-text-secondary">
+                  <Eye size={18} />
+                </div>
+                <span className="text-sm font-medium">Aperçu du site</span>
+              </Link>
+              <Link
+                to="/admin/user"
+                onClick={() => setSidebarOpen(false)}
+                className="flex items-center space-x-3 px-4 py-3 rounded-xl admin-nav-item border border-transparent transition-all duration-200"
+              >
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg admin-text-secondary">
+                  <User size={18} />
+                </div>
+                <span className="text-sm font-medium">{user?.username}</span>
+              </Link>
+              <button
+                onClick={() => { setSidebarOpen(false); logout(); }}
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl admin-nav-item border border-transparent transition-all duration-200 text-left"
+              >
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg admin-text-secondary">
+                  <LogOut size={18} />
+                </div>
+                <span className="text-sm font-medium">Déconnexion</span>
+              </button>
+            </div>
           </nav>
 
-          {/* Current Theme - Design amélioré */}
+          {/* Current Theme */}
           <div className="p-4 border-t border-gray-100">
             <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center">
               <Brush className="w-4 h-4 mr-2 text-blue-600" />
@@ -296,13 +330,11 @@ const AdminLayoutContent = () => {
             {getCurrentTheme() && (
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100 shadow-sm">
                 <div className="flex items-center space-x-3 mb-3">
-                  <div 
+                  <div
                     className="w-8 h-8 rounded-lg shadow-md border-2 border-white flex items-center justify-center"
                     style={{ backgroundColor: getCurrentTheme().colors.primary }}
                   >
-                    <div 
-                      className="w-3 h-3 rounded-full bg-white opacity-80"
-                    />
+                    <div className="w-3 h-3 rounded-full bg-white opacity-80" />
                   </div>
                   <div>
                     <div className="text-sm font-bold text-gray-900">{getCurrentTheme().name}</div>
@@ -315,15 +347,15 @@ const AdminLayoutContent = () => {
                   {getCurrentTheme().description}
                 </div>
                 <div className="flex items-center space-x-1 mt-3">
-                  <div 
+                  <div
                     className="w-3 h-3 rounded-full border border-gray-200"
                     style={{ backgroundColor: getCurrentTheme().colors.primary }}
                   />
-                  <div 
+                  <div
                     className="w-3 h-3 rounded-full border border-gray-200"
                     style={{ backgroundColor: getCurrentTheme().colors.secondary }}
                   />
-                  <div 
+                  <div
                     className="w-3 h-3 rounded-full border border-gray-200"
                     style={{ backgroundColor: getCurrentTheme().colors.accent }}
                   />
@@ -333,14 +365,13 @@ const AdminLayoutContent = () => {
             )}
           </div>
 
-          {/* Sections Summary - Design amélioré */}
+          {/* Sections Summary */}
           <div className="p-4 border-t border-gray-100">
             <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center">
               <LayoutGrid className="w-4 h-4 mr-2 text-green-600" />
               Résumé
             </h3>
             <div className="space-y-3">
-              {/* Total sections */}
               <div className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg p-3 border border-gray-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
@@ -350,8 +381,6 @@ const AdminLayoutContent = () => {
                   <span className="text-lg font-bold text-blue-600">{sections.length}</span>
                 </div>
               </div>
-              
-              {/* Sections actives */}
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-3 border border-green-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
@@ -363,8 +392,6 @@ const AdminLayoutContent = () => {
                   </span>
                 </div>
               </div>
-              
-              {/* Sections masquées */}
               <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg p-3 border border-orange-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
@@ -381,7 +408,7 @@ const AdminLayoutContent = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-3" style={{ backgroundColor: 'var(--admin-bg-secondary)' }}>
+        <main className="flex-1 p-4 lg:p-6" style={{ backgroundColor: 'var(--admin-bg-secondary)' }}>
           {/* Alerte pour les identifiants par défaut */}
           <DefaultPasswordAlert />
           
@@ -408,19 +435,19 @@ const AdminLayoutContent = () => {
 
       {/* Add Section Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="admin-card rounded-xl p-6 max-w-4xl max-h-[80vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold admin-text-primary">Ajouter une section</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="admin-card rounded-xl p-4 sm:p-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold admin-text-primary">Ajouter une section</h2>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="admin-text-muted hover:text-red-500 transition-colors"
+                className="admin-text-muted hover:text-red-500 transition-colors p-1"
               >
-                ✕
+                <X size={20} />
               </button>
             </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {getSectionTemplates().map((template) => (
                 <div
                   key={template.type}
