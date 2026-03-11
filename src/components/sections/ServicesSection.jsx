@@ -57,22 +57,6 @@ const ServicesSection = ({ section, useGlobalStyles }) => {
   const [selectedService, setSelectedService] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Debug modal state
-  useEffect(() => {
-    if (isModalOpen) {
-      console.log('Modal is open:', { selectedService: selectedService?.title });
-      // Vérifier si le modal est dans le DOM après un court délai
-      setTimeout(() => {
-        const modalElements = document.querySelectorAll('[style*="zIndex: 99999"]');
-        console.log('Modal elements in DOM:', modalElements.length);
-        if (modalElements.length > 0) {
-          console.log('Modal found in DOM:', modalElements[0]);
-          console.log('Modal computed styles:', window.getComputedStyle(modalElements[0]));
-        }
-      }, 100);
-    }
-  }, [isModalOpen, selectedService]);
-
   useEffect(() => {
     const el = servicesSectionRef.current;
     if (!el || !isDefaultTheme) return;
@@ -95,7 +79,6 @@ const ServicesSection = ({ section, useGlobalStyles }) => {
     const modalElement = (
       <div 
         onClick={() => {
-          console.log('Closing modal - backdrop clicked');
           setIsModalOpen(false);
         }}
         style={{ 
@@ -115,7 +98,6 @@ const ServicesSection = ({ section, useGlobalStyles }) => {
         <div 
           onClick={(e) => {
             e.stopPropagation();
-            console.log('Modal content clicked');
           }}
           style={{ 
             backgroundColor: 'white',
@@ -247,7 +229,6 @@ const ServicesSection = ({ section, useGlobalStyles }) => {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          console.log('Opening modal for service:', service.title);
                           setSelectedService(service);
                           setIsModalOpen(true);
                         }}
@@ -394,7 +375,6 @@ const ServicesSection = ({ section, useGlobalStyles }) => {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          console.log('Opening modal for service:', service.title);
                           setSelectedService(service);
                           setIsModalOpen(true);
                         }}

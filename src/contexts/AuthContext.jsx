@@ -21,14 +21,14 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         setUser(user);
         setIsAuthenticated(true);
-        console.log('✅ Utilisateur authentifié:', user.username);
+
       } else {
         setUser(null);
         setIsAuthenticated(false);
-        console.log('❌ Aucune authentification valide');
+
       }
     } catch (error) {
-      console.error('❌ Erreur vérification auth:', error);
+
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -41,10 +41,10 @@ export const AuthProvider = ({ children }) => {
       const data = await authService.login(username, password);
       setUser(data.user);
       setIsAuthenticated(true);
-      console.log('🔐 Connexion réussie:', data.user.username);
+
       return data;
     } catch (error) {
-      console.error('❌ Erreur connexion:', error);
+
       throw error;
     }
   };
@@ -54,9 +54,9 @@ export const AuthProvider = ({ children }) => {
       await authService.logout();
       setUser(null);
       setIsAuthenticated(false);
-      console.log('🚪 Déconnexion réussie');
+
     } catch (error) {
-      console.error('❌ Erreur déconnexion:', error);
+
     }
   };
 
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
         confirmPassword: newPassword
       });
       
-      console.log('🔒 Mot de passe changé avec succès');
+
       
       // Déconnexion automatique pour des raisons de sécurité
       // L'utilisateur devra se reconnecter avec son nouveau mot de passe
@@ -78,14 +78,14 @@ export const AuthProvider = ({ children }) => {
       
       return result;
     } catch (error) {
-      console.error('❌ Erreur changement mot de passe:', error);
+
       throw error;
     }
   };
 
   const updateUserInfo = (updatedUserInfo) => {
     setUser(prev => ({ ...prev, ...updatedUserInfo }));
-    console.log('👤 Informations utilisateur mises à jour:', updatedUserInfo);
+
   };
 
   const value = {

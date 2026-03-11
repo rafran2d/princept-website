@@ -87,11 +87,10 @@ class SectionStore {
   loadFromStorage() {
     try {
       const sections = dataStorage.loadFromLocalStorage(this.storageKey) || [];
-      console.log('📦 SectionStore - Sections chargées:', sections.length, 'sections');
-      console.log('📦 IDs chargés:', sections.map(s => ({ id: s.id, type: s.type })));
+
       return sections;
     } catch (error) {
-      console.error('Error loading sections from storage:', error);
+
       return [];
     }
   }
@@ -100,7 +99,7 @@ class SectionStore {
     try {
       dataStorage.saveToLocalStorage(this.storageKey, this.sections);
     } catch (error) {
-      console.error('Error saving sections to storage:', error);
+
     }
   }
 

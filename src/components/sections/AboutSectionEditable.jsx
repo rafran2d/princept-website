@@ -19,8 +19,6 @@ const iconMap = {
 const AboutSectionEditable = ({ section, useGlobalStyles, isEditing = false }) => {
   const { t, currentLanguage, getActiveLanguages } = useFrontendLanguage();
 
-  console.log('🔍 ABOUT - AboutSectionEditable isEditing:', isEditing);
-
   // Obtenir le code de la langue courante pour smartNavigate
   const currentLangCode = getActiveLanguages().find(l => l.id === currentLanguage)?.code || 'fr';
 

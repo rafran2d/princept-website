@@ -72,7 +72,6 @@ const InlineImageEditor = ({
           onImageChange(base64String);
         }
 
-        console.log(`✅ Image mise à jour pour ${fieldPath}`);
         setIsUploading(false);
       };
 
@@ -83,7 +82,6 @@ const InlineImageEditor = ({
 
       reader.readAsDataURL(file);
     } catch (err) {
-      console.error('❌ Erreur upload image:', err);
       setError(err.message || 'Erreur lors de l\'upload');
       setIsUploading(false);
     }
@@ -100,9 +98,7 @@ const InlineImageEditor = ({
         onImageChange('');
       }
 
-      console.log(`🗑️ Image supprimée pour ${fieldPath}`);
     } catch (err) {
-      console.error('❌ Erreur suppression image:', err);
       setError(err.message);
     }
   };

@@ -209,7 +209,7 @@ const ServicesSectionEditable = ({ section, useGlobalStyles, isEditing = false }
                       <button
                         className="font-medium text-sm flex items-center justify-center transition-colors duration-200 mx-auto group"
                         style={{ color: 'var(--color-primary, #3B82F6)' }}
-                        onClick={() => console.log(`Learn more about ${service.title}`)}
+                        onClick={() => {}}
                         onMouseEnter={(e) => {
                           e.target.style.color = 'var(--color-secondary, #64748B)';
                         }}

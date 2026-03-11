@@ -211,7 +211,6 @@ export const useFrontendLanguage = () => {
 
       // Sécurité supplémentaire : si le résultat est encore un objet
       if (result && typeof result === 'object') {
-        console.error('⚠️ t() returned an object:', { input: multilingualContent, result });
         return String(fallback || '');
       }
 
@@ -223,7 +222,6 @@ export const useFrontendLanguage = () => {
       // Dernier recours
       return String(fallback || '');
     } catch (error) {
-      console.error('❌ Error in t() function:', error);
       return String(fallback || '');
     }
   };

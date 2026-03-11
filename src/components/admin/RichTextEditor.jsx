@@ -38,20 +38,6 @@ const getCorrectFlag = (flag, code) => {
   return getFlagFromCode(code);
 };
 
-// Supprimer les avertissements findDOMNode en développement (provenant de react-quill)
-if (import.meta.env.DEV) {
-  const originalError = console.error;
-  console.error = (...args) => {
-    if (
-      typeof args[0] === 'string' &&
-      (args[0].includes('findDOMNode') || args[0].includes('DOMNodeInserted'))
-    ) {
-      return; // Ignorer les avertissements findDOMNode de react-quill
-    }
-    originalError.apply(console, args);
-  };
-}
-
 const RichTextEditor = ({ value = {}, onChange, placeholder = '', className = '' }) => {
   const { getActiveLanguages, currentAdminLanguage, setAdminLanguage } = useLanguage();
   const activeLanguages = getActiveLanguages();

@@ -12,11 +12,6 @@ class ApiService {
   async fetchWithRetry(endpoint, options = {}, retries = 3) {
     const url = `${this.baseURL}${endpoint}`;
     
-    // Log pour debug
-    if (endpoint === '/api/health') {
-      console.log(`🔍 Tentative de connexion à: ${url}`);
-    }
-    
     for (let i = 0; i < retries; i++) {
       try {
         const response = await fetch(url, {
@@ -38,44 +33,18 @@ class ApiService {
           const errorMessage = errorData.error || errorData.message || `HTTP ${response.status}`;
           const errorDetails = errorData.details || errorData.error || '';
           const fullError = errorDetails ? `${errorMessage}: ${errorDetails}` : errorMessage;
-          
-          // Log détaillé pour /api/health
-          if (endpoint === '/api/health') {
-            console.error(`❌ Health check échoué:`, {
-              status: response.status,
-              statusText: response.statusText,
-              error: fullError,
-              url
-            });
-          }
-          
+
           throw new Error(fullError);
         }
 
         const data = await response.json();
-        
-        // Log pour debug
-        if (endpoint === '/api/health') {
-          console.log(`✅ Health check réussi:`, data);
-        }
-        
+
         return data;
       } catch (error) {
         const isLastAttempt = i === retries - 1;
         const errorMsg = error.message || error.toString();
         
-        console.warn(`⚠️ Tentative ${i + 1}/${retries} échouée pour ${endpoint}:`, errorMsg);
-        
         if (isLastAttempt) {
-          // Log détaillé pour la dernière tentative
-          if (endpoint === '/api/health') {
-            console.error(`❌ Échec définitif health check:`, {
-              url,
-              error: errorMsg,
-              baseURL: this.baseURL,
-              endpoint
-            });
-          }
           throw new Error(`Échec API après ${retries} tentatives: ${errorMsg}`);
         }
         
@@ -111,7 +80,6 @@ class ApiService {
       }
       return { status: 'ERROR', error: 'Réponse de santé invalide' };
     } catch (error) {
-      console.error('❌ Erreur healthCheck:', error);
       return { status: 'ERROR', error: error.message };
     }
   }
@@ -495,7 +463,6 @@ class ApiService {
       };
 
     } catch (error) {
-      console.error('Erreur migration complète:', error);
       throw error;
     }
   }
@@ -510,7 +477,6 @@ class ApiService {
       await this.getHealth();
       return true;
     } catch (error) {
-      console.warn('API non accessible:', error.message);
       return false;
     }
   }
@@ -551,7 +517,6 @@ class ApiService {
     keysToRemove.forEach(key => {
       if (localStorage.getItem(key)) {
         localStorage.removeItem(key);
-        console.log(`🗑️ localStorage nettoyé: ${key}`);
       }
     });
 

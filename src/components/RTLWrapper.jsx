@@ -21,7 +21,6 @@ const RTLWrapper = ({ children }) => {
       document.body.classList.remove('rtl');
     }
 
-    console.log(`🌍 RTL Direction set to: ${isRTL ? 'RTL' : 'LTR'} for language: ${currentLang?.name}`);
   }, [isRTL, currentLang]);
 
   return (

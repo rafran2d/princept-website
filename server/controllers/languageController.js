@@ -7,7 +7,6 @@ class LanguageController {
       const languages = await Language.findAll();
       res.json(languages);
     } catch (error) {
-      console.error('Erreur lors de la récupération des langues:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }
@@ -18,7 +17,6 @@ class LanguageController {
       const languages = await Language.findActive();
       res.json(languages);
     } catch (error) {
-      console.error('Erreur lors de la récupération des langues actives:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }
@@ -32,7 +30,6 @@ class LanguageController {
       }
       res.json(language);
     } catch (error) {
-      console.error('Erreur lors de la récupération de la langue par défaut:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }
@@ -49,7 +46,6 @@ class LanguageController {
       
       res.json(language);
     } catch (error) {
-      console.error('Erreur lors de la récupération de la langue:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }
@@ -92,7 +88,6 @@ class LanguageController {
       const newLanguage = await Language.create(languageData);
       res.status(201).json(newLanguage);
     } catch (error) {
-      console.error('Erreur lors de la création de la langue:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }
@@ -130,7 +125,6 @@ class LanguageController {
       const updatedLanguage = await Language.update(id, languageData);
       res.json(updatedLanguage);
     } catch (error) {
-      console.error('Erreur lors de la mise à jour de la langue:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }
@@ -142,7 +136,6 @@ class LanguageController {
       const updatedLanguage = await Language.toggleActive(id);
       res.json(updatedLanguage);
     } catch (error) {
-      console.error('Erreur lors du basculement de la langue:', error);
       if (error.message === 'Langue introuvable') {
         return res.status(404).json({ error: error.message });
       }
@@ -160,7 +153,6 @@ class LanguageController {
       const updatedLanguage = await Language.setAsDefault(id);
       res.json(updatedLanguage);
     } catch (error) {
-      console.error('Erreur lors de la définition de la langue par défaut:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }
@@ -172,7 +164,6 @@ class LanguageController {
       await Language.delete(id);
       res.json({ message: 'Langue supprimée avec succès' });
     } catch (error) {
-      console.error('Erreur lors de la suppression de la langue:', error);
       if (error.message === 'Langue introuvable') {
         return res.status(404).json({ error: error.message });
       }
@@ -195,7 +186,6 @@ class LanguageController {
       const reorderedLanguages = await Language.reorder(languageOrder);
       res.json(reorderedLanguages);
     } catch (error) {
-      console.error('Erreur lors de la réorganisation des langues:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }

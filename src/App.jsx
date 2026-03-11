@@ -16,7 +16,7 @@ const AppContent = () => {
   
   // Si l'utilisateur admin a le mot de passe par défaut, bloquer complètement l'application
   if (isAuthenticated && needsPasswordChange) {
-    console.log('🚨 SÉCURITÉ: Mot de passe par défaut détecté - Blocage de l\'application');
+
     return <ForcePasswordChange />;
   }
   
@@ -42,7 +42,7 @@ const hexToRgb = (hex) => {
 };
 
 function App() {
-  console.log('🌟 APP.JS - App component loaded, current URL:', window.location.href);
+
   const { settings } = useDesignSettings();
 
   useEffect(() => {
@@ -94,9 +94,9 @@ function App() {
       if (savedTheme) {
         try {
           currentTheme = JSON.parse(savedTheme);
-          console.log('✨ Thème personnalisé chargé:', activeThemeId);
+
         } catch (e) {
-          console.error('Erreur lors du chargement du thème personnalisé:', e);
+
         }
       }
     }
@@ -165,8 +165,6 @@ function App() {
     }
   }, [settings]);
 
-  console.log('🚦 APP.JS - Rendering routes...');
-  
   return (
     <AuthProvider>
       <LanguageProvider>

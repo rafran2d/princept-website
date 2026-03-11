@@ -157,7 +157,6 @@ const LanguageManagement = () => {
         await removeLanguage(deleteModal.language.id);
         setDeleteModal({ isOpen: false, language: null });
       } catch (error) {
-        console.error('❌ Erreur suppression:', error);
         alert(error.message || 'Erreur lors de la suppression de la langue');
         // Ne pas fermer la modale en cas d'erreur
       }

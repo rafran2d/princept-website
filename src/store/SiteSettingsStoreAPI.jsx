@@ -13,7 +13,7 @@ class SiteSettingsStoreAPI {
 
   async initialize() {
     try {
-      console.log('🔄 SiteSettingsStoreAPI - Initialisation...');
+
       this.isLoading = true;
       this.error = null;
       
@@ -23,7 +23,7 @@ class SiteSettingsStoreAPI {
       if (isApiAvailable) {
         await this.loadFromAPI();
       } else {
-        console.warn('⚠️ API non accessible, utilisation des paramètres par défaut');
+
         this.initializeDefaultSettings();
       }
       
@@ -32,9 +32,9 @@ class SiteSettingsStoreAPI {
       this.applyMetaUpdates();
       this.notify();
       
-      console.log('✅ SiteSettingsStoreAPI initialisé');
+
     } catch (error) {
-      console.error('❌ Erreur initialisation SiteSettingsStoreAPI:', error);
+
       this.error = error.message;
       this.isLoading = false;
       this.initializeDefaultSettings();
@@ -46,36 +46,30 @@ class SiteSettingsStoreAPI {
 
   async loadFromAPI() {
     try {
-      console.log('📡 Chargement paramètres site depuis API...');
+
       const apiSettings = await apiService.getSiteSettings();
       
-      // Debug pour site_title
-      if (apiSettings.site_title) {
-        console.log('🔍 Chargé depuis API site_title:', apiSettings.site_title);
-      }
+
+
       
       // Convertir les paramètres API vers le format du store
       this.settings = this.convertFromAPIFormat(apiSettings);
       
-      // Debug pour siteName après conversion
-      if (this.settings.siteName) {
-        console.log('🔍 Après conversion siteName:', this.settings.siteName);
-      }
+
+
       
       // S'assurer que les paramètres par défaut sont présents
       this.mergeWithDefaults();
       
-      // Debug pour siteName après merge
-      if (this.settings.siteName) {
-        console.log('🔍 Après merge siteName:', this.settings.siteName);
-      }
+
+
       
-      console.log('✅ Paramètres site chargés depuis API');
+
       
       // Notifier tous les composants des nouveaux paramètres
       this.notify();
     } catch (error) {
-      console.error('❌ Erreur chargement API site settings:', error);
+
       throw error;
     }
   }
@@ -556,7 +550,7 @@ class SiteSettingsStoreAPI {
         
         if (isValidMultilingualObject && hasOnlyLanguageCodes) {
           // C'est déjà un objet multilingue valide, ne pas le toucher
-          console.log(`✅ Objet multilingue valide pour ${field}, ignoré`);
+
           return;
         }
         
@@ -565,21 +559,21 @@ class SiteSettingsStoreAPI {
         const hasFrKey = keys.includes('fr');
         
         if (hasNumericKeys) {
-          console.log(`🔧 Détection corruption extrême pour ${field}:`, this.settings[field]);
+
           
           // Cas 1: Corruption avec clé 'fr' vide - préserver les autres langues
           if (hasFrKey && this.settings[field].fr === '') {
-            console.log(`🔧 Réinitialisation ${field} à vide (fr vide détecté)`);
+
             this.settings[field] = this.createMultilingualObject('', this.settings[field]);
           }
           // Cas 2: Format doublement corrompu détecté
           else if (keys.length > 50) {
-            console.log(`🔧 Corruption extrême détectée pour ${field} (${keys.length} clés), réinitialisation`);
+
             this.settings[field] = this.createMultilingualObject('');
           }
           // Cas 3: Format corrompu normal avec valeur 'fr' - préserver les autres langues
           else if (hasFrKey && this.settings[field].fr) {
-            console.log(`🔧 Correction format corrompu pour ${field}, préservation valeurs existantes`);
+
             this.settings[field] = this.createMultilingualObject('', this.settings[field]);
           }
           // Cas 4: Reconstruction depuis indices numériques
@@ -591,11 +585,11 @@ class SiteSettingsStoreAPI {
               .join('');
             // Créer un objet avec la valeur reconstruite en français seulement
             this.settings[field] = { fr: reconstructed, en: '' };
-            console.log(`🔧 Reconstruction depuis indices pour ${field}:`, reconstructed);
+
           }
           // Cas 5: Autres corruptions - réinitialiser
           else {
-            console.log(`🔧 Corruption non reconnue pour ${field}, réinitialisation`);
+
             this.settings[field] = this.createMultilingualObject('');
           }
         }
@@ -622,7 +616,7 @@ class SiteSettingsStoreAPI {
       if (typeof currentValue === 'string') {
         // Convertir la chaîne en objet multilingue
         current[finalKey] = this.createMultilingualObject(currentValue);
-        console.log(`🔧 Migration template email ${fieldPath} vers multilingue`);
+
       } else if (!currentValue) {
         // Créer un objet multilingue vide si n'existe pas
         current[finalKey] = this.createMultilingualObject('');
@@ -635,11 +629,11 @@ class SiteSettingsStoreAPI {
 
   async ensureMapFieldsExist() {
     try {
-      console.log('🔍 Vérification existence champs carte en base...');
+
       
       const isApiAvailable = await apiService.isApiReachable();
       if (!isApiAvailable) {
-        console.log('⚠️ API non accessible, impossible de créer les champs');
+
         return;
       }
 
@@ -655,20 +649,20 @@ class SiteSettingsStoreAPI {
       }
 
       if (fieldsToCreate.length > 0) {
-        console.log(`🔧 Création de ${fieldsToCreate.length} champs carte manquants...`);
+
         
         for (const [key, value] of fieldsToCreate) {
           await apiService.setSiteSetting(key, JSON.stringify(value), 'json');
-          console.log(`✅ Champ ${key} créé en base`);
+
         }
         
-        console.log('✅ Tous les champs carte sont maintenant en base');
+
       } else {
-        console.log('✅ Champs carte déjà présents en base');
+
       }
       
     } catch (error) {
-      console.error('❌ Erreur création champs carte:', error);
+
     }
   }
 
@@ -683,7 +677,7 @@ class SiteSettingsStoreAPI {
       
       // Si c'est une chaîne simple, convertir en objet
       if (typeof socialData === 'string') {
-        console.log(`🔄 Migration réseau social ${network}: "${socialData}" -> objet`);
+
         this.settings.social[network] = {
           url: socialData,
           visible: socialData.length > 0, // Visible si URL existe
@@ -727,22 +721,17 @@ class SiteSettingsStoreAPI {
     Object.entries(apiSettings).forEach(([key, value]) => {
       const mappedKey = keyMapping[key] || key;
       
-      // Debug pour détecter les conflits sur siteName
-      if (mappedKey === 'siteName' || key === 'siteName') {
-        console.log('🔍 Traitement clé qui affecte siteName:', { key, mappedKey, value });
-      }
+
+
       
       // Éviter les doublons : si une clé est déjà mappée, ignorer la clé directe
       if (key === 'siteName' && apiSettings.site_title) {
-        console.log('🚫 Ignoré siteName direct car site_title existe');
         return;
       }
       if (key === 'siteDescription' && apiSettings.site_description) {
-        console.log('🚫 Ignoré siteDescription direct car site_description existe');
         return;
       }
       if (key === 'siteTagline' && apiSettings.site_tagline) {
-        console.log('🚫 Ignoré siteTagline direct car site_tagline existe');
         return;
       }
       
@@ -770,7 +759,7 @@ class SiteSettingsStoreAPI {
           converted['officeHours'] = parsedOfficeHours;  // Version objet pour l'interface
           return;
         } catch (error) {
-          console.error('❌ Erreur parsing office_hours:', error);
+
           converted[mappedKey] = value;
           return;
         }
@@ -794,16 +783,13 @@ class SiteSettingsStoreAPI {
       )) {
         try {
           const parsed = JSON.parse(value);
-          // Debug pour siteName
-          if (key === 'site_title') {
-            console.log('🔍 Parsing site_title:', { original: value, parsed });
-          }
+
+
           // Vérifier si c'est bien un objet multilingue
           if (parsed && typeof parsed === 'object' && (parsed.fr || parsed.en || Object.keys(parsed).length > 0)) {
             converted[mappedKey] = parsed;
-            if (key === 'site_title') {
-              console.log('🔍 Assigné siteName:', converted[mappedKey]);
-            }
+
+
           } else {
             converted[mappedKey] = value;
           }
@@ -886,10 +872,8 @@ class SiteSettingsStoreAPI {
     try {
       const newSettings = { ...this.settings, ...updates };
       
-      // Debug pour siteName
-      if (updates.siteName) {
-        console.log('🔍 Mise à jour siteName:', updates.siteName);
-      }
+
+
       
       // Synchroniser officeHours avec office_hours (format legacy)
       if (updates.officeHours) {
@@ -902,10 +886,8 @@ class SiteSettingsStoreAPI {
         // Convertir et sauvegarder via API
         const apiFormat = this.convertToAPIFormat(newSettings);
         
-        // Debug pour site_title
-        if (apiFormat.site_title) {
-          console.log('🔍 Conversion API site_title:', apiFormat.site_title);
-        }
+
+
         
         // Sauvegarder les paramètres un par un pour éviter les erreurs de taille
         const promises = Object.entries(apiFormat).map(async ([key, value]) => {
@@ -914,32 +896,24 @@ class SiteSettingsStoreAPI {
                          typeof value === 'boolean' ? 'boolean' :
                          typeof value === 'number' ? 'number' : 'string';
             
-            // Debug spécial pour site_title
-            if (key === 'site_title') {
-              console.log('💾 Sauvegarde site_title:', { key, value, type });
-            }
-            
-            // Gérer spécialement les images base64 très longues
-            if (key === 'logoUrl' && typeof value === 'string' && value.startsWith('data:image/')) {
-              console.log('💾 Sauvegarde logo base64 (taille:', Math.round(value.length / 1024), 'KB)');
-            }
+
+
             
             return await apiService.setSiteSetting(key, value, type);
           } catch (error) {
-            console.error(`❌ Erreur sauvegarde ${key}:`, error.message);
             throw new Error(`Erreur sauvegarde ${key}: ${error.message}`);
           }
         });
-        
+
         await Promise.all(promises);
       }
-      
+
       // Mettre à jour localement
       this.settings = newSettings;
       this.applyMetaUpdates();
       this.notify();
     } catch (error) {
-      console.error('❌ Erreur mise à jour paramètres site:', error);
+
       throw error;
     }
   }
@@ -958,9 +932,9 @@ class SiteSettingsStoreAPI {
       this.settings = newSettings;
       this.notify();
       
-      console.log('📝 Mise à jour locale:', Object.keys(updates).join(', '));
+
     } catch (error) {
-      console.error('❌ Erreur mise à jour locale:', error);
+
       throw error;
     }
   }
@@ -981,20 +955,14 @@ class SiteSettingsStoreAPI {
                          typeof value === 'boolean' ? 'boolean' :
                          typeof value === 'number' ? 'number' : 'string';
             
-            // Gérer spécialement les images base64 très longues
-            if (key === 'logoUrl' && typeof value === 'string' && value.startsWith('data:image/')) {
-              console.log('💾 Sauvegarde logo base64 (taille:', Math.round(value.length / 1024), 'KB)');
-            }
-            
             return await apiService.setSiteSetting(key, value, type);
           } catch (error) {
-            console.error(`❌ Erreur sauvegarde ${key}:`, error.message);
             throw new Error(`Erreur sauvegarde ${key}: ${error.message}`);
           }
         });
         
         await Promise.all(promises);
-        console.log('✅ Tous les paramètres sauvegardés avec succès');
+
       } else {
         throw new Error('API non disponible');
       }
@@ -1006,7 +974,7 @@ class SiteSettingsStoreAPI {
       await this.loadFromAPI();
       
     } catch (error) {
-      console.error('❌ Erreur sauvegarde complète:', error);
+
       throw error;
     }
   }
@@ -1016,7 +984,7 @@ class SiteSettingsStoreAPI {
       const updates = { [key]: value };
       await this.updateSettings(updates);
     } catch (error) {
-      console.error('❌ Erreur mise à jour paramètre:', error);
+
       throw error;
     }
   }
@@ -1049,7 +1017,7 @@ class SiteSettingsStoreAPI {
     });
 
     if (hasMigration) {
-      console.log('✅ URLs sociales migrées vers la nouvelle structure');
+
       this.updateSettings(this.settings);
     }
   }
@@ -1165,7 +1133,7 @@ class SiteSettingsStoreAPI {
       this.applyMetaUpdates();
       this.notify();
     } catch (error) {
-      console.error('❌ Erreur reset paramètres:', error);
+
       throw error;
     }
   }
@@ -1189,26 +1157,26 @@ class SiteSettingsStoreAPI {
   // Migrer depuis localStorage vers API (pour la migration complète)
   async migrateFromLocalStorage() {
     try {
-      console.log('🔄 Migration site settings localStorage -> API...');
+
       
       const localStorageKey = 'princept-site-settings';
       const localData = localStorage.getItem(localStorageKey);
       
       if (localData) {
         const parsedData = JSON.parse(localData);
-        console.log('📦 Données localStorage trouvées:', Object.keys(parsedData).length, 'paramètres');
+
         
         // Mettre à jour via API
         await this.updateSettings(parsedData);
         
-        console.log('✅ Migration site settings terminée');
+
         return true;
       } else {
-        console.log('ℹ️ Aucune donnée localStorage à migrer');
+
         return false;
       }
     } catch (error) {
-      console.error('❌ Erreur migration site settings:', error);
+
       return false;
     }
   }

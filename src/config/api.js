@@ -3,7 +3,7 @@ class ApiConfig {
   constructor() {
     // Configuration par défaut
     this.defaultConfig = {
-      baseURL: 'http://localhost:3004',
+      baseURL: 'http://localhost:3003',
       timeout: 30000,
       headers: {
         'Content-Type': 'application/json'
@@ -56,7 +56,6 @@ class ApiConfig {
   // Changer l'URL de base (utile pour les tests ou changement d'environnement)
   setBaseURL(newBaseURL) {
     this.config.baseURL = newBaseURL;
-    console.log(`🔧 API Base URL changée vers: ${newBaseURL}`);
   }
 
   // Utilitaire pour faire des requêtes avec gestion d'erreur standardisée
@@ -78,7 +77,6 @@ class ApiConfig {
 
       return await response.json();
     } catch (error) {
-      console.error(`❌ API Request failed [${endpoint}]:`, error.message);
       throw error;
     }
   }

@@ -42,20 +42,11 @@ class RealEmailService {
         current_date: emailData.variables?.date || new Date().toLocaleString('fr-FR')
       };
 
-      console.log('📧 [EmailJS] Envoi en cours...', {
-        service: emailConfig.emailjsServiceId,
-        template: emailConfig.emailjsTemplateId,
-        to: emailData.to,
-        subject: emailData.subject
-      });
-
       const response = await emailjs.send(
         emailConfig.emailjsServiceId,
         emailConfig.emailjsTemplateId,
         templateParams
       );
-
-      console.log('✅ [EmailJS] Email envoyé avec succès:', response);
 
       return {
         success: true,
@@ -66,7 +57,6 @@ class RealEmailService {
       };
 
     } catch (error) {
-      console.error('❌ [EmailJS] Erreur lors de l\'envoi:', error);
       throw new Error(`Échec EmailJS: ${error.text || error.message}`);
     }
   }
@@ -93,12 +83,6 @@ class RealEmailService {
         type: type
       };
 
-      console.log('📧 [Mailjet via Backend] Envoi en cours...', {
-        to: emailData.to,
-        subject: emailData.subject,
-        sandbox: emailConfig.mailjetSandboxMode
-      });
-
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
@@ -113,7 +97,6 @@ class RealEmailService {
       }
 
       const result = await response.json();
-      console.log('✅ [Mailjet via Backend] Email envoyé avec succès:', result);
 
       return {
         success: true,
@@ -124,7 +107,6 @@ class RealEmailService {
       };
 
     } catch (error) {
-      console.error('❌ [Mailjet API] Erreur lors de l\'envoi:', error);
       throw new Error(`Échec Mailjet: ${error.message}`);
     }
   }
@@ -155,12 +137,6 @@ class RealEmailService {
         type: type
       };
 
-      console.log('📧 [Backend API] Envoi en cours...', {
-        endpoint: emailConfig.apiEndpoint,
-        to: emailData.to,
-        subject: emailData.subject
-      });
-
       const response = await fetch(emailConfig.apiEndpoint, {
         method: 'POST',
         headers: {
@@ -175,7 +151,6 @@ class RealEmailService {
       }
 
       const result = await response.json();
-      console.log('✅ [Backend API] Email envoyé avec succès:', result);
 
       return {
         success: true,
@@ -186,7 +161,6 @@ class RealEmailService {
       };
 
     } catch (error) {
-      console.error('❌ [Backend API] Erreur lors de l\'envoi:', error);
       throw new Error(`Échec Backend API: ${error.message}`);
     }
   }
@@ -246,7 +220,6 @@ class RealEmailService {
       }
       
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de l\'email de notification:', error);
       throw error;
     }
   }
@@ -255,7 +228,6 @@ class RealEmailService {
   async sendContactConfirmation(formData, emailConfig, siteSettings) {
     try {
       if (!emailConfig?.templates?.contactConfirmation?.enabled) {
-        console.log('Email de confirmation désactivé');
         return { success: true, message: 'Confirmation email disabled' };
       }
 
@@ -298,7 +270,6 @@ class RealEmailService {
       }
       
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de l\'email de confirmation:', error);
       throw error;
     }
   }
@@ -329,7 +300,6 @@ class RealEmailService {
       try {
         results.confirmation = await this.sendContactConfirmation(formData, emailConfig, siteSettings);
       } catch (confirmError) {
-        console.warn('Erreur lors de l\'envoi de la confirmation:', confirmError);
         results.errors.push(`Confirmation: ${confirmError.message}`);
       }
 

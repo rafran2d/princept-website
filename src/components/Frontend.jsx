@@ -137,17 +137,6 @@ const Frontend = () => {
     const fallbackLabel = section.type.charAt(0).toUpperCase() + section.type.slice(1);
     const labelValue = t(section.title, fallbackLabel);
 
-    // Debug: vérifier si le label est un objet
-    if (typeof labelValue === 'object') {
-      console.error('❌ navigationItem.label is an object!', {
-        sectionId: section.id,
-        sectionType: section.type,
-        sectionTitle: section.title,
-        labelValue: labelValue,
-        labelType: typeof labelValue
-      });
-    }
-
     return {
       id: `${section.type}-${section.id}`, // Unique ID combining type and section ID
       label: typeof labelValue === 'string' ? labelValue : fallbackLabel,

@@ -24,12 +24,12 @@ export const LanguageProvider = ({ children }) => {
       try {
         health = await apiService.healthCheck();
       } catch (healthError) {
-        console.error('❌ Erreur health check:', healthError);
+
         // Essayer directement getHealth() si healthCheck() échoue
         try {
           health = await apiService.getHealth();
         } catch (directError) {
-          console.error('❌ Erreur getHealth direct:', directError);
+
           throw new Error(`Impossible de se connecter à l'API: ${directError.message}`);
         }
       }
@@ -47,16 +47,16 @@ export const LanguageProvider = ({ children }) => {
         const detectedDbType = (health.database && health.database.includes('MySQL')) || 
                               health.dbType === 'mysql' ? 'mysql' : 'error';
         setDbType(detectedDbType);
-        console.log(`✅ Connexion ${detectedDbType.toUpperCase()} établie`, health);
+
         
         await loadLanguagesFromAPI();
       } else {
         setDbType('error');
-        console.error('❌ Base de données non disponible:', health);
+
         throw new Error(`Base de données inaccessible: ${health.error || health.status || 'Unknown'}`);
       }
     } catch (error) {
-      console.error('❌ Erreur initialisation:', error);
+
       setDbType('error');
       // Initialiser avec des langues par défaut minimales pour éviter le crash
       setLanguages({
@@ -101,9 +101,9 @@ export const LanguageProvider = ({ children }) => {
         setCurrentAdminLanguage(defaultLang.id);
       }
       
-      console.log(`📚 ${languagesArray.length} langues chargées depuis ${dbType.toUpperCase()}`);
+
     } catch (error) {
-      console.error('❌ Erreur chargement langues:', error);
+
       throw error;
     }
   };
@@ -164,14 +164,14 @@ export const LanguageProvider = ({ children }) => {
         [languageId]: frontendLang
       }));
       
-      console.log(`🔄 Langue ${frontendLang.name} ${frontendLang.isActive ? 'activée' : 'désactivée'} (${dbType})`);
+
       
       // Déclencher événement
       setTimeout(() => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('❌ Erreur toggle langue:', error);
+
       throw error;
     }
   }
@@ -196,14 +196,14 @@ export const LanguageProvider = ({ children }) => {
         return updated;
       });
       
-      console.log(`⭐ ${frontendLang.name} définie comme langue par défaut (${dbType})`);
+
       
       // Déclencher événement
       setTimeout(() => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('❌ Erreur définition langue par défaut:', error);
+
       throw error;
     }
   }
@@ -224,14 +224,14 @@ export const LanguageProvider = ({ children }) => {
         [newLanguage.id]: frontendLang
       }));
       
-      console.log(`➕ Langue ${frontendLang.name} créée (${dbType})`);
+
       
       // Déclencher événement
       setTimeout(() => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('❌ Erreur ajout langue:', error);
+
       throw error;
     }
   }
@@ -252,14 +252,14 @@ export const LanguageProvider = ({ children }) => {
         [languageId]: frontendLang
       }));
       
-      console.log(`✏️ Langue ${frontendLang.name} mise à jour (${dbType})`);
+
       
       // Déclencher événement
       setTimeout(() => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('❌ Erreur mise à jour langue:', error);
+
       throw error;
     }
   }
@@ -283,14 +283,14 @@ export const LanguageProvider = ({ children }) => {
         return updated;
       });
       
-      console.log(`🗑️ Langue supprimée (${dbType})`);
+
       
       // Déclencher événement
       setTimeout(() => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('❌ Erreur suppression langue:', error);
+
       throw error;
     }
   }
@@ -314,9 +314,9 @@ export const LanguageProvider = ({ children }) => {
         return updated;
       });
       
-      console.log(`🔄 Ordre des langues mis à jour (${dbType})`);
+
     } catch (error) {
-      console.error('❌ Erreur réorganisation:', error);
+
       throw error;
     }
   }

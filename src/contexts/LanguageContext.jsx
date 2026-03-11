@@ -217,7 +217,6 @@ export const LanguageProvider = ({ children }) => {
   // Supprimer une langue
   function removeLanguage(languageId) {
     if (languages[languageId]?.isDefault) {
-      console.warn('Impossible de supprimer la langue par défaut');
       return;
     }
     

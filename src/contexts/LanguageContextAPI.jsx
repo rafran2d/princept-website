@@ -25,14 +25,14 @@ export const LanguageProvider = ({ children }) => {
       setIsApiAvailable(apiAvailable);
 
       if (apiAvailable) {
-        console.log('✅ API disponible, chargement depuis MySQL');
+
         await loadLanguagesFromAPI();
       } else {
-        console.warn('⚠️ API indisponible, fallback vers localStorage');
+
         await loadLanguagesFromLocalStorage();
       }
     } catch (error) {
-      console.error('Erreur initialisation langues:', error);
+
       // Fallback vers localStorage
       await loadLanguagesFromLocalStorage();
     } finally {
@@ -68,9 +68,9 @@ export const LanguageProvider = ({ children }) => {
         setCurrentAdminLanguage(defaultLang.id);
       }
       
-      console.log(`📚 ${languagesArray.length} langues chargées depuis MySQL`);
+
     } catch (error) {
-      console.error('Erreur chargement API:', error);
+
       throw error;
     }
   };
@@ -98,7 +98,7 @@ export const LanguageProvider = ({ children }) => {
       setCurrentAdminLanguage(defaultLang.id);
     }
     
-    console.log('📚 Langues chargées depuis localStorage');
+
   };
 
   // Sauvegarder dans localStorage (backup)
@@ -163,7 +163,7 @@ export const LanguageProvider = ({ children }) => {
         const updatedLanguages = { ...languages, [languageId]: frontendLang };
         saveToLocalStorage(updatedLanguages);
         
-        console.log(`🔄 Langue ${frontendLang.name} ${frontendLang.isActive ? 'activée' : 'désactivée'}`);
+
       } else {
         // Fallback localStorage
         setLanguages(prev => ({
@@ -180,7 +180,7 @@ export const LanguageProvider = ({ children }) => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('Erreur toggle langue:', error);
+
       throw error;
     }
   }
@@ -202,7 +202,7 @@ export const LanguageProvider = ({ children }) => {
           return updated;
         });
         
-        console.log(`⭐ ${frontendLang.name} définie comme langue par défaut`);
+
       } else {
         // Fallback localStorage
         setLanguages(prev => {
@@ -220,7 +220,7 @@ export const LanguageProvider = ({ children }) => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('Erreur définition langue par défaut:', error);
+
       throw error;
     }
   }
@@ -238,7 +238,7 @@ export const LanguageProvider = ({ children }) => {
           [newLanguage.id]: frontendLang
         }));
         
-        console.log(`➕ Langue ${frontendLang.name} créée`);
+
       } else {
         // Fallback localStorage
         const maxOrder = Math.max(...Object.values(languages).map(l => l.order || 0), 0);
@@ -256,7 +256,7 @@ export const LanguageProvider = ({ children }) => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('Erreur ajout langue:', error);
+
       throw error;
     }
   }
@@ -274,7 +274,7 @@ export const LanguageProvider = ({ children }) => {
           [languageId]: frontendLang
         }));
         
-        console.log(`✏️ Langue ${frontendLang.name} mise à jour`);
+
       } else {
         // Fallback localStorage
         setLanguages(prev => ({
@@ -292,7 +292,7 @@ export const LanguageProvider = ({ children }) => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('Erreur mise à jour langue:', error);
+
       throw error;
     }
   }
@@ -306,7 +306,7 @@ export const LanguageProvider = ({ children }) => {
       
       if (isApiAvailable) {
         await apiService.deleteLanguage(languageId);
-        console.log(`🗑️ Langue supprimée`);
+
       }
       
       setLanguages(prev => {
@@ -320,7 +320,7 @@ export const LanguageProvider = ({ children }) => {
         window.dispatchEvent(new CustomEvent('languagesUpdated'));
       }, 100);
     } catch (error) {
-      console.error('Erreur suppression langue:', error);
+
       throw error;
     }
   }
@@ -330,7 +330,7 @@ export const LanguageProvider = ({ children }) => {
     try {
       if (isApiAvailable) {
         await apiService.reorderLanguages(newOrder);
-        console.log('🔄 Ordre des langues mis à jour');
+
       }
       
       setLanguages(prev => {
@@ -343,7 +343,7 @@ export const LanguageProvider = ({ children }) => {
         return updated;
       });
     } catch (error) {
-      console.error('Erreur réorganisation:', error);
+
       throw error;
     }
   }

@@ -46,11 +46,7 @@ const ContactSectionEditable = ({ section, useGlobalStyles, isEditing = false })
     setSubmitSuccess(null);
 
     try {
-      console.log('📧 Envoi du message via le service email unifié...');
-
       const result = await unifiedEmailService.sendContactEmails(formData, settings);
-
-      console.log('✅ Message envoyé avec succès:', result);
 
       setSubmitSuccess('Votre message a été envoyé avec succès ! Nous vous répondrons bientôt.');
       setIsSubmitted(true);
@@ -62,8 +58,6 @@ const ContactSectionEditable = ({ section, useGlobalStyles, isEditing = false })
       }, 5000);
 
     } catch (error) {
-      console.error('❌ Erreur lors de l\'envoi du message:', error);
-
       let errorMessage = 'Une erreur est survenue lors de l\'envoi du message.';
 
       if (error.message.includes('Configuration email non trouvée')) {

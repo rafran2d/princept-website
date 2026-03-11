@@ -41,7 +41,6 @@ const PageView = () => {
       const data = await apiService.getPage(slug);
       setPage(data);
     } catch (error) {
-      console.error('Erreur chargement page:', error);
       setError('Page non trouvée');
     } finally {
       setIsLoading(false);
@@ -91,8 +90,7 @@ const PageView = () => {
       const href = link.getAttribute('href');
       if (href) {
         // Note: Les liens externes nécessiteraient une requête fetch, on les ignore pour l'instant
-        console.log('CSS externe détecté:', href);
-      }
+        }
     });
 
     // Retirer les balises <style> et <link> du contenu pour éviter la duplication
@@ -168,15 +166,6 @@ const PageView = () => {
       label: t(section.title, section.type.charAt(0).toUpperCase() + section.type.slice(1)),
       sectionId: section.id
     }));
-
-  // Debug: vérifier que les sections sont chargées
-  if (import.meta.env.DEV) {
-    console.log('🔍 PageView Debug:', {
-      enabledSectionsCount: enabledSections?.length || 0,
-      navigationItemsCount: navigationItems?.length || 0,
-      navigationItems: navigationItems
-    });
-  }
 
   if (isLoading) {
     return (

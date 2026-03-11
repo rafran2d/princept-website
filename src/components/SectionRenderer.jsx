@@ -72,12 +72,9 @@ const SectionRenderer = ({ section, isEditMode = false }) => {
   // Mode édition disponible seulement pour les utilisateurs connectés
   const canEdit = isAuthenticated && (isEditMode || localEditMode);
 
-  console.log('🔍 RENDERER - canEdit:', canEdit, 'isAuthenticated:', isAuthenticated, 'isEditMode:', isEditMode, 'localEditMode:', localEditMode);
-
   // Écouter les changements de mode édition global
   useEffect(() => {
     const handleEditModeChange = (event) => {
-      console.log('🔍 RENDERER - Edit mode changed to:', event.detail.isEditMode);
       setLocalEditMode(event.detail.isEditMode);
     };
 
@@ -106,7 +103,6 @@ const SectionRenderer = ({ section, isEditMode = false }) => {
 
       // Si getLocalizedValue retourne encore un objet, logger l'erreur
       if (typeof result === 'object') {
-        console.error('⚠️ convertMultilingualToString: getLocalizedValue returned object:', { value, result });
         return '';
       }
 
@@ -185,15 +181,6 @@ const SectionRenderer = ({ section, isEditMode = false }) => {
         return convertedSlide;
       });
       
-      // Log pour debug
-      if (localized.type === 'hero-slider') {
-        console.log('🔍 Slides convertis:', localized.slides.map(s => ({
-          id: s.id,
-          title: typeof s.title,
-          subtitle: typeof s.subtitle,
-          description: typeof s.description
-        })));
-      }
     }
     
     // Convertir les posts de blog
@@ -212,15 +199,6 @@ const SectionRenderer = ({ section, isEditMode = false }) => {
         return convertedPost;
       });
       
-      // Log pour debug
-      if (localized.type === 'blog') {
-        console.log('🔍 Posts convertis:', localized.posts.map(p => ({
-          id: p.id,
-          title: typeof p.title,
-          summary: typeof p.summary,
-          content: typeof p.content
-        })));
-      }
     }
     
     return localized;
@@ -236,7 +214,6 @@ const SectionRenderer = ({ section, isEditMode = false }) => {
 
   // Si en mode édition, utiliser les versions éditables
   if (canEdit) {
-    console.log('🔍 RENDERER - Using editable component for:', localizedSection.type);
     switch (localizedSection.type) {
       case 'hero':
         Component = HeroSectionEditable;
@@ -266,12 +243,9 @@ const SectionRenderer = ({ section, isEditMode = false }) => {
         Component = BlogSectionEditable;
         break;
       default:
-        console.log('🔍 RENDERER - No editable component for:', localizedSection.type);
         // Garder le composant par défaut
         break;
     }
-  } else {
-    console.log('🔍 RENDERER - Using normal component for:', localizedSection.type);
   }
 
   // Si c'est un type de section thématique, utiliser le composant thématique

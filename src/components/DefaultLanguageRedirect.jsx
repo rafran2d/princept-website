@@ -6,8 +6,6 @@ const DefaultLanguageRedirect = () => {
   const { getDefaultLanguage, isLoading } = useLanguage();
   const defaultLanguage = getDefaultLanguage();
   
-  console.log('🔄 DefaultLanguageRedirect - Loading:', isLoading, 'Default:', defaultLanguage?.code);
-  
   // Si les langues sont en cours de chargement, attendre
   if (isLoading) {
     return null;

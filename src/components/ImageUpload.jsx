@@ -45,7 +45,6 @@ const ImageUpload = ({
         return;
       }
       
-      console.log(`📷 Image convertie en base64: ${Math.round(estimatedBase64Size / 1024)}KB`);
       setPreviewUrl(base64);
       onChange(base64);
     };

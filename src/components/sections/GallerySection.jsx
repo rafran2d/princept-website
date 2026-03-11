@@ -54,7 +54,6 @@ const GalleryImage = ({ src, alt }) => {
         const processed = await removeWhiteBackground(img, 250);
         setProcessedSrc(processed);
       } catch (error) {
-        console.error('Erreur lors du traitement de l\'image:', error);
         setProcessedSrc(null);
       }
     };

@@ -55,12 +55,6 @@ const EmailTemplateTest = () => {
     setResult(null);
 
     try {
-      console.log('🧪 [EmailTemplateTest] Début du test:', {
-        language: selectedLanguage,
-        formData: testData,
-        emailConfig: settings.emailConfig
-      });
-
       // Enrichir les données avec la langue
       const enrichedData = {
         ...testData,
@@ -83,8 +77,6 @@ const EmailTemplateTest = () => {
       });
 
     } catch (error) {
-      console.error('❌ [EmailTemplateTest] Erreur:', error);
-      
       setResult({
         success: false,
         error: error.message,

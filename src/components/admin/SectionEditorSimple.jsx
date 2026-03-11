@@ -50,8 +50,6 @@ const ColorPicker = ({ label, color, onChange }) => {
 
 const SectionEditorSimple = () => {
   const { id } = useParams();
-  console.log('🚀 SectionEditorSimple - Composant chargé avec ID:', id);
-  
   const navigate = useNavigate();
   const { sections, updateSection } = useSections();
   const [section, setSection] = useState(null);
@@ -60,22 +58,10 @@ const SectionEditorSimple = () => {
   const { message, showSuccess, showError, hideMessage } = useFlashMessage();
 
   useEffect(() => {
-    console.log('🔍 SectionEditorSimple Debug:');
-    console.log('  - ID recherché:', id);
-    console.log('  - Nombre de sections chargées:', sections.length);
-    console.log('  - IDs des sections disponibles:', sections.map(s => s.id));
-    
     const foundSection = sections.find(s => s.id === id);
-    console.log('  - Section trouvée:', foundSection ? 'OUI' : 'NON');
-    
+
     if (foundSection) {
       setSection(foundSection);
-      console.log('  - Section définie');
-    } else if (sections.length > 0) {
-      console.log('  - ❌ Section non trouvée après chargement complet');
-      console.log('  - IDs disponibles:', sections.map(s => ({ id: s.id, type: s.type })));
-    } else {
-      console.log('  - ⏳ Sections pas encore chargées, attente...');
     }
   }, [id, sections, navigate]);
 

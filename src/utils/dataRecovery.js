@@ -3,17 +3,11 @@ class DataRecovery {
   
   // Vérifier tout le localStorage
   checkLocalStorage() {
-    console.log('=== DIAGNOSTIC LOCALSTORAGE ===');
-    
     const keys = Object.keys(localStorage);
-    console.log('Toutes les clés localStorage:', keys);
-    
+
     // Vérifier les clés spécifiques
     const sectionsData = localStorage.getItem('onepress-sections');
     const settingsData = localStorage.getItem('princept-site-settings');
-    
-    console.log('onepress-sections:', sectionsData ? JSON.parse(sectionsData) : 'VIDE');
-    console.log('princept-site-settings:', settingsData ? JSON.parse(settingsData) : 'VIDE');
     
     // Chercher d'autres clés similaires
     const relatedKeys = keys.filter(key => 
@@ -22,12 +16,6 @@ class DataRecovery {
       key.includes('onepress') ||
       key.includes('site')
     );
-    
-    console.log('Clés potentiellement liées:', relatedKeys);
-    
-    relatedKeys.forEach(key => {
-      console.log(`${key}:`, localStorage.getItem(key));
-    });
     
     return {
       allKeys: keys,
@@ -40,8 +28,6 @@ class DataRecovery {
   
   // Restaurer des données d'urgence
   restoreEmergencyData() {
-    console.log('=== RESTAURATION D\'URGENCE ===');
-    
     const emergencySections = [
       {
         id: 'emergency-hero-' + Date.now(),
@@ -93,15 +79,12 @@ class DataRecovery {
     
     localStorage.setItem('onepress-sections', JSON.stringify(emergencySections));
     localStorage.setItem('princept-site-settings', JSON.stringify(emergencySettings));
-    
-    console.log('Données d\'urgence restaurées');
+
     return { sections: emergencySections, settings: emergencySettings };
   }
   
   // Chercher dans toutes les clés pour des patterns
   searchForBackups() {
-    console.log('=== RECHERCHE DE SAUVEGARDES ===');
-    
     const allKeys = Object.keys(localStorage);
     const backupKeys = [];
     
@@ -122,13 +105,6 @@ class DataRecovery {
           backupKeys.push(key);
         }
       });
-    });
-    
-    console.log('Sauvegardes potentielles trouvées:', backupKeys);
-    
-    backupKeys.forEach(key => {
-      const data = localStorage.getItem(key);
-      console.log(`Contenu de ${key}:`, data ? data.substring(0, 200) + '...' : 'VIDE');
     });
     
     return backupKeys;
@@ -160,7 +136,6 @@ class DataRecovery {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    console.log('Export localStorage terminé');
   }
 }
 
@@ -170,7 +145,6 @@ window.diagnoseData = () => {
   const diagnostic = recovery.checkLocalStorage();
   
   if (!diagnostic.hasData) {
-    console.warn('AUCUNE DONNÉE TROUVÉE - RESTAURATION D\'URGENCE');
     recovery.restoreEmergencyData();
     window.location.reload();
   }

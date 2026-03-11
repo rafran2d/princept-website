@@ -13,7 +13,6 @@ const DesignSettingsController = {
       });
       res.json({ success: true, data });
     } catch (error) {
-      console.error('❌ Erreur getDesignSettings:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -33,7 +32,6 @@ const DesignSettingsController = {
 
       res.json({ success: true, data: { setting_name, setting_value } });
     } catch (error) {
-      console.error('❌ Erreur setDesignSetting:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }

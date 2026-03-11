@@ -176,7 +176,6 @@ const ThemeSelector = () => {
       const parsed = JSON.parse(saved);
       return Array.isArray(parsed) ? parsed : [];
     } catch (e) {
-      console.error('Error loading custom themes:', e);
       return [];
     }
   });

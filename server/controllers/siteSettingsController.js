@@ -19,7 +19,6 @@ const SiteSettingsController = {
       });
       res.json({ success: true, data });
     } catch (error) {
-      console.error('❌ Erreur getSiteSettings:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -39,7 +38,6 @@ const SiteSettingsController = {
 
       res.json({ success: true, data: { setting_key, setting_value } });
     } catch (error) {
-      console.error('❌ Erreur setSiteSetting:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }

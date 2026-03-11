@@ -36,12 +36,6 @@ const MultilingualEmailSender = ({
       // Sélectionner le service d'email approprié
       const service = useRealEmailService ? realEmailService : emailService;
       
-      console.log(`📧 [MultilingualEmailSender] Envoi email en langue: ${currentLanguage}`, {
-        service: useRealEmailService ? 'realEmailService' : 'emailService',
-        language: currentLanguage,
-        formData: enrichedFormData
-      });
-      
       // Envoyer l'email avec la langue spécifiée
       const emailResult = await service.sendContactEmails(
         enrichedFormData,
@@ -59,8 +53,6 @@ const MultilingualEmailSender = ({
       onSuccess?.(emailResult);
       
     } catch (error) {
-      console.error('Erreur lors de l\'envoi multilingue:', error);
-      
       setResult({
         success: false,
         error: error.message,

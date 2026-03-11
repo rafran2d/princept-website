@@ -831,8 +831,6 @@ const TestimonialsEditor = ({ testimonials = [], onChange }) => {
 
 const SectionEditor = () => {
   const { id } = useParams();
-  console.log('🚀 SectionEditor - Composant chargé avec ID:', id);
-  
   const navigate = useNavigate();
   const { sections, updateSection } = useSections();
   const [section, setSection] = useState(null);
@@ -925,31 +923,20 @@ const SectionEditor = () => {
   }, [createMultilingualObject]);
 
   useEffect(() => {
-    console.log('🔍 SectionEditor Debug:');
-    console.log('  - ID recherché:', id);
-    console.log('  - Nombre de sections chargées:', sections.length);
-    console.log('  - IDs des sections disponibles:', sections.map(s => s.id));
-    
     const foundSection = sections.find(s => s.id === id);
-    console.log('  - Section trouvée:', foundSection ? 'OUI' : 'NON');
-    
+
     if (foundSection) {
       // Migrer automatiquement les données vers le format multilingue
       const migratedSection = migrateToMultilingual(foundSection);
       setSection(migratedSection);
       setIsLoading(false);
-      console.log('  - Section migrée et définie');
     } else if (sections.length > 0) {
       // Attendre un peu avant de dire que la section n'est pas trouvée
       const timeout = setTimeout(() => {
         setIsLoading(false);
-        console.log('  - ❌ Section non trouvée après délai d\'attente');
-        console.log('  - IDs disponibles:', sections.map(s => ({ id: s.id, type: s.type })));
       }, 1000); // Attendre 1 seconde
-      
+
       return () => clearTimeout(timeout);
-    } else {
-      console.log('  - ⏳ Sections pas encore chargées, attente...');
     }
   }, [id, sections, navigate, migrateToMultilingual]);
 

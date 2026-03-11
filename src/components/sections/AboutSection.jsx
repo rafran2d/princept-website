@@ -211,7 +211,6 @@ const AboutSection = ({ section, useGlobalStyles }) => {
     const modalElement = (
       <div 
         onClick={() => {
-          console.log('Closing modal - backdrop clicked');
           setIsModalOpen(false);
         }}
         className="agency-modal-backdrop"
@@ -235,7 +234,6 @@ const AboutSection = ({ section, useGlobalStyles }) => {
         <div 
           onClick={(e) => {
             e.stopPropagation();
-            console.log('Modal content clicked');
           }}
           className="agency-modal-3d"
           style={{ 
@@ -599,7 +597,6 @@ const AboutSection = ({ section, useGlobalStyles }) => {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        console.log('Opening modal for feature:', feature.title);
                         setSelectedFeature(feature);
                         setIsModalOpen(true);
                       }}
@@ -737,7 +734,6 @@ const AboutSection = ({ section, useGlobalStyles }) => {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      console.log('Opening modal for feature:', feature.title);
                       setSelectedFeature(feature);
                       setIsModalOpen(true);
                     }}

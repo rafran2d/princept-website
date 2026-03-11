@@ -11,7 +11,6 @@ const ThemesController = {
       }));
       res.json({ success: true, data });
     } catch (error) {
-      console.error('❌ Erreur getThemes:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -30,7 +29,6 @@ const ThemesController = {
 
       res.status(201).json({ success: true, data: { id: themeId, ...req.body } });
     } catch (error) {
-      console.error('❌ Erreur createTheme:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -44,7 +42,6 @@ const ThemesController = {
       await database.run('UPDATE custom_themes SET is_active = 1 WHERE id = ?', [req.params.id]);
       res.json({ success: true, data: { id: req.params.id, is_active: 1 } });
     } catch (error) {
-      console.error('❌ Erreur activateTheme:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }

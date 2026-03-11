@@ -17,8 +17,6 @@ const AppRoutes = () => {
   const { getActiveLanguages, isLoading } = useLanguage();
   const activeLanguages = getActiveLanguages();
 
-  console.log('🛣️ AppRoutes - Loading:', isLoading, 'Languages:', activeLanguages.map(l => l.code));
-
   // Si les langues sont en cours de chargement, ne pas afficher les routes de redirection
   if (isLoading) {
     return (

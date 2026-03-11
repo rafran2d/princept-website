@@ -12,7 +12,6 @@ class DataStorage {
     const jsonAvailable = await this.checkJSONAvailability();
     
     if (!jsonAvailable) {
-      console.warn('API JSON non disponible, utilisation de localStorage');
       this.storageType = 'localStorage';
       return;
     }
@@ -25,8 +24,6 @@ class DataStorage {
   setStorageType(type) {
     if (['localStorage', 'json'].includes(type)) {
       this.storageType = type;
-    } else {
-      console.error('Type de stockage non supporté:', type);
     }
   }
 
@@ -56,7 +53,6 @@ class DataStorage {
       const stored = localStorage.getItem(key);
       return stored ? JSON.parse(stored) : null;
     } catch (error) {
-      console.error('Erreur lors du chargement depuis localStorage:', error);
       return null;
     }
   }
@@ -67,7 +63,6 @@ class DataStorage {
       localStorage.setItem(key, JSON.stringify(data));
       return true;
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde vers localStorage:', error);
       return false;
     }
   }
@@ -88,11 +83,9 @@ class DataStorage {
         // Fichier n'existe pas encore
         return null;
       } else {
-        console.error('Erreur lors du chargement JSON:', response.statusText);
         return null;
       }
     } catch (error) {
-      console.error('Erreur lors du chargement depuis JSON:', error);
       return null;
     }
   }
@@ -111,11 +104,9 @@ class DataStorage {
       if (response.ok) {
         return true;
       } else {
-        console.error('Erreur lors de la sauvegarde JSON:', response.statusText);
         return false;
       }
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde vers JSON:', error);
       return false;
     }
   }
@@ -132,15 +123,12 @@ class DataStorage {
           const success = await this.saveToJSON(key, data);
           if (success) {
             results.success.push(key);
-            console.log(`Migration réussie pour ${key}`);
           } else {
             results.failed.push(key);
-            console.error(`Échec de la migration pour ${key}`);
           }
         }
       } catch (error) {
         results.failed.push(key);
-        console.error(`Erreur lors de la migration de ${key}:`, error);
       }
     }
 
@@ -159,15 +147,12 @@ class DataStorage {
           const success = this.saveToLocalStorage(key, data);
           if (success) {
             results.success.push(key);
-            console.log(`Migration réussie pour ${key}`);
           } else {
             results.failed.push(key);
-            console.error(`Échec de la migration pour ${key}`);
           }
         }
       } catch (error) {
         results.failed.push(key);
-        console.error(`Erreur lors de la migration de ${key}:`, error);
       }
     }
 
@@ -249,7 +234,6 @@ class DataStorage {
       });
       return response.ok;
     } catch (error) {
-      console.log('API JSON non disponible, utilisation de localStorage');
       return false;
     }
   }
@@ -263,7 +247,6 @@ class DataStorage {
         // Vérifier si les données existent déjà en JSON
         const jsonData = await this.loadFromJSON(key);
         if (jsonData) {
-          console.log(`Données ${key} déjà présentes en JSON, migration ignorée`);
           continue;
         }
 
@@ -271,14 +254,8 @@ class DataStorage {
         const localData = this.loadFromLocalStorage(key);
         if (localData) {
           const success = await this.saveToJSON(key, localData);
-          if (success) {
-            console.log(`Migration automatique réussie pour ${key}`);
-          } else {
-            console.warn(`Échec de la migration automatique pour ${key}`);
-          }
         }
       } catch (error) {
-        console.warn(`Erreur lors de la migration automatique de ${key}:`, error);
       }
     }
   }

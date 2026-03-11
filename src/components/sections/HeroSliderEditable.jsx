@@ -153,16 +153,6 @@ const HeroSliderEditable = ({ section, useGlobalStyles, isEditing = false }) => 
   // Convertir les strings en objets multilingues si nécessaire
   // S'assurer que toutes les valeurs dans l'objet sont des strings
   const normalizeMultilingualValue = (value, fieldName = '') => {
-    // Log pour déboguer
-    if (fieldName) {
-      console.log(`🔍 normalizeMultilingualValue [${fieldName}]:`, {
-        value,
-        type: typeof value,
-        isObject: value && typeof value === 'object',
-        isArray: Array.isArray(value)
-      });
-    }
-    
     if (!value) return {};
     
     // Si c'est une string, créer un objet avec la langue par défaut
@@ -209,10 +199,6 @@ const HeroSliderEditable = ({ section, useGlobalStyles, isEditing = false }) => 
           normalized[langCode] = '';
         }
       });
-      
-      if (fieldName) {
-        console.log(`✅ normalizeMultilingualValue [${fieldName}] résultat:`, normalized);
-      }
       
       return normalized;
     }

@@ -10,9 +10,6 @@ import InlineImageEditor from '../InlineImageEditor';
 const HeroSectionEditable = ({ section, useGlobalStyles, isEditing = false }) => {
   const { t, currentLanguage, getActiveLanguages } = useFrontendLanguage();
 
-  console.log('🔍 HERO - HeroSectionEditable isEditing:', isEditing);
-
-
   // Obtenir le code de la langue courante pour smartNavigate
   const currentLangCode = getActiveLanguages().find(l => l.id === currentLanguage)?.code || 'fr';
 

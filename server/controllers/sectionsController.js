@@ -24,7 +24,6 @@ const SectionsController = {
       }));
       res.json({ success: true, data });
     } catch (error) {
-      console.error('❌ Erreur getSections:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -40,7 +39,6 @@ const SectionsController = {
       row.section_data = row.section_data ? JSON.parse(row.section_data) : null;
       res.json({ success: true, data: row });
     } catch (error) {
-      console.error('❌ Erreur getSection:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -59,7 +57,6 @@ const SectionsController = {
 
       res.status(201).json({ success: true, data: { id: sectionId, ...req.body } });
     } catch (error) {
-      console.error('❌ Erreur createSection:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -77,7 +74,6 @@ const SectionsController = {
 
       res.json({ success: true, data: { id: req.params.id, ...req.body } });
     } catch (error) {
-      console.error('❌ Erreur updateSection:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -88,7 +84,6 @@ const SectionsController = {
       await database.run('DELETE FROM sections WHERE id = ?', [req.params.id]);
       res.json({ success: true, message: 'Section supprimée' });
     } catch (error) {
-      console.error('❌ Erreur deleteSection:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }

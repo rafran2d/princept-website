@@ -19,7 +19,6 @@ const UserPreferencesController = {
       });
       res.json({ success: true, data });
     } catch (error) {
-      console.error('❌ Erreur getUserPreferences:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -39,7 +38,6 @@ const UserPreferencesController = {
 
       res.json({ success: true, data: { preference_key, preference_value } });
     } catch (error) {
-      console.error('❌ Erreur setUserPreference:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }

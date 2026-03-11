@@ -50,23 +50,6 @@ const ContactSection = ({ section, useGlobalStyles }) => {
   // Plein écran uniquement quand paramètres chargés ET aucune info contact affichée (formulaire seul)
   const contactFullScreen = isSettingsLoaded && !hasContactInfo;
 
-  // Debug pour comprendre pourquoi le plein écran ne s'active pas
-  if (import.meta.env.DEV) {
-    console.log('🔍 ContactSection Debug:', {
-      isSettingsLoaded,
-      hasContactInfo,
-      contactFullScreen,
-      showContactEmail: settings.showContactEmail,
-      showContactPhone: settings.showContactPhone,
-      showContactAddress: settings.showContactAddress,
-      showOfficeHours: settings.showOfficeHours,
-      hasEmail: !!settings.email,
-      hasPhone: !!settings.phone,
-      hasAddress: !!settings.address,
-      hasOfficeHours: !!(settings.officeHours && typeof settings.officeHours === 'object')
-    });
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -75,12 +58,8 @@ const ContactSection = ({ section, useGlobalStyles }) => {
 
     try {
       // Utiliser le service email unifié qui récupère la configuration depuis la nouvelle API
-      console.log('📧 Envoi du message via le service email unifié...');
-      
       const result = await unifiedEmailService.sendContactEmails(formData, settings);
-      
-      console.log('✅ Message envoyé avec succès:', result);
-      
+
       // Succès
       setSubmitSuccess('Votre message a été envoyé avec succès ! Nous vous répondrons bientôt.');
       setIsSubmitted(true);
@@ -93,8 +72,6 @@ const ContactSection = ({ section, useGlobalStyles }) => {
       }, 5000);
 
     } catch (error) {
-      console.error('❌ Erreur lors de l\'envoi du message:', error);
-      
       // Messages d'erreur plus spécifiques
       let errorMessage = 'Une erreur est survenue lors de l\'envoi du message.';
       
@@ -122,7 +99,6 @@ const ContactSection = ({ section, useGlobalStyles }) => {
   };
 
   const formatOfficeHours = (officeHours) => {
-    console.log('🕐 formatOfficeHours called with:', officeHours);
     if (!officeHours) return [];
     
     // Utiliser les traductions depuis les paramètres du site
@@ -160,7 +136,6 @@ const ContactSection = ({ section, useGlobalStyles }) => {
       
       // Cas normal fermé
       if (!dayInfo || dayInfo.closed) {
-        console.log(`📅 ${label} est fermé:`, dayInfo);
         return { label, text: 'Fermé', isHoliday: false };
       }
       

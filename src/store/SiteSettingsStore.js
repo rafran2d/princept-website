@@ -237,7 +237,7 @@ Envoyé depuis {{siteName}}
       this.settings = settings;
       return settings;
     } catch (error) {
-      console.error('Error loading site settings from storage:', error);
+
       this.settings = {};
       return {};
     }
@@ -248,7 +248,7 @@ Envoyé depuis {{siteName}}
       await dataStorage.save(this.storageKey, this.settings);
       this.updateFavicon();
     } catch (error) {
-      console.error('Error saving site settings to storage:', error);
+
     }
   }
 
@@ -309,7 +309,7 @@ Envoyé depuis {{siteName}}
     });
 
     if (hasMigration) {
-      console.log('Migrated legacy social URLs to new structure');
+
     }
   }
 

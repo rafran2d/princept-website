@@ -8,7 +8,6 @@ const useSafeLanguage = () => {
   try {
     return useLanguage();
   } catch (error) {
-    console.warn('LanguageContext non disponible dans FloatingEditWidget');
     return {
       currentLanguage: 'fr',
       getActiveLanguages: () => [{ id: 'fr', name: 'Français' }]
@@ -25,7 +24,6 @@ const FloatingEditWidget = () => {
 
   // Afficher le widget seulement si connecté
   useEffect(() => {
-    console.log('🔍 AUTH - FloatingEditWidget isAuthenticated:', isAuthenticated);
     setIsVisible(isAuthenticated);
   }, [isAuthenticated]);
 
@@ -38,14 +36,12 @@ const FloatingEditWidget = () => {
 
   const handleToggleEdit = () => {
     const newEditMode = !isEditMode;
-    console.log('🔍 TOGGLE - Edit mode changed to:', newEditMode);
     setIsEditMode(newEditMode);
 
     // Émettre un événement global
     window.dispatchEvent(new CustomEvent('cms:editModeChanged', {
       detail: { isEditMode: newEditMode }
     }));
-    console.log('🔍 TOGGLE - Event dispatched');
   };
 
   const goToAdmin = () => {

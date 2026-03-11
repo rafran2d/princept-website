@@ -68,7 +68,6 @@ const PageManagement = () => {
       }));
       setPages(normalizedPages);
     } catch (error) {
-      console.error('Erreur chargement pages:', error);
       showError('Erreur lors du chargement des pages');
       setPages([]);
     } finally {
@@ -93,12 +92,6 @@ const PageManagement = () => {
         isPublished: formData.isPublished !== false
       };
 
-      console.log('📤 Envoi des données:', {
-        ...pageData,
-        title: typeof pageData.title === 'object' ? 'object' : typeof pageData.title,
-        content: typeof pageData.content === 'object' ? 'object' : typeof pageData.content
-      });
-
       if (editingPage) {
         await apiService.updatePage(editingPage.id, pageData);
         showSuccess('Page modifiée avec succès !');
@@ -109,7 +102,6 @@ const PageManagement = () => {
       await loadPages();
       resetForm();
     } catch (error) {
-      console.error('❌ Erreur sauvegarde page:', error);
       const errorMessage = error.message || 'Erreur lors de la sauvegarde de la page';
       showError(`Erreur lors de la sauvegarde de la page : ${errorMessage}`);
     }
@@ -129,7 +121,6 @@ const PageManagement = () => {
         await loadPages();
         setDeleteModal({ isOpen: false, page: null });
       } catch (error) {
-        console.error('Erreur suppression page:', error);
         showError('Erreur lors de la suppression de la page');
         setDeleteModal({ isOpen: false, page: null });
       }

@@ -14,7 +14,7 @@ class SectionStoreAPI {
 
   async initialize() {
     try {
-      console.log('🔄 SectionStoreAPI - Initialisation...');
+
       this.isLoading = true;
       this.error = null;
       
@@ -24,7 +24,7 @@ class SectionStoreAPI {
       if (isApiAvailable) {
         await this.loadFromAPI();
       } else {
-        console.warn('⚠️ API non accessible, utilisation des données par défaut');
+
         await this.initializeDefaultSections();
       }
       
@@ -32,9 +32,9 @@ class SectionStoreAPI {
       this.isLoading = false;
       this.notify();
       
-      console.log('✅ SectionStoreAPI initialisé avec', this.sections.length, 'sections');
+
     } catch (error) {
-      console.error('❌ Erreur initialisation SectionStoreAPI:', error);
+
       this.error = error.message;
       this.isLoading = false;
       await this.initializeDefaultSections();
@@ -45,28 +45,27 @@ class SectionStoreAPI {
 
   async loadFromAPI() {
     try {
-      console.log('📡 Chargement sections depuis API...');
+
       const apiSections = await apiService.getSections();
       
       // Convertir les sections API au format attendu par l'interface
       this.sections = apiSections.map(section => this.convertFromAPIFormat(section));
       
       if (this.sections.length === 0) {
-        console.log('📝 Aucune section trouvée, création des sections par défaut...');
+
         await this.initializeDefaultSections();
       }
       
-      console.log('✅ Sections chargées depuis API:', this.sections.length);
-      console.log('🔍 Première section après conversion:', this.sections[0]);
+
     } catch (error) {
-      console.error('❌ Erreur chargement API sections:', error);
+
       throw error;
     }
   }
 
   async initializeDefaultSections() {
     try {
-      console.log('🏗️ Création des sections par défaut...');
+
       
       const defaultSections = [
         {
@@ -155,7 +154,7 @@ class SectionStoreAPI {
             await apiService.createSection(section);
           } catch (error) {
             if (!error.message.includes('duplicate') && !error.message.includes('exists')) {
-              console.warn(`⚠️ Erreur création section ${section.id}:`, error.message);
+
             }
           }
         }
@@ -174,9 +173,9 @@ class SectionStoreAPI {
         }));
       }
       
-      console.log('✅ Sections par défaut créées:', this.sections.length);
+
     } catch (error) {
-      console.error('❌ Erreur création sections par défaut:', error);
+
     }
   }
 
@@ -281,15 +280,14 @@ class SectionStoreAPI {
       this.notify();
       return newSection;
     } catch (error) {
-      console.error('❌ Erreur ajout section:', error);
+
       throw error;
     }
   }
 
   async updateSection(id, updates) {
     try {
-      console.log(`🔍 SectionStoreAPI - updateSection ${id}:`);
-      console.log('  - Données originales:', JSON.stringify(updates, null, 2));
+
 
       const isApiAvailable = await apiService.isApiReachable();
 
@@ -318,27 +316,27 @@ class SectionStoreAPI {
         }
 
         const apiData = this.convertToAPIFormat(mergedSection);
-        console.log('  - Données après merge et convertToAPIFormat:', JSON.stringify(apiData, null, 2));
+
 
         const updated = await apiService.updateSection(id, apiData);
         const index = this.sections.findIndex(section => section.id === id);
         if (index !== -1) {
           // Convertir les données API au format attendu par l'interface
           this.sections[index] = this.convertFromAPIFormat(updated);
-          console.log(`✅ Section ${id} mise à jour:`, this.sections[index]);
+
         }
       } else {
         // Mode dégradé
         const index = this.sections.findIndex(section => section.id === id);
         if (index !== -1) {
           this.sections[index] = { ...this.sections[index], ...updates };
-          console.log(`✅ Section ${id} mise à jour en mode dégradé:`, this.sections[index]);
+
         }
       }
 
       this.notify();
     } catch (error) {
-      console.error('❌ Erreur mise à jour section:', error);
+
       throw error;
     }
   }
@@ -355,7 +353,7 @@ class SectionStoreAPI {
       this.reorderPositions();
       this.notify();
     } catch (error) {
-      console.error('❌ Erreur suppression section:', error);
+
       throw error;
     }
   }
@@ -368,7 +366,7 @@ class SectionStoreAPI {
         const currentEnabled = section.enabled || section.is_enabled === 1;
         const newEnabled = !currentEnabled;
         
-        console.log(`🔄 Toggle section ${id}: ${currentEnabled} -> ${newEnabled}`);
+
         
         await this.updateSection(id, { 
           enabled: newEnabled,
@@ -376,7 +374,7 @@ class SectionStoreAPI {
         });
       }
     } catch (error) {
-      console.error('❌ Erreur toggle section:', error);
+
       throw error;
     }
   }
@@ -393,7 +391,7 @@ class SectionStoreAPI {
       await Promise.all(promises);
       this.notify();
     } catch (error) {
-      console.error('❌ Erreur réorganisation sections:', error);
+
       throw error;
     }
   }

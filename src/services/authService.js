@@ -30,7 +30,6 @@ class AuthService {
 
       return data;
     } catch (error) {
-      console.error('❌ Erreur login:', error);
       throw error;
     }
   }
@@ -49,7 +48,6 @@ class AuthService {
         });
       }
     } catch (error) {
-      console.error('❌ Erreur logout:', error);
     } finally {
       // Nettoyer le localStorage
       localStorage.removeItem(this.tokenKey);
@@ -79,7 +77,6 @@ class AuthService {
       const data = await response.json();
       return data.user;
     } catch (error) {
-      console.error('❌ Erreur vérification token:', error);
       this.logout();
       return null;
     }
@@ -97,7 +94,6 @@ class AuthService {
       try {
         return JSON.parse(userStr);
       } catch (error) {
-        console.error('❌ Erreur parsing user:', error);
         return null;
       }
     }
@@ -140,7 +136,6 @@ class AuthService {
 
       return data;
     } catch (error) {
-      console.error('❌ Erreur changement mot de passe:', error);
       throw error;
     }
   }
@@ -175,7 +170,6 @@ class AuthService {
 
       return data;
     } catch (error) {
-      console.error('❌ Erreur mise à jour profil:', error);
       throw error;
     }
   }

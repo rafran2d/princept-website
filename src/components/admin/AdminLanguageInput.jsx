@@ -105,8 +105,6 @@ const AdminLanguageInput = ({
       
       if (hasNumericKeys || Array.isArray(value)) {
         // Objet corrompu détecté, essayer de récupérer les valeurs utilisables
-        console.warn('Objet multilingue corrompu détecté:', value);
-        
         const obj = {};
         languages.forEach(lang => {
           obj[lang.code] = '';
@@ -161,7 +159,6 @@ const AdminLanguageInput = ({
         }
         // Sinon, convertir en string (mais logger un avertissement)
         else {
-          console.warn(`⚠️ AdminLanguageInput: Valeur non-string pour ${lang.code}:`, langValue);
           obj[lang.code] = String(langValue || '');
         }
       });
@@ -169,7 +166,6 @@ const AdminLanguageInput = ({
       // Vérification finale : s'assurer qu'aucune valeur n'est un objet
       Object.keys(obj).forEach(key => {
         if (obj[key] && typeof obj[key] === 'object') {
-          console.error(`❌ AdminLanguageInput: Valeur encore objet après normalisation pour ${key}:`, obj[key]);
           obj[key] = '';
         }
       });

@@ -32,16 +32,9 @@ import ContentFiller from './ContentFiller';
 import { predefinedThemes } from '../../data/themes';
 
 const AdminLayoutContent = () => {
-  console.log('🏠 AdminLayoutContent - Début du chargement');
-  
   const location = useLocation();
-  console.log('📍 Location récupéré:', location.pathname);
-  
   const navigate = useNavigate();
-  console.log('🧭 Navigate récupéré');
-  
   const { sections, getSectionTemplates } = useSections();
-  console.log('📦 useSections récupéré, sections:', sections.length);
   const { isDark } = useAdminThemeAPI();
   const { user, logout } = useAuth();
   const [showAddModal, setShowAddModal] = useState(false);
@@ -51,7 +44,6 @@ const AdminLayoutContent = () => {
   // Force re-render when location changes
   useEffect(() => {
     if (currentPath !== location.pathname) {
-      console.log('🔄 URL changed to:', location.pathname);
       setCurrentPath(location.pathname);
       setForceRender(prev => prev + 1);
     }
@@ -90,8 +82,6 @@ const AdminLayoutContent = () => {
   const { addSection } = useSections();
 
   try {
-    console.log('🔧 AdminLayoutContent - Début du rendu');
-
   const handleAddSection = (template) => {
     const sectionData = {
       type: template.type,
@@ -239,7 +229,6 @@ const AdminLayoutContent = () => {
                   <li key={item.id}>
                     <button
                       onClick={() => {
-                        console.log('🖱️ Clicking nav button:', item.label, 'to:', item.path);
                         // Simple navigation - useEffect will handle the state update
                         navigate(item.path, { replace: true });
                       }}
@@ -396,25 +385,15 @@ const AdminLayoutContent = () => {
           {/* Alerte pour les identifiants par défaut */}
           <DefaultPasswordAlert />
           
-          {console.log('🔀 AdminLayout - Route actuelle:', location.pathname)}
           <Routes key={`${currentPath}-${forceRender}`}>
             <Route path="/" element={
-              <>
-                {console.log('📍 Route: Admin home')}
-                <SectionList key={`sections-${forceRender}`} />
-              </>
+              <SectionList key={`sections-${forceRender}`} />
             } />
             <Route path="section" element={
-              <>
-                {console.log('📍 Route: Section list')}
-                <SectionList key={`sections-list-${forceRender}`} />
-              </>
+              <SectionList key={`sections-list-${forceRender}`} />
             } />
             <Route path="section/:id" element={
-              <>
-                {console.log('📍 Route: Section editor avec ID')}
-                <SectionEditor key={`editor-${currentPath}-${forceRender}`} />
-              </>
+              <SectionEditor key={`editor-${currentPath}-${forceRender}`} />
             } />
             <Route path="design" element={<DesignSettings key={`design-${forceRender}`} />} />
             <Route path="languages" element={<LanguageManagement key={`languages-${forceRender}`} />} />
@@ -462,7 +441,6 @@ const AdminLayoutContent = () => {
     </div>
   );
   } catch (error) {
-    console.error('❌ AdminLayoutContent - Erreur:', error);
     return (
       <div style={{ padding: '20px', backgroundColor: '#ff5722', color: '#fff' }}>
         <h1>❌ Erreur AdminLayoutContent</h1>
@@ -474,17 +452,13 @@ const AdminLayoutContent = () => {
 };
 
 const AdminLayout = () => {
-  console.log('🏗️ AdminLayout - Composant principal chargé');
-  
   try {
-    console.log('🏗️ AdminLayout - Tentative de chargement AdminThemeProviderAPI');
     return (
       <AdminThemeProviderAPI>
         <AdminLayoutContent />
       </AdminThemeProviderAPI>
     );
   } catch (error) {
-    console.error('❌ AdminLayout - Erreur:', error);
     return (
       <div style={{ padding: '20px', backgroundColor: '#ffeb3b', color: '#000' }}>
         <h1>❌ Erreur AdminLayout</h1>

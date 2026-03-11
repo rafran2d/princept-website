@@ -8,7 +8,6 @@ const DynamicLanguageRouter = ({ children }) => {
   useEffect(() => {
     // Écouter les événements de mise à jour des langues
     const handleLanguagesUpdated = () => {
-      console.log('🔄 Languages updated, refreshing app routes...');
       // Forcer le rechargement de l'application pour que les nouvelles routes soient prises en compte
       window.location.reload();
     };

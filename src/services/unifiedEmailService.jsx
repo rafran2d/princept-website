@@ -13,12 +13,6 @@ class UnifiedEmailService {
     const providerName = (providerConfig.providerId || providerConfig.provider || 'UNKNOWN').toUpperCase();
     
     try {
-      console.log(`📧 [${providerName}] Préparation envoi email:`, {
-        to: emailData.to,
-        subject: emailData.subject,
-        type: type
-      });
-
       // Construire le payload selon le provider
       const payload = this.buildPayload(providerConfig, emailData, type);
 
@@ -36,7 +30,6 @@ class UnifiedEmailService {
       }
 
       const result = await response.json();
-      console.log(`✅ [${providerName}] Email envoyé avec succès:`, result);
 
       return {
         success: true,
@@ -47,17 +40,14 @@ class UnifiedEmailService {
       };
 
     } catch (error) {
-      console.error(`❌ [${providerName}] Erreur envoi:`, error);
       throw new Error(`Échec ${providerConfig.providerName || providerName}: ${error.message}`);
     }
   }
 
   // Construit le payload selon le provider sélectionné
   buildPayload(providerConfig, emailData, type) {
-    console.log('🔍 DEBUG buildPayload providerConfig:', providerConfig);
     // Pour la structure Mailjet: { provider: "mailjet", finalConfig: {...} }
     const provider = providerConfig.provider || providerConfig.providerId || providerConfig.finalConfig?.providerId;
-    console.log('🔍 DEBUG provider détecté:', provider);
     
     const basePayload = {
       provider: provider,
@@ -166,12 +156,6 @@ class UnifiedEmailService {
 
   // Envoie un email de notification de contact
   async sendContactNotification(formData, siteSettings) {
-    console.log('🔍 DEBUG siteSettings complet:', siteSettings);
-    console.log('🔍 DEBUG siteSettings keys:', Object.keys(siteSettings));
-    console.log('🔍 DEBUG contact_email:', siteSettings.contact_email);
-    console.log('🔍 DEBUG email_config:', siteSettings.email_config);
-    console.log('🔍 DEBUG emailConfig:', siteSettings.emailConfig);
-    
     // La config provider peut être dans contact_email (Mailjet) ou emailConfig (SMTP/autres)
     let providerConfig = null;
     let templatesConfig = null;
@@ -185,14 +169,12 @@ class UnifiedEmailService {
         try {
           contactEmailData = JSON.parse(contactEmailData);
         } catch (e) {
-          console.log('🔍 Erreur parsing contact_email:', e);
         }
       }
       
       // Vérifier si on a un provider non-SMTP (priorité)
       if (contactEmailData && contactEmailData.provider && contactEmailData.provider !== 'smtp') {
         providerConfig = contactEmailData;
-        console.log('🔍 Provider config trouvée dans contact_email:', providerConfig.provider);
       }
     }
     
@@ -204,18 +186,14 @@ class UnifiedEmailService {
         try {
           emailConfig = JSON.parse(emailConfig);
         } catch (e) {
-          console.log('🔍 Erreur parsing emailConfig:', e);
         }
       }
       
       // Vérifier si on a un provider valide
       if (emailConfig && emailConfig.provider && emailConfig.provider !== 'smtp') {
         providerConfig = emailConfig;
-        console.log('🔍 Provider config trouvée dans emailConfig:', providerConfig.provider);
       } else if (emailConfig && emailConfig.provider === 'smtp') {
-        // Accepter SMTP même si pas complètement configuré (pour debug)
         providerConfig = emailConfig;
-        console.log('🔍 Provider SMTP config trouvée dans emailConfig (peut être incomplete)');
       }
     }
     
@@ -230,7 +208,6 @@ class UnifiedEmailService {
       
       if (emailConfig && emailConfig.templates) {
         templatesConfig = emailConfig.templates;
-        console.log('🔍 Templates trouvés dans emailConfig');
       }
     }
     
@@ -305,7 +282,6 @@ class UnifiedEmailService {
     }
 
     if (!emailConfig.templates?.contactConfirmation?.enabled) {
-      console.log('Email de confirmation désactivé');
       return { success: true, message: 'Confirmation email disabled' };
     }
 
@@ -354,7 +330,6 @@ class UnifiedEmailService {
       try {
         results.confirmation = await this.sendContactConfirmation(formData, siteSettings);
       } catch (confirmError) {
-        console.warn('Erreur lors de l\'envoi de la confirmation:', confirmError);
         results.errors.push(`Confirmation: ${confirmError.message}`);
       }
 

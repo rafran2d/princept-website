@@ -7,7 +7,6 @@ const PagesController = {
       const rows = await database.query('SELECT * FROM pages ORDER BY created_at DESC');
       res.json({ success: true, data: rows });
     } catch (error) {
-      console.error('❌ Erreur getPages:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -21,7 +20,6 @@ const PagesController = {
       }
       res.json({ success: true, data: rows[0] });
     } catch (error) {
-      console.error('❌ Erreur getPage:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -36,7 +34,6 @@ const PagesController = {
       );
       res.status(201).json({ success: true, data: { id: result.insertId, ...req.body } });
     } catch (error) {
-      console.error('❌ Erreur createPage:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -51,7 +48,6 @@ const PagesController = {
       );
       res.json({ success: true, data: { id: req.params.id, ...req.body } });
     } catch (error) {
-      console.error('❌ Erreur updatePage:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -62,7 +58,6 @@ const PagesController = {
       await database.run('DELETE FROM pages WHERE id = ?', [req.params.id]);
       res.json({ success: true, message: 'Page supprimée' });
     } catch (error) {
-      console.error('❌ Erreur deletePage:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }

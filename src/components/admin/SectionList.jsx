@@ -364,9 +364,7 @@ const SectionList = () => {
       title: typeof section.title === 'string' ? `${section.title} (copie)` : { ...section.title, fr: `${getLocalizedValue(section.title)} (copie)` }
       // L'ID sera généré automatiquement par addSection
     };
-    console.log('🔄 Section originale ID:', id);
     const newSection = addSection(duplicatedSection);
-    console.log('✨ Nouvelle section créée avec ID:', newSection.id);
     showSuccess(`Section "${getLocalizedValue(section.title)}" dupliquée avec succès !`);
     
     // Scroll vers la nouvelle section après un court délai pour s'assurer qu'elle est rendue

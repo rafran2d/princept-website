@@ -1,8 +1,6 @@
 import React from 'react';
 
 const AdminLayoutTest = () => {
-  console.log('🧪 AdminLayoutTest - Fichier test chargé sans imports complexes');
-  
   return (
     <div style={{ padding: '20px', backgroundColor: '#e3f2fd' }}>
       <h1>🧪 AdminLayoutTest</h1>

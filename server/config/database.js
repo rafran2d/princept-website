@@ -5,81 +5,119 @@ class Database {
   constructor() {
     this.pool = null;
     this.initialized = false;
-    this.initializeDatabase();
+    this.isMonitoring = false;
+    this.currentStatus = 'disconnected';
+    this.healthInterval = null;
   }
 
-  async initializeDatabase() {
-    try {
-      this.initMySQL();
-      const connected = await this.testConnection();
-      if (connected) {
-        console.log('✅ Utilisation de MySQL');
+  async initialize() {
+    await this.connectMySQL();
+    this.startHealthMonitoring();
+  }
+
+  async connectMySQL(retries = 5, delay = 2000) {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        if (attempt > 1) {
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+
+        if (this.pool) {
+          try { await this.pool.end(); } catch (_) {}
+        }
+
+        this.pool = mysql.createPool({
+          host: process.env.DB_HOST,
+          port: process.env.DB_PORT || 3306,
+          user: process.env.DB_USER,
+          password: process.env.DB_PASSWORD,
+          database: process.env.DB_NAME,
+          charset: 'utf8mb4',
+          waitForConnections: true,
+          connectionLimit: 10,
+          queueLimit: 0,
+          acquireTimeout: 10000,
+          enableKeepAlive: true,
+          keepAliveInitialDelay: 0,
+        });
+
+        const connection = await this.pool.getConnection();
+        await connection.ping();
+        connection.release();
+
         this.initialized = true;
+        this.currentStatus = 'connected';
+        return true;
+      } catch (error) {
+        if (attempt === retries) {
+          this.currentStatus = 'error';
+          throw new Error(`MySQL unavailable after ${retries} attempts: ${error.message}`);
+        }
       }
-    } catch (error) {
-      console.error('❌ Erreur initialisation base:', error.message);
     }
   }
 
-  initMySQL() {
-    this.pool = mysql.createPool({
-      host: process.env.DB_HOST || 'localhost',
-      port: process.env.DB_PORT || 3310,
-      user: process.env.DB_USER || 'princept_website_user',
-      password: process.env.DB_PASSWORD || 'princept_website_pass456',
-      database: process.env.DB_NAME || 'princept_website',
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0,
-      acquireTimeout: 10000,
-      timeout: 10000,
-    });
+  startHealthMonitoring() {
+    if (this.isMonitoring) return;
+    this.isMonitoring = true;
+
+    this.healthInterval = setInterval(async () => {
+      try {
+        if (this.currentStatus === 'connected') {
+          const connection = await this.pool.getConnection();
+          await connection.ping();
+          connection.release();
+        } else {
+          try {
+            await this.connectMySQL();
+          } catch (_) {}
+        }
+      } catch (_) {
+        this.currentStatus = 'error';
+      }
+    }, 30000);
   }
 
-  // Exécuter une requête
   async query(sql, params = []) {
-    try {
-      const [results] = await this.pool.execute(sql, params);
-      return results;
-    } catch (error) {
-      console.error('Erreur base de données:', error);
-      throw error;
-    }
+    const [results] = await this.pool.execute(sql, params);
+    return results;
   }
 
-  // Exécuter une requête de modification
   async run(sql, params = []) {
-    try {
-      const [results] = await this.pool.execute(sql, params);
-      return results;
-    } catch (error) {
-      console.error('Erreur base de données:', error);
-      throw error;
-    }
+    const [results] = await this.pool.execute(sql, params);
+    return results;
   }
 
-  // Tester la connexion
   async testConnection() {
     try {
       const connection = await this.pool.getConnection();
-      console.log('✅ Connexion MySQL réussie');
       connection.release();
       return true;
-    } catch (error) {
-      console.error('❌ Erreur connexion:', error.message);
+    } catch (_) {
       return false;
     }
   }
 
-  // Fermer le pool de connexions
+  getStatus() {
+    return {
+      currentDB: this.currentStatus,
+      isConnected: this.currentStatus === 'connected',
+      isError: this.currentStatus === 'error',
+      isMonitoring: this.isMonitoring,
+    };
+  }
+
   async close() {
+    this.isMonitoring = false;
+    if (this.healthInterval) {
+      clearInterval(this.healthInterval);
+    }
     if (this.pool) {
       await this.pool.end();
     }
   }
 }
 
-// Instance singleton
 const database = new Database();
 
 module.exports = database;

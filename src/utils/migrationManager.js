@@ -19,7 +19,6 @@ class MigrationManager {
   markMigrationCompleted() {
     localStorage.setItem(this.migrationKey, 'completed');
     localStorage.setItem(`${this.migrationKey}-date`, new Date().toISOString());
-    console.log('✅ Migration marquée comme terminée');
   }
 
   // Créer une sauvegarde de localStorage avant migration
@@ -45,10 +44,8 @@ class MigrationManager {
       });
 
       localStorage.setItem(this.backupKey, JSON.stringify(backup));
-      console.log('💾 Sauvegarde localStorage créée:', Object.keys(backup).length, 'éléments');
       return backup;
     } catch (error) {
-      console.error('❌ Erreur création sauvegarde:', error);
       throw error;
     }
   }
@@ -56,16 +53,13 @@ class MigrationManager {
   // Migrer les langues
   async migrateSiteLanguages() {
     try {
-      console.log('🌍 Migration des langues...');
-      
       const siteLanguages = localStorage.getItem('site-languages');
       const currentAdminLang = localStorage.getItem('current-admin-language');
-      
+
       let migrated = 0;
 
       if (siteLanguages) {
         const languages = JSON.parse(siteLanguages);
-        console.log('📥 Langues trouvées:', languages.length);
         
         for (const lang of languages) {
           try {
@@ -82,7 +76,6 @@ class MigrationManager {
             migrated++;
           } catch (error) {
             if (!error.message.includes('duplicate') && !error.message.includes('exists')) {
-              console.warn(`⚠️ Erreur création langue ${lang.code}:`, error.message);
             } else {
               migrated++; // Compte comme migré si elle existe déjà
             }
@@ -94,10 +87,8 @@ class MigrationManager {
         await apiService.setUserPreference('current_admin_language', currentAdminLang);
       }
 
-      console.log(`✅ Langues migrées: ${migrated}`);
       return migrated;
     } catch (error) {
-      console.error('❌ Erreur migration langues:', error);
       return 0;
     }
   }
@@ -105,16 +96,12 @@ class MigrationManager {
   // Migrer les sections
   async migrateSections() {
     try {
-      console.log('📄 Migration des sections...');
-      
       const sectionsData = localStorage.getItem('onepress-sections');
       if (!sectionsData) {
-        console.log('ℹ️ Aucune section à migrer');
         return 0;
       }
 
       const sections = JSON.parse(sectionsData);
-      console.log('📥 Sections trouvées:', sections.length);
       
       let migrated = 0;
       
@@ -151,17 +138,14 @@ class MigrationManager {
           migrated++;
         } catch (error) {
           if (!error.message.includes('duplicate') && !error.message.includes('exists')) {
-            console.warn(`⚠️ Erreur création section ${section.id}:`, error.message);
           } else {
             migrated++;
           }
         }
       }
 
-      console.log(`✅ Sections migrées: ${migrated}`);
       return migrated;
     } catch (error) {
-      console.error('❌ Erreur migration sections:', error);
       return 0;
     }
   }
@@ -169,16 +153,12 @@ class MigrationManager {
   // Migrer les paramètres du site
   async migrateSiteSettings() {
     try {
-      console.log('⚙️ Migration des paramètres du site...');
-      
       const settingsData = localStorage.getItem('princept-site-settings');
       if (!settingsData) {
-        console.log('ℹ️ Aucun paramètre site à migrer');
         return 0;
       }
 
       const settings = JSON.parse(settingsData);
-      console.log('📥 Paramètres site trouvés:', Object.keys(settings).length);
       
       // Mapping des paramètres
       const settingsMapping = {
@@ -206,14 +186,11 @@ class MigrationManager {
           await apiService.setSiteSetting(apiKey, value, settingType);
           migrated++;
         } catch (error) {
-          console.warn(`⚠️ Erreur paramètre ${localKey}:`, error.message);
         }
       }
 
-      console.log(`✅ Paramètres site migrés: ${migrated}`);
       return migrated;
     } catch (error) {
-      console.error('❌ Erreur migration paramètres site:', error);
       return 0;
     }
   }
@@ -221,16 +198,13 @@ class MigrationManager {
   // Migrer les thèmes personnalisés
   async migrateCustomThemes() {
     try {
-      console.log('🎨 Migration des thèmes...');
-      
       const customThemesData = localStorage.getItem('customThemes');
       const activeTheme = localStorage.getItem('activeTheme');
-      
+
       let migrated = 0;
 
       if (customThemesData) {
         const customThemes = JSON.parse(customThemesData);
-        console.log('📥 Thèmes personnalisés trouvés:', Object.keys(customThemes).length);
 
         for (const [themeId, themeConfig] of Object.entries(customThemes)) {
           try {
@@ -243,7 +217,6 @@ class MigrationManager {
             migrated++;
           } catch (error) {
             if (!error.message.includes('duplicate') && !error.message.includes('exists')) {
-              console.warn(`⚠️ Erreur création thème ${themeId}:`, error.message);
             } else {
               migrated++;
             }
@@ -256,10 +229,8 @@ class MigrationManager {
         await apiService.setUserPreference('active_theme', activeTheme);
       }
 
-      console.log(`✅ Thèmes migrés: ${migrated}`);
       return migrated;
     } catch (error) {
-      console.error('❌ Erreur migration thèmes:', error);
       return 0;
     }
   }
@@ -267,16 +238,12 @@ class MigrationManager {
   // Migrer les paramètres de design
   async migrateDesignSettings() {
     try {
-      console.log('🖌️ Migration des paramètres de design...');
-      
       const designSettingsData = localStorage.getItem('designSettings');
       if (!designSettingsData) {
-        console.log('ℹ️ Aucun paramètre design à migrer');
         return 0;
       }
 
       const settings = JSON.parse(designSettingsData);
-      console.log('📥 Paramètres design trouvés:', Object.keys(settings).length);
       
       let migrated = 0;
       
@@ -285,14 +252,11 @@ class MigrationManager {
           await apiService.setDesignSetting(name, value);
           migrated++;
         } catch (error) {
-          console.warn(`⚠️ Erreur paramètre design ${name}:`, error.message);
         }
       }
 
-      console.log(`✅ Paramètres design migrés: ${migrated}`);
       return migrated;
     } catch (error) {
-      console.error('❌ Erreur migration design settings:', error);
       return 0;
     }
   }
@@ -300,8 +264,6 @@ class MigrationManager {
   // Migrer les préférences utilisateur
   async migrateUserPreferences() {
     try {
-      console.log('👤 Migration des préférences utilisateur...');
-      
       const preferences = {
         current_admin_language: localStorage.getItem('current-admin-language'),
         admin_theme: localStorage.getItem('admin-theme'),
@@ -317,15 +279,12 @@ class MigrationManager {
             await apiService.setUserPreference(key, value, prefType);
             migrated++;
           } catch (error) {
-            console.warn(`⚠️ Erreur préférence ${key}:`, error.message);
           }
         }
       }
 
-      console.log(`✅ Préférences utilisateur migrées: ${migrated}`);
       return migrated;
     } catch (error) {
-      console.error('❌ Erreur migration préférences:', error);
       return 0;
     }
   }
@@ -333,7 +292,6 @@ class MigrationManager {
   // Migration complète
   async migrateAll() {
     if (this.isMigrationCompleted()) {
-      console.log('ℹ️ Migration déjà effectuée');
       return {
         alreadyCompleted: true,
         backupExists: !!localStorage.getItem(this.backupKey)
@@ -341,8 +299,6 @@ class MigrationManager {
     }
 
     try {
-      console.log('🚀 Début de la migration complète localStorage -> API HA');
-      
       // Vérifier que l'API est accessible
       const isApiAvailable = await apiService.isApiReachable();
       if (!isApiAvailable) {
@@ -367,10 +323,6 @@ class MigrationManager {
       // Marquer comme terminé
       this.markMigrationCompleted();
 
-      console.log('🎉 Migration complète terminée !');
-      console.log('📊 Résultats:', results);
-      console.log(`📈 Total migré: ${totalMigrated} éléments`);
-
       return {
         success: true,
         results,
@@ -379,7 +331,6 @@ class MigrationManager {
       };
 
     } catch (error) {
-      console.error('❌ ERREUR Migration complète:', error);
       return {
         success: false,
         error: error.message
@@ -390,7 +341,6 @@ class MigrationManager {
   // Nettoyer localStorage après vérification
   async cleanupLocalStorage(force = false) {
     if (!force && !this.isMigrationCompleted()) {
-      console.warn('⚠️ Migration non terminée, nettoyage annulé');
       return false;
     }
 
@@ -414,9 +364,6 @@ class MigrationManager {
         }
       });
 
-      console.log('🗑️ localStorage nettoyé:', removed.length, 'éléments supprimés');
-      console.log('🔒 Sauvegarde conservée sous la clé:', this.backupKey);
-      
       return {
         success: true,
         removed,
@@ -424,7 +371,6 @@ class MigrationManager {
       };
 
     } catch (error) {
-      console.error('❌ Erreur nettoyage localStorage:', error);
       return {
         success: false,
         error: error.message
@@ -450,14 +396,12 @@ class MigrationManager {
       localStorage.removeItem(this.migrationKey);
       localStorage.removeItem(`${this.migrationKey}-date`);
 
-      console.log('🔄 localStorage restauré depuis la sauvegarde');
       return {
         success: true,
         restoredKeys: Object.keys(backup)
       };
 
     } catch (error) {
-      console.error('❌ Erreur restauration:', error);
       return {
         success: false,
         error: error.message

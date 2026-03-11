@@ -53,7 +53,6 @@ const AuthController = {
         }
       });
     } catch (error) {
-      console.error('❌ Erreur login:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -75,7 +74,6 @@ const AuthController = {
 
       res.json({ user: users[0] });
     } catch (error) {
-      console.error('❌ Erreur verify:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -105,7 +103,6 @@ const AuthController = {
 
       res.json({ message: 'Mot de passe modifié avec succès' });
     } catch (error) {
-      console.error('❌ Erreur change-password:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   },
@@ -132,7 +129,6 @@ const AuthController = {
       const users = await database.query('SELECT id, username, email, role, is_default_password FROM users WHERE id = ?', [userId]);
       res.json({ message: 'Profil mis à jour', user: users[0] });
     } catch (error) {
-      console.error('❌ Erreur update-profile:', error);
       res.status(500).json({ error: 'Erreur serveur' });
     }
   }

@@ -26,10 +26,10 @@ export const AdminThemeProviderAPI = ({ children }) => {
         const preferences = await apiService.getUserPreferences();
         const adminTheme = preferences.admin_theme || 'light';
         setIsDark(adminTheme === 'dark');
-        console.log('🎨 Thème admin chargé depuis API:', adminTheme);
+
       } else {
         // Mode dégradé : utiliser localStorage
-        console.warn('⚠️ API non accessible, utilisation localStorage pour thème admin');
+
         const saved = localStorage.getItem('admin-theme');
         if (saved) {
           setIsDark(saved === 'dark');
@@ -40,7 +40,7 @@ export const AdminThemeProviderAPI = ({ children }) => {
         }
       }
     } catch (error) {
-      console.error('❌ Erreur chargement thème admin:', error);
+
       setError(error.message);
       
       // Fallback vers localStorage
@@ -81,12 +81,12 @@ export const AdminThemeProviderAPI = ({ children }) => {
       
       if (isApiAvailable) {
         await apiService.setUserPreference('admin_theme', theme);
-        console.log('🎨 Thème admin sauvegardé via API:', theme);
+
       } else {
-        console.warn('⚠️ API non accessible, thème sauvé uniquement en localStorage');
+
       }
     } catch (error) {
-      console.error('❌ Erreur sauvegarde thème admin:', error);
+
       // En cas d'erreur API, au moins localStorage est mis à jour
     }
   };
@@ -135,7 +135,7 @@ export const useAdminThemeAPI = () => {
 export const useMigrateAdminTheme = () => {
   const migrateToAPI = async () => {
     try {
-      console.log('🔄 Migration thème admin localStorage -> API...');
+
       
       const localTheme = localStorage.getItem('admin-theme');
       if (localTheme) {
@@ -143,15 +143,15 @@ export const useMigrateAdminTheme = () => {
         
         if (isApiAvailable) {
           await apiService.setUserPreference('admin_theme', localTheme);
-          console.log('✅ Thème admin migré vers API:', localTheme);
+
           return true;
         }
       }
       
-      console.log('ℹ️ Aucune migration thème admin nécessaire');
+
       return false;
     } catch (error) {
-      console.error('❌ Erreur migration thème admin:', error);
+
       return false;
     }
   };

@@ -222,15 +222,12 @@ const ContentFiller = () => {
       await Promise.all(promises);
       return true;
     } catch (error) {
-      console.error('Erreur mise à jour paramètres:', error);
       throw error;
     }
   };
 
   const updateSection = async (sectionId, sectionType, content) => {
     try {
-      console.log(`🔄 Mise à jour section ${sectionId} (${sectionType})`, content);
-      
       // Récupérer toutes les sections
       const sections = await apiService.getSections();
 
@@ -240,9 +237,8 @@ const ContentFiller = () => {
         // Chercher la première section de ce type existante
         existingSection = sections.find(s => s.section_type === sectionType);
       if (existingSection) {
-          console.log(`✅ Section ${sectionType} existante trouvée (ID: ${existingSection.id}):`, existingSection);
+          // Section found by type
         } else {
-          console.log(`ℹ️ Aucune section ${sectionType} existante trouvée, recherche par ID...`);
           // Si aucune trouvée par type, chercher par ID
           existingSection = sections.find(s => s.id === sectionId);
         }
@@ -252,15 +248,12 @@ const ContentFiller = () => {
       }
 
       if (existingSection) {
-        console.log(`✅ Section existante trouvée:`, existingSection);
         // Mettre à jour - section_data est déjà parsé en JSON par l'API
         const currentData = existingSection.section_data || {};
         const updatedData = {
           ...currentData,
           ...content
         };
-        
-        console.log(`📝 Données mises à jour:`, updatedData);
         
         // Utiliser l'ID de la section existante (qui peut être différent de sectionId)
         const actualSectionId = existingSection.id;
@@ -271,10 +264,8 @@ const ContentFiller = () => {
           section_data: updatedData,
           is_enabled: 1  // S'assurer que la section est activée
         });
-        console.log(`✅ Section mise à jour (ID: ${actualSectionId}):`, result);
         return actualSectionId; // Retourner l'ID réel utilisé
       } else {
-        console.log(`➕ Création nouvelle section ${sectionId}`);
         // Créer une nouvelle section
         const result = await apiService.createSection({
           id: sectionId,
@@ -284,7 +275,6 @@ const ContentFiller = () => {
           sort_order: 0,
           language_id: 'fr'
         });
-        console.log(`✅ Section créée:`, result);
         return sectionId;
       }
       
@@ -293,7 +283,6 @@ const ContentFiller = () => {
       
       return true;
     } catch (error) {
-      console.error(`❌ Erreur section ${sectionId}:`, error);
       throw error;
     }
   };
@@ -811,7 +800,6 @@ Antananarivo 101, Madagaskar</p>
       
       return true;
     } catch (error) {
-      console.error('Erreur création pages légales:', error);
       throw error;
     }
   };
@@ -1014,11 +1002,10 @@ Antananarivo 101, Madagaskar</p>
       // Recharger les sections depuis le store
       try {
         await sectionStore.refresh();
-        console.log('✅ Sections rechargées');
       } catch (reloadError) {
-        console.warn('⚠️ Erreur rechargement sections:', reloadError);
+        // Reload error ignored
       }
-      
+
       // Déclencher un événement pour forcer le rechargement
       window.dispatchEvent(new CustomEvent('sectionsUpdated'));
 
@@ -1232,36 +1219,17 @@ Antananarivo 101, Madagaskar</p>
                   
                   // Recharger les sections depuis le store
                   try {
-                    console.log('🔄 Rechargement des sections...');
                     await sectionStore.refresh();
-                    console.log('✅ Sections rechargées');
                   } catch (reloadError) {
-                    console.warn('⚠️ Erreur rechargement sections:', reloadError);
+                    // Reload error ignored
                   }
-                  
+
                   // Déclencher un événement pour forcer le rechargement
                   window.dispatchEvent(new CustomEvent('sectionsUpdated'));
-                  
-                  // Vérifier que la section a bien été créée/mise à jour
-                  const verifySections = await apiService.getSections();
-                  // Chercher toutes les sections hero-slider (peu importe l'ID)
-                  const heroSliderSections = verifySections.filter(s => s.section_type === 'hero-slider');
-                  if (heroSliderSections.length > 0) {
-                    const heroSliderSection = heroSliderSections[0];
-                    console.log(`✅ Section hero-slider trouvée (ID: ${heroSliderSection.id}):`, heroSliderSection);
-                    console.log('📊 Nombre de slides:', heroSliderSection.section_data?.slides?.length || 0);
-                    console.log('🔘 Section activée:', heroSliderSection.is_enabled);
-                    if (heroSliderSections.length > 1) {
-                      console.warn(`⚠️ Attention: ${heroSliderSections.length} sections hero-slider trouvées. La première a été mise à jour.`);
-                    }
-                  } else {
-                    console.warn('⚠️ Aucune section hero-slider trouvée après création/mise à jour');
-                  }
-                  
-                  showSuccess('Hero Slider rempli avec succès ! 4 slides avec images gratuites (FR et EN). Ouvrez la console (F12) pour voir les logs détaillés. Si les changements ne sont pas visibles, rechargez la page frontend.');
+
+                  showSuccess('Hero Slider rempli avec succès ! 4 slides avec images gratuites (FR et EN). Si les changements ne sont pas visibles, rechargez la page frontend.');
                   setProgress('');
                 } catch (error) {
-                  console.error('❌ Erreur détaillée Hero Slider:', error);
                   setIsLoading(false);
                   showError(`Erreur lors du remplissage du Hero Slider : ${error.message}. Vérifiez la console pour plus de détails.`);
                   setProgress('');
@@ -1499,20 +1467,17 @@ Antananarivo 101, Madagaskar</p>
                   
                   // Recharger les sections depuis le store
                   try {
-                    console.log('🔄 Rechargement des sections...');
                     await sectionStore.refresh();
-                    console.log('✅ Sections rechargées');
                   } catch (reloadError) {
-                    console.warn('⚠️ Erreur rechargement sections:', reloadError);
+                    // Reload error ignored
                   }
-                  
+
                   // Déclencher un événement pour forcer le rechargement
                   window.dispatchEvent(new CustomEvent('sectionsUpdated'));
-                  
+
                   showSuccess('Section "Nos activités récentes" remplie avec succès ! 6 posts avec images gratuites (FR et EN). Si les changements ne sont pas visibles, rechargez la page frontend.');
                   setProgress('');
                 } catch (error) {
-                  console.error('❌ Erreur détaillée Blog:', error);
                   setIsLoading(false);
                   showError(`Erreur lors du remplissage de la section Blog : ${error.message}. Vérifiez la console pour plus de détails.`);
                   setProgress('');

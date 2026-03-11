@@ -7,7 +7,6 @@ const useSafeLanguage = () => {
   try {
     return useLanguage();
   } catch (error) {
-    console.warn('LanguageContext non disponible, utilisation des valeurs par défaut');
     return {
       currentLanguage: 'fr',
       getLocalizedValue: (value, language = 'fr') => {
@@ -43,8 +42,6 @@ const InlineTextEditor = ({
   const inputRef = useRef(null);
   const { currentLanguage, getLocalizedValue } = useSafeLanguage();
 
-  console.log('🔍 INIT - InlineTextEditor props:', { sectionId, fieldPath, onSave: !!onSave, value, disabled, isEditing });
-
   // Obtenir la valeur localisée appropriée
   const displayValue = getLocalizedValue(value, currentLanguage);
 
@@ -66,9 +63,7 @@ const InlineTextEditor = ({
   }, [isEditing, multiline]);
 
   const handleEdit = useCallback(() => {
-    console.log('🔍 EDIT - handleEdit called, disabled:', disabled);
     if (disabled) return;
-    console.log('🔍 EDIT - Entering edit mode');
     setIsEditing(true);
     setError(null);
   }, [disabled]);
@@ -80,12 +75,7 @@ const InlineTextEditor = ({
   }, [originalValue]);
 
   const handleSave = useCallback(async () => {
-    console.log('🔍 SAVE - handleSave called');
-    console.log('🔍 SAVE - editValue:', editValue);
-    console.log('🔍 SAVE - originalValue:', originalValue);
-
     if (editValue === originalValue) {
-      console.log('🔍 SAVE - No changes, skipping save');
       setIsEditing(false);
       return;
     }
@@ -93,8 +83,6 @@ const InlineTextEditor = ({
     try {
       setIsSaving(true);
       setError(null);
-
-      console.log('🔍 SAVE - Starting save process...');
 
       // Préparer la nouvelle valeur multilingue
       let newValue;
@@ -111,23 +99,14 @@ const InlineTextEditor = ({
         };
       }
 
-      console.log('🔍 SAVE - Prepared newValue:', newValue);
-      console.log('🔍 SAVE - sectionId:', sectionId);
-      console.log('🔍 SAVE - fieldPath:', fieldPath);
-
       // Sauvegarder via le callback principal (qui gère l'API et le store)
       if (onSave) {
-        console.log('🔍 SAVE - Calling onSave callback...');
         await onSave(fieldPath, newValue);
-        console.log('🔍 SAVE - onSave callback completed');
-      } else {
-        console.warn('🔍 SAVE - No onSave callback provided, cannot save');
       }
 
       setOriginalValue(editValue);
       setIsEditing(false);
     } catch (err) {
-      console.error('Erreur sauvegarde texte inline:', err);
       setError(err.message);
     } finally {
       setIsSaving(false);
@@ -171,25 +150,19 @@ const InlineTextEditor = ({
         section_data: updatedSectionData
       });
 
-      console.log(`✅ Texte sauvegardé en base: ${fieldPath} = ${editValue}`);
     } catch (error) {
-      console.error('❌ Erreur sauvegarde en base:', error);
       throw error;
     }
   };
 
   const handleKeyDown = useCallback((e) => {
-    console.log('🔍 KEY - Key pressed:', e.key, 'multiline:', multiline);
     if (e.key === 'Enter' && !multiline && !e.shiftKey) {
-      console.log('🔍 KEY - Enter pressed, calling handleSave');
       e.preventDefault();
       handleSave();
     } else if (e.key === 'Escape') {
-      console.log('🔍 KEY - Escape pressed, calling handleCancel');
       e.preventDefault();
       handleCancel();
     } else if (e.key === 'Enter' && multiline && (e.ctrlKey || e.metaKey)) {
-      console.log('🔍 KEY - Ctrl+Enter pressed, calling handleSave');
       e.preventDefault();
       handleSave();
     }
@@ -204,10 +177,7 @@ const InlineTextEditor = ({
     }, 150);
   }, [isEditing, isSaving, handleSave]);
 
-  console.log('🔍 RENDER - isEditing state:', isEditing);
-
   if (isEditing) {
-    console.log('🔍 RENDER - Rendering edit mode');
     const InputComponent = multiline ? 'textarea' : 'input';
 
     return (
@@ -246,7 +216,6 @@ const InlineTextEditor = ({
         }}>
           <button
             onClick={() => {
-              console.log('🔍 BUTTON - Save button clicked');
               handleSave();
             }}
             disabled={isSaving}
@@ -313,7 +282,6 @@ const InlineTextEditor = ({
     <TagComponent
       className={`inline-editor ${disabled ? 'disabled' : 'editable'} ${isEmpty ? 'empty' : ''} ${className}`}
       onClick={() => {
-        console.log('🔍 CLICK - Element clicked!');
         handleEdit();
       }}
       style={{

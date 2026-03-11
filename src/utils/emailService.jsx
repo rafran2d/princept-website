@@ -128,7 +128,6 @@ class EmailService {
       }
       
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de l\'email de notification:', error);
       throw error;
     }
   }
@@ -137,7 +136,6 @@ class EmailService {
   async sendContactConfirmation(formData, emailConfig, siteSettings, currentLanguage = null) {
     try {
       if (!emailConfig?.templates?.contactConfirmation?.enabled) {
-        console.log('Email de confirmation désactivé');
         return { success: true, message: 'Confirmation email disabled' };
       }
 
@@ -187,7 +185,6 @@ class EmailService {
       }
       
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de l\'email de confirmation:', error);
       throw error;
     }
   }
@@ -228,7 +225,6 @@ class EmailService {
       return await this.simulateMailjetSend(payload, emailConfig, type);
 
     } catch (error) {
-      console.error('Erreur Mailjet:', error);
       throw new Error(`Échec envoi Mailjet: ${error.message}`);
     }
   }
@@ -269,17 +265,6 @@ class EmailService {
           return;
         }
 
-        // Log de simulation Mailjet
-        console.log(`📧 [MAILJET SIMULATION] Email ${type} envoyé:`, {
-          from: `${payload.Messages[0].From.Name} <${payload.Messages[0].From.Email}>`,
-          to: payload.Messages[0].To[0].Email,
-          subject: payload.Messages[0].Subject,
-          apiKey: `${emailConfig.mailjetApiKey.substr(0, 8)}...`,
-          sandboxMode: payload.SandboxMode || false
-        });
-
-        console.log(`📧 [MAILJET SIMULATION] Payload complet:`, JSON.stringify(payload, null, 2));
-
         resolve({
           success: true,
           messageId: `mj_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -311,17 +296,6 @@ class EmailService {
           reject(new Error('Adresse destinataire manquante'));
           return;
         }
-
-        // Simulation d'un succès avec log pour debug
-        console.log(`📧 [SMTP SIMULATION] Email ${type} envoyé:`, {
-          from: `${emailData.from.name} <${emailData.from.email}>`,
-          to: emailData.to,
-          subject: emailData.subject,
-          smtp: `${emailData.smtpConfig.host}:${emailData.smtpConfig.port}`,
-          secure: emailData.smtpConfig.secure ? 'SSL/TLS' : 'Non sécurisé'
-        });
-
-        console.log(`📧 [SMTP SIMULATION] Contenu de l'email:\n${emailData.text}`);
 
         resolve({
           success: true,
@@ -378,17 +352,10 @@ class EmailService {
       try {
         results.confirmation = await this.sendContactConfirmation(formData, emailConfig, siteSettings, results.language);
       } catch (confirmError) {
-        console.warn('Erreur lors de l\'envoi de la confirmation:', confirmError);
         results.errors.push(`Confirmation: ${confirmError.message}`);
       }
 
       results.success = results.notification.success;
-      
-      console.log(`📧 [MultiLang] Emails envoyés en ${results.language}:`, {
-        notification: results.notification?.success,
-        confirmation: results.confirmation?.success,
-        language: results.language
-      });
       
       return results;
 

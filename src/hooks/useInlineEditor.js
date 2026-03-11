@@ -7,7 +7,6 @@ const useSafeLanguage = () => {
   try {
     return useLanguage();
   } catch (error) {
-    console.warn('LanguageContext non disponible, utilisation des valeurs par défaut');
     return {
       currentLanguage: 'fr',
       getLocalizedValue: (value) => {
@@ -28,17 +27,11 @@ export const useInlineEditor = (sectionId) => {
 
   const updateSectionField = useCallback(async (fieldPath, newValue) => {
     try {
-      console.log('🔍 UPDATE - updateSectionField called');
-      console.log('🔍 UPDATE - fieldPath:', fieldPath);
-      console.log('🔍 UPDATE - newValue:', newValue);
-      console.log('🔍 UPDATE - sectionId:', sectionId);
-
       setIsUpdating(true);
       setError(null);
 
       // Validation du fieldPath
       if (!fieldPath || typeof fieldPath !== 'string') {
-        console.error('🔍 UPDATE - Invalid fieldPath:', fieldPath);
         throw new Error(`fieldPath invalide: ${fieldPath}`);
       }
 
@@ -95,15 +88,10 @@ export const useInlineEditor = (sectionId) => {
       current[finalPathParts[finalPathParts.length - 1]] = newValue;
 
       // Sauvegarder via le store
-      console.log('🔍 UPDATE - Calling sectionStoreAPI.updateSection...');
       await sectionStoreAPI.updateSection(sectionId, updatedSection);
-      console.log('🔍 UPDATE - sectionStoreAPI.updateSection completed');
-
-      console.log(`✅ Section ${sectionId} mise à jour:`, fieldPath, '=', newValue);
 
       return updatedSection;
     } catch (err) {
-      console.error(`❌ Erreur mise à jour section ${sectionId}:`, err);
       setError(err.message);
       throw err;
     } finally {
@@ -112,16 +100,10 @@ export const useInlineEditor = (sectionId) => {
   }, [sectionId]);
 
   const updateMultilingualField = useCallback(async (fieldPath, value, languageId = null) => {
-    console.log('🔍 HOOK - updateMultilingualField called');
-    console.log('🔍 HOOK - fieldPath:', fieldPath);
-    console.log('🔍 HOOK - value:', value);
-    console.log('🔍 HOOK - sectionId:', sectionId);
-
     const targetLanguage = languageId || currentLanguage;
 
     // Validation du fieldPath
     if (!fieldPath || typeof fieldPath !== 'string') {
-      console.error('🔍 HOOK - Invalid fieldPath:', fieldPath);
       throw new Error(`fieldPath invalide: ${fieldPath}`);
     }
 
@@ -132,9 +114,7 @@ export const useInlineEditor = (sectionId) => {
       const isMultilingualObject = keys.some(key => ['fr', 'en', 'es', 'it', 'de', 'pt', 'ar', 'ch', 'jp', 'kr'].includes(key));
 
       if (isMultilingualObject) {
-        console.log('🔍 HOOK - Value is already multilingual object, using directly');
         const result = await updateSectionField(fieldPath, value);
-        console.log('🔍 HOOK - updateSectionField completed');
         return result;
       }
     }
@@ -169,16 +149,13 @@ export const useInlineEditor = (sectionId) => {
       };
     }
 
-    console.log('🔍 HOOK - Calling updateSectionField with:', fieldPath, multilingualValue);
     const result = await updateSectionField(fieldPath, multilingualValue);
-    console.log('🔍 HOOK - updateSectionField completed');
     return result;
   }, [sectionId, currentLanguage, updateSectionField]);
 
   const getFieldValue = useCallback((fieldPath, section = null) => {
     // Validation du fieldPath
     if (!fieldPath || typeof fieldPath !== 'string') {
-      console.warn(`getFieldValue: fieldPath invalide`, fieldPath);
       return null;
     }
 
@@ -188,9 +165,6 @@ export const useInlineEditor = (sectionId) => {
     }
 
     if (!section) {
-      const allSections = sectionStoreAPI.getSections();
-      console.warn(`getFieldValue: section ${sectionId} non trouvée`);
-      console.log('🔍 Available sections:', allSections.map(s => ({ id: s.id, type: s.section_type })));
       return null;
     }
 
@@ -222,7 +196,6 @@ export const useInlineEditor = (sectionId) => {
     for (const part of pathParts) {
       current = current?.[part];
       if (current === undefined) {
-        console.warn(`getFieldValue: chemin ${finalPath} non trouvé à l'étape ${part}`);
         return null;
       }
     }

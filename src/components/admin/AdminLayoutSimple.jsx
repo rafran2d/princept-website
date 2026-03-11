@@ -4,17 +4,10 @@ import { Routes, Route, useParams } from 'react-router-dom';
 // Composant SectionEditor simplifié pour le test
 const SimpleSectionEditor = () => {
   const { id } = useParams();
-  console.log('🎯 SimpleSectionEditor - ID reçu:', id);
-  console.log('🎯 SimpleSectionEditor - URL complète:', window.location.pathname);
-  console.log('🎯 SimpleSectionEditor - useParams complet:', useParams());
-  
   // Simuler une recherche de section
   const sections = JSON.parse(localStorage.getItem('onepress-sections') || '[]');
-  console.log('🎯 SimpleSectionEditor - Sections disponibles:', sections.length);
-  console.log('🎯 SimpleSectionEditor - IDs disponibles:', sections.map(s => s.id));
-  
+
   const foundSection = sections.find(s => s.id === id);
-  console.log('🎯 SimpleSectionEditor - Section trouvée:', foundSection ? 'OUI' : 'NON');
   
   if (!foundSection) {
     return (
@@ -55,8 +48,6 @@ const SimpleSectionEditor = () => {
 
 // Composant SectionList simplifié
 const SimpleSectionList = () => {
-  console.log('📋 SimpleSectionList - Chargé');
-  
   return (
     <div style={{ padding: '20px', backgroundColor: '#f0f8ff' }}>
       <h2>📋 Liste des Sections</h2>
@@ -66,8 +57,6 @@ const SimpleSectionList = () => {
 };
 
 const AdminLayoutSimple = () => {
-  console.log('🏠 AdminLayoutSimple - Composant chargé');
-  
   return (
     <div style={{ 
       minHeight: '100vh', 
@@ -89,14 +78,11 @@ const AdminLayoutSimple = () => {
         <Routes>
           <Route path="/" element={<SimpleSectionList />} />
           <Route path="section/:id" element={
-            <>
-              {console.log('🎯 Route section/:id matchée !')}
-              <div style={{ padding: '20px', backgroundColor: '#e8f5e8' }}>
-                <h2>✅ Test SectionEditor Route</h2>
-                <p>ID: {window.location.pathname.split('/').pop()}</p>
-                <p>La route fonctionne !</p>
-              </div>
-            </>
+            <div style={{ padding: '20px', backgroundColor: '#e8f5e8' }}>
+              <h2>Test SectionEditor Route</h2>
+              <p>ID: {window.location.pathname.split('/').pop()}</p>
+              <p>La route fonctionne !</p>
+            </div>
           } />
           <Route path="*" element={
             <div style={{ padding: '20px', backgroundColor: '#fff3cd' }}>

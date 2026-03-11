@@ -69,7 +69,6 @@ export const DefaultFooter = ({ theme, settings, navigationItems, scrollToSectio
       const data = await apiService.getPages();
       setPages((data || []).filter(page => page.isPublished !== false));
     } catch (error) {
-      console.warn('Impossible de charger les pages dynamiques:', error);
       setPages([]);
     } finally {
       setIsLoadingPages(false);
@@ -132,16 +131,6 @@ export const DefaultFooter = ({ theme, settings, navigationItems, scrollToSectio
     }
   ];
 
-  // Debug en développement
-  if (import.meta.env.DEV) {
-    console.log('🔍 Footer Debug:', {
-      navigationItemsCount: navigationItems?.length || 0,
-      navigationItems: navigationItems,
-      allQuickLinksCount: allQuickLinks.length,
-      hasScrollToSection: !!scrollToSection
-    });
-  }
-  
   // Diviser en 2 colonnes si plus de 4 éléments
   const shouldSplitQuickLinks = allQuickLinks.length > 4;
   const midPoint = shouldSplitQuickLinks ? Math.ceil(allQuickLinks.length / 2) : allQuickLinks.length;
