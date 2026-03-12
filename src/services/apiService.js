@@ -1,7 +1,7 @@
 // Service API complet pour Princept CMS avec HA
 // Gère tous les types de données : langues, sections, paramètres, thèmes, etc.
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3004';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3003';
 
 class ApiService {
   constructor() {
@@ -23,11 +23,11 @@ class ApiService {
         });
 
         if (!response.ok) {
-          let errorData;
+          const text = await response.text();
+          let errorData = { error: `HTTP ${response.status}`, details: text };
           try {
-            errorData = await response.json();
+            if (text) errorData = JSON.parse(text);
           } catch {
-            const text = await response.text();
             errorData = { error: text || `HTTP ${response.status}`, details: text };
           }
           const errorMessage = errorData.error || errorData.message || `HTTP ${response.status}`;
@@ -223,6 +223,15 @@ class ApiService {
     });
     
     return Promise.all(promises);
+  }
+
+  /** Sauvegarde tous les paramètres en une seule requête (évite le rate limiting). */
+  async setSiteSettingsBulk(settings) {
+    const response = await this.fetchWithRetry('/api/site-settings/bulk', {
+      method: 'POST',
+      body: JSON.stringify({ settings })
+    });
+    return response;
   }
 
   async updateSiteSetting(key, value) {

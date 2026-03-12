@@ -226,20 +226,25 @@ class UnifiedEmailService {
       throw new Error('Template de contact non activé');
     }
 
+    const now = new Date();
+    const dateStr = now.toLocaleString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const timeStr = now.toLocaleString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
     const variables = {
       name: formData.name,
       email: formData.email,
       phone: formData.phone || 'Non renseigné',
-      subject: formData.subject,
+      subject: formData.subject || '',
       message: formData.message,
       siteName: this.getSiteNameFromSettings(siteSettings),
-      date: new Date().toLocaleString('fr-FR', {
-        year: 'numeric',
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
+      date: dateStr,
+      time: timeStr
     };
 
     const emailContent = this.replaceTemplateVariables(
@@ -276,41 +281,77 @@ class UnifiedEmailService {
         throw new Error('Configuration email invalide (JSON malformé)');
       }
     }
-    
+
     if (!emailConfig) {
-      throw new Error('Configuration email non trouvée dans les paramètres');
+      return { success: true, message: 'Confirmation email disabled (no config)' };
     }
 
     if (!emailConfig.templates?.contactConfirmation?.enabled) {
       return { success: true, message: 'Confirmation email disabled' };
     }
 
+    // Templates sont dans emailConfig.templates (pas emailConfig.config.templates)
+    const confirmationTpl = emailConfig.templates.contactConfirmation;
+    if (!confirmationTpl?.template && !confirmationTpl?.subject) {
+      return { success: true, message: 'Confirmation template missing' };
+    }
+
+    // Même résolution du provider que pour la notification (contact_email ou emailConfig)
+    let providerConfig = null;
+    if (siteSettings.contact_email) {
+      let ce = siteSettings.contact_email;
+      if (typeof ce === 'string') {
+        try { ce = JSON.parse(ce); } catch {}
+      }
+      if (ce?.provider) providerConfig = ce;
+    }
+    if (!providerConfig && emailConfig?.provider) {
+      providerConfig = emailConfig;
+    }
+    if (!providerConfig) {
+      throw new Error('Configuration du provider email non trouvée pour la confirmation');
+    }
+
+    const config = providerConfig.finalConfig || providerConfig.config || providerConfig;
+    const now = new Date();
+    const dateStr = now.toLocaleString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const timeStr = now.toLocaleString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
     const variables = {
       name: formData.name,
+      subject: formData.subject || '',
       message: formData.message,
       siteName: this.getSiteNameFromSettings(siteSettings),
       email: siteSettings.email,
-      phone: siteSettings.phone
+      phone: siteSettings.phone,
+      date: dateStr,
+      time: timeStr
     };
 
     const emailContent = this.replaceTemplateVariables(
-      emailConfig.config.templates.contactConfirmation.template, 
+      confirmationTpl.template,
       variables
     );
 
     const emailData = {
       to: formData.email,
-      subject: this.replaceTemplateVariables(emailConfig.config.templates.contactConfirmation.subject, variables),
+      subject: this.replaceTemplateVariables(confirmationTpl.subject, variables),
       text: emailContent,
-      html: emailContent.replace(/\n/g, '<br>'),
+      html: (typeof emailContent === 'string' ? emailContent : '').replace(/\n/g, '<br>'),
       from: {
-        email: emailConfig.config.senderEmail,
-        name: emailConfig.config.senderName
+        email: config.senderEmail || siteSettings.email,
+        name: config.senderName || 'Website'
       },
-      replyTo: emailConfig.config.replyTo || siteSettings.email
+      replyTo: config.replyTo || siteSettings.email
     };
 
-    return await this.sendEmail(emailConfig.finalConfig, emailData, 'contact_confirmation');
+    return await this.sendEmail(providerConfig, emailData, 'contact_confirmation');
   }
 
   // Envoie les deux emails (notification + confirmation)

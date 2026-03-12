@@ -40,6 +40,35 @@ const SiteSettingsController = {
     } catch (error) {
       res.status(500).json({ error: 'Erreur serveur' });
     }
+  },
+
+  // POST /api/site-settings/bulk — sauvegarde en une requête (évite le rate limiting)
+  async setBulk(req, res) {
+    try {
+      const { settings } = req.body;
+      if (!settings || typeof settings !== 'object') {
+        return res.status(400).json({ error: 'Body doit contenir settings (objet clé/valeur)' });
+      }
+
+      const entries = Object.entries(settings);
+      for (const [setting_key, setting_value] of entries) {
+        const setting_type = typeof setting_value === 'object' ? 'json' :
+          typeof setting_value === 'boolean' ? 'boolean' :
+          typeof setting_value === 'number' ? 'number' : 'string';
+        const valueStr = typeof setting_value === 'object' ? JSON.stringify(setting_value) : String(setting_value);
+
+        await database.run(
+          `INSERT INTO site_settings (setting_key, setting_value, setting_type, description)
+           VALUES (?, ?, ?, ?)
+           ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), setting_type = VALUES(setting_type), description = VALUES(description)`,
+          [setting_key, valueStr, setting_type, null]
+        );
+      }
+
+      res.json({ success: true, data: { saved: entries.length } });
+    } catch (error) {
+      res.status(500).json({ error: 'Erreur serveur', details: error.message });
+    }
   }
 };
 

@@ -3050,7 +3050,7 @@ export const CursorFooter = ({ theme, settings, navigationItems, scrollToSection
                     {settings?.logoText || ''}
                   </span>
                   <div className="flex items-center mt-2">
-                    <span className="text-green-500 text-xs mr-2">></span>
+                    <span className="text-green-500 text-xs mr-2">{'>'}</span>
                     <div className="h-0.5 w-16 bg-gradient-to-r from-green-500 to-blue-500 animate-pulse"></div>
                   </div>
                 </div>

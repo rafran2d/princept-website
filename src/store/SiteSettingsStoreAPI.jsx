@@ -189,33 +189,39 @@ class SiteSettingsStoreAPI {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nouveau message de contact</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background-color: #3b82f6; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-        .content { background-color: #f8f9fa; padding: 20px; border: 1px solid #e9ecef; }
-        .message { background-color: white; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #3b82f6; }
-        .footer { background-color: #6c757d; color: white; padding: 10px; text-align: center; font-size: 12px; border-radius: 0 0 8px 8px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; margin: 0; padding: 24px; background: #f3f4f6; }
+        .card { max-width: 560px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); color: #fff; padding: 28px 24px; text-align: center; }
+        .header h1 { margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; }
+        .header p { margin: 6px 0 0; font-size: 0.875rem; opacity: 0.9; }
+        .content { padding: 28px 24px; }
+        .row { display: table; width: 100%; margin-bottom: 12px; font-size: 0.9375rem; }
+        .label { display: table-cell; width: 100px; color: #6b7280; font-weight: 500; vertical-align: top; }
+        .value { display: table-cell; color: #1f2937; }
+        .message-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 20px 0; border-left: 4px solid #4f46e5; }
+        .message-box h3 { margin: 0 0 8px; font-size: 0.875rem; font-weight: 600; color: #374151; }
+        .message-box p { margin: 0; color: #4b5563; white-space: pre-wrap; word-break: break-word; }
+        .meta { font-size: 0.8125rem; color: #9ca3af; margin-top: 20px; }
+        .footer { background: #f9fafb; padding: 16px 24px; text-align: center; font-size: 0.75rem; color: #6b7280; border-top: 1px solid #e5e7eb; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>Nouveau message de contact</h2>
-    </div>
-    
-    <div class="content">
-        <p><strong>Nom :</strong> {{name}}</p>
-        <p><strong>Email :</strong> {{email}}</p>
-        <p><strong>Sujet :</strong> {{subject}}</p>
-        
-        <div class="message">
-            <h4>Message :</h4>
-            <p>{{message}}</p>
+    <div class="card">
+        <div class="header">
+            <h1>Nouveau message de contact</h1>
+            <p>Un visiteur vous a envoyé un message depuis votre site</p>
         </div>
-        
-        <p><small>Message reçu le {{date}} à {{time}}</small></p>
-    </div>
-    
-    <div class="footer">
-        <p>Ce message a été envoyé depuis votre site web</p>
+        <div class="content">
+            <div class="row"><span class="label">Nom</span><span class="value">{{name}}</span></div>
+            <div class="row"><span class="label">Email</span><span class="value"><a href="mailto:{{email}}" style="color:#4f46e5;text-decoration:none">{{email}}</a></span></div>
+            <div class="row"><span class="label">Sujet</span><span class="value">{{subject}}</span></div>
+            <div class="message-box">
+                <h3>Message</h3>
+                <p>{{message}}</p>
+            </div>
+            <p class="meta">Reçu le {{date}} à {{time}}</p>
+        </div>
+        <div class="footer">Message envoyé depuis le formulaire de contact de votre site</div>
     </div>
 </body>
 </html>`,
@@ -226,33 +232,39 @@ class SiteSettingsStoreAPI {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Contact Message</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background-color: #3b82f6; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-        .content { background-color: #f8f9fa; padding: 20px; border: 1px solid #e9ecef; }
-        .message { background-color: white; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #3b82f6; }
-        .footer { background-color: #6c757d; color: white; padding: 10px; text-align: center; font-size: 12px; border-radius: 0 0 8px 8px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; margin: 0; padding: 24px; background: #f3f4f6; }
+        .card { max-width: 560px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); color: #fff; padding: 28px 24px; text-align: center; }
+        .header h1 { margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; }
+        .header p { margin: 6px 0 0; font-size: 0.875rem; opacity: 0.9; }
+        .content { padding: 28px 24px; }
+        .row { display: table; width: 100%; margin-bottom: 12px; font-size: 0.9375rem; }
+        .label { display: table-cell; width: 100px; color: #6b7280; font-weight: 500; vertical-align: top; }
+        .value { display: table-cell; color: #1f2937; }
+        .message-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 20px 0; border-left: 4px solid #4f46e5; }
+        .message-box h3 { margin: 0 0 8px; font-size: 0.875rem; font-weight: 600; color: #374151; }
+        .message-box p { margin: 0; color: #4b5563; white-space: pre-wrap; word-break: break-word; }
+        .meta { font-size: 0.8125rem; color: #9ca3af; margin-top: 20px; }
+        .footer { background: #f9fafb; padding: 16px 24px; text-align: center; font-size: 0.75rem; color: #6b7280; border-top: 1px solid #e5e7eb; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>New Contact Message</h2>
-    </div>
-    
-    <div class="content">
-        <p><strong>Name:</strong> {{name}}</p>
-        <p><strong>Email:</strong> {{email}}</p>
-        <p><strong>Subject:</strong> {{subject}}</p>
-        
-        <div class="message">
-            <h4>Message:</h4>
-            <p>{{message}}</p>
+    <div class="card">
+        <div class="header">
+            <h1>New contact message</h1>
+            <p>A visitor has sent you a message from your website</p>
         </div>
-        
-        <p><small>Message received on {{date}} at {{time}}</small></p>
-    </div>
-    
-    <div class="footer">
-        <p>This message was sent from your website</p>
+        <div class="content">
+            <div class="row"><span class="label">Name</span><span class="value">{{name}}</span></div>
+            <div class="row"><span class="label">Email</span><span class="value"><a href="mailto:{{email}}" style="color:#4f46e5;text-decoration:none">{{email}}</a></span></div>
+            <div class="row"><span class="label">Subject</span><span class="value">{{subject}}</span></div>
+            <div class="message-box">
+                <h3>Message</h3>
+                <p>{{message}}</p>
+            </div>
+            <p class="meta">Received on {{date}} at {{time}}</p>
+        </div>
+        <div class="footer">Message sent from your website contact form</div>
     </div>
 </body>
 </html>`
@@ -271,37 +283,39 @@ class SiteSettingsStoreAPI {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmation de réception</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background-color: #28a745; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-        .content { background-color: #f8f9fa; padding: 20px; border: 1px solid #e9ecef; }
-        .summary { background-color: white; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #28a745; }
-        .footer { background-color: #6c757d; color: white; padding: 10px; text-align: center; font-size: 12px; border-radius: 0 0 8px 8px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; margin: 0; padding: 24px; background: #f3f4f6; }
+        .card { max-width: 560px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #fff; padding: 28px 24px; text-align: center; }
+        .header h1 { margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; }
+        .header .icon { font-size: 1.75rem; margin-right: 8px; }
+        .content { padding: 28px 24px; }
+        .content p { margin: 0 0 14px; font-size: 0.9375rem; color: #4b5563; }
+        .content p:last-of-type { margin-bottom: 0; }
+        .summary { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 18px; margin: 22px 0; }
+        .summary h3 { margin: 0 0 12px; font-size: 0.875rem; font-weight: 600; color: #166534; }
+        .summary p { margin: 4px 0; font-size: 0.875rem; color: #15803d; }
+        .signature { margin-top: 24px; font-size: 0.9375rem; color: #374151; }
+        .footer { background: #f9fafb; padding: 16px 24px; text-align: center; font-size: 0.75rem; color: #6b7280; border-top: 1px solid #e5e7eb; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>✓ Message reçu</h2>
-    </div>
-    
-    <div class="content">
-        <p>Bonjour <strong>{{name}}</strong>,</p>
-        
-        <p>Nous avons bien reçu votre message et nous vous remercions de nous avoir contactés.</p>
-        
-        <div class="summary">
-            <h4>Résumé de votre message :</h4>
-            <p><strong>Sujet :</strong> {{subject}}</p>
-            <p><strong>Message :</strong> {{message}}</p>
-            <p><strong>Date d'envoi :</strong> {{date}} à {{time}}</p>
+    <div class="card">
+        <div class="header">
+            <h1><span class="icon">✓</span> Message bien reçu</h1>
         </div>
-        
-        <p>Notre équipe reviendra vers vous dans les plus brefs délais.</p>
-        
-        <p>Cordialement,<br>L'équipe Princept</p>
-    </div>
-    
-    <div class="footer">
-        <p>Ceci est un message automatique, merci de ne pas y répondre</p>
+        <div class="content">
+            <p>Bonjour <strong>{{name}}</strong>,</p>
+            <p>Nous avons bien reçu votre message et vous remercions de nous avoir contactés.</p>
+            <div class="summary">
+                <h3>Résumé de votre message</h3>
+                <p><strong>Sujet :</strong> {{subject}}</p>
+                <p><strong>Message :</strong> {{message}}</p>
+                <p><strong>Envoyé le :</strong> {{date}} à {{time}}</p>
+            </div>
+            <p>Notre équipe reviendra vers vous dans les plus brefs délais.</p>
+            <p class="signature">Cordialement,<br><strong>L'équipe {{siteName}}</strong></p>
+        </div>
+        <div class="footer">Ceci est un message automatique, merci de ne pas y répondre.</div>
     </div>
 </body>
 </html>`,
@@ -310,39 +324,41 @@ class SiteSettingsStoreAPI {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Message Confirmation</title>
+    <title>Message confirmation</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background-color: #28a745; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-        .content { background-color: #f8f9fa; padding: 20px; border: 1px solid #e9ecef; }
-        .summary { background-color: white; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #28a745; }
-        .footer { background-color: #6c757d; color: white; padding: 10px; text-align: center; font-size: 12px; border-radius: 0 0 8px 8px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; margin: 0; padding: 24px; background: #f3f4f6; }
+        .card { max-width: 560px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #fff; padding: 28px 24px; text-align: center; }
+        .header h1 { margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; }
+        .header .icon { font-size: 1.75rem; margin-right: 8px; }
+        .content { padding: 28px 24px; }
+        .content p { margin: 0 0 14px; font-size: 0.9375rem; color: #4b5563; }
+        .content p:last-of-type { margin-bottom: 0; }
+        .summary { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 18px; margin: 22px 0; }
+        .summary h3 { margin: 0 0 12px; font-size: 0.875rem; font-weight: 600; color: #166534; }
+        .summary p { margin: 4px 0; font-size: 0.875rem; color: #15803d; }
+        .signature { margin-top: 24px; font-size: 0.9375rem; color: #374151; }
+        .footer { background: #f9fafb; padding: 16px 24px; text-align: center; font-size: 0.75rem; color: #6b7280; border-top: 1px solid #e5e7eb; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>✓ Message Received</h2>
-    </div>
-    
-    <div class="content">
-        <p>Hello <strong>{{name}}</strong>,</p>
-        
-        <p>We have received your message and thank you for contacting us.</p>
-        
-        <div class="summary">
-            <h4>Summary of your message:</h4>
-            <p><strong>Subject:</strong> {{subject}}</p>
-            <p><strong>Message:</strong> {{message}}</p>
-            <p><strong>Sent on:</strong> {{date}} at {{time}}</p>
+    <div class="card">
+        <div class="header">
+            <h1><span class="icon">✓</span> Message received</h1>
         </div>
-        
-        <p>Our team will get back to you as soon as possible.</p>
-        
-        <p>Best regards,<br>The Princept Team</p>
-    </div>
-    
-    <div class="footer">
-        <p>This is an automated message, please do not reply</p>
+        <div class="content">
+            <p>Hello <strong>{{name}}</strong>,</p>
+            <p>We have received your message and thank you for contacting us.</p>
+            <div class="summary">
+                <h3>Summary of your message</h3>
+                <p><strong>Subject:</strong> {{subject}}</p>
+                <p><strong>Message:</strong> {{message}}</p>
+                <p><strong>Sent on:</strong> {{date}} at {{time}}</p>
+            </div>
+            <p>Our team will get back to you as soon as possible.</p>
+            <p class="signature">Best regards,<br><strong>The {{siteName}} team</strong></p>
+        </div>
+        <div class="footer">This is an automated message, please do not reply.</div>
     </div>
 </body>
 </html>`
@@ -883,29 +899,9 @@ class SiteSettingsStoreAPI {
       const isApiAvailable = await apiService.isApiReachable();
       
       if (isApiAvailable) {
-        // Convertir et sauvegarder via API
+        // Convertir et sauvegarder via API en une seule requête (évite le rate limiting)
         const apiFormat = this.convertToAPIFormat(newSettings);
-        
-
-
-        
-        // Sauvegarder les paramètres un par un pour éviter les erreurs de taille
-        const promises = Object.entries(apiFormat).map(async ([key, value]) => {
-          try {
-            const type = typeof value === 'object' ? 'json' : 
-                         typeof value === 'boolean' ? 'boolean' :
-                         typeof value === 'number' ? 'number' : 'string';
-            
-
-
-            
-            return await apiService.setSiteSetting(key, value, type);
-          } catch (error) {
-            throw new Error(`Erreur sauvegarde ${key}: ${error.message}`);
-          }
-        });
-
-        await Promise.all(promises);
+        await apiService.setSiteSettingsBulk(apiFormat);
       }
 
       // Mettre à jour localement
@@ -945,24 +941,9 @@ class SiteSettingsStoreAPI {
       const isApiAvailable = await apiService.isApiReachable();
       
       if (isApiAvailable) {
-        // Convertir et sauvegarder via API
+        // Convertir et sauvegarder via API en une seule requête (évite le rate limiting)
         const apiFormat = this.convertToAPIFormat(this.settings);
-        
-        // Sauvegarder les paramètres un par un pour éviter les erreurs de taille
-        const promises = Object.entries(apiFormat).map(async ([key, value]) => {
-          try {
-            const type = typeof value === 'object' ? 'json' : 
-                         typeof value === 'boolean' ? 'boolean' :
-                         typeof value === 'number' ? 'number' : 'string';
-            
-            return await apiService.setSiteSetting(key, value, type);
-          } catch (error) {
-            throw new Error(`Erreur sauvegarde ${key}: ${error.message}`);
-          }
-        });
-        
-        await Promise.all(promises);
-
+        await apiService.setSiteSettingsBulk(apiFormat);
       } else {
         throw new Error('API non disponible');
       }
@@ -1127,9 +1108,9 @@ class SiteSettingsStoreAPI {
       const isApiAvailable = await apiService.isApiReachable();
       if (isApiAvailable) {
         const apiFormat = this.convertToAPIFormat(this.settings);
-        await apiService.setSiteSettings(apiFormat);
+        await apiService.setSiteSettingsBulk(apiFormat);
       }
-      
+
       this.applyMetaUpdates();
       this.notify();
     } catch (error) {
