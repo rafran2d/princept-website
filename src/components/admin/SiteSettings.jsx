@@ -25,8 +25,7 @@ const ColorPicker = ({ label, color, onChange }) => {
         >
           <div
             className="w-6 h-6 rounded border"
-            style={{ borderColor: 'var(--admin-border)' }}
-            style={{ backgroundColor: color }}
+            style={{ borderColor: 'var(--admin-border)', backgroundColor: color }}
           />
           <span className="text-sm font-mono">{color}</span>
         </button>

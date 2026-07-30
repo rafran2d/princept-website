@@ -119,10 +119,25 @@ class ApiService {
 
   async updateLanguage(id, languageData) {
     const response = await this.fetchWithRetry(`/api/languages/${id}`, {
-      method: 'PATCH',
+      method: 'PUT',
       body: JSON.stringify(languageData)
     });
-    return response.data;
+    return response;
+  }
+
+  async setDefaultLanguage(id) {
+    const response = await this.fetchWithRetry(`/api/languages/${id}/default`, {
+      method: 'PATCH'
+    });
+    return response;
+  }
+
+  async reorderLanguages(languageOrder) {
+    const response = await this.fetchWithRetry('/api/languages/reorder', {
+      method: 'PUT',
+      body: JSON.stringify({ languageOrder })
+    });
+    return response;
   }
 
   async toggleLanguage(id) {
@@ -555,6 +570,8 @@ export const {
   getDefaultLanguage,
   createLanguage,
   updateLanguage,
+  setDefaultLanguage,
+  reorderLanguages,
   toggleLanguage,
   deleteLanguage,
   getSections,

@@ -32,6 +32,7 @@ import EmailProviderSettings from './EmailProviderSettings';
 import PageManagement from './PageManagement';
 import ContentFiller from './ContentFiller';
 import ThemeSelector from './ThemeSelector';
+import AdminErrorBoundary from './AdminErrorBoundary';
 import { predefinedThemes } from '../../data/themes';
 
 const AdminLayoutContent = () => {
@@ -414,25 +415,27 @@ const AdminLayoutContent = () => {
           {/* Alerte pour les identifiants par défaut */}
           <DefaultPasswordAlert />
           
-          <Routes key={`${currentPath}-${forceRender}`}>
-            <Route path="/" element={
-              <SectionList key={`sections-${forceRender}`} />
-            } />
-            <Route path="section" element={
-              <SectionList key={`sections-list-${forceRender}`} />
-            } />
-            <Route path="section/:id" element={
-              <SectionEditor key={`editor-${currentPath}-${forceRender}`} />
-            } />
-            <Route path="design" element={<DesignSettings key={`design-${forceRender}`} />} />
-            <Route path="themes" element={<ThemeSelector key={`themes-${forceRender}`} />} />
-            <Route path="languages" element={<LanguageManagement key={`languages-${forceRender}`} />} />
-            <Route path="pages" element={<PageManagement key={`pages-${forceRender}`} />} />
-            <Route path="content" element={<ContentFiller key={`content-${forceRender}`} />} />
-            <Route path="email" element={<EmailProviderSettings key={`email-${forceRender}`} />} />
-            <Route path="settings" element={<SiteSettings key={`settings-${forceRender}`} />} />
-            <Route path="user" element={<UserSettings key={`user-${forceRender}`} />} />
-          </Routes>
+          <AdminErrorBoundary key={`${currentPath}-${forceRender}`}>
+            <Routes>
+              <Route path="/" element={
+                <SectionList key={`sections-${forceRender}`} />
+              } />
+              <Route path="section" element={
+                <SectionList key={`sections-list-${forceRender}`} />
+              } />
+              <Route path="section/:id" element={
+                <SectionEditor key={`editor-${currentPath}-${forceRender}`} />
+              } />
+              <Route path="design" element={<DesignSettings key={`design-${forceRender}`} />} />
+              <Route path="themes" element={<ThemeSelector key={`themes-${forceRender}`} />} />
+              <Route path="languages" element={<LanguageManagement key={`languages-${forceRender}`} />} />
+              <Route path="pages" element={<PageManagement key={`pages-${forceRender}`} />} />
+              <Route path="content" element={<ContentFiller key={`content-${forceRender}`} />} />
+              <Route path="email" element={<EmailProviderSettings key={`email-${forceRender}`} />} />
+              <Route path="settings" element={<SiteSettings key={`settings-${forceRender}`} />} />
+              <Route path="user" element={<UserSettings key={`user-${forceRender}`} />} />
+            </Routes>
+          </AdminErrorBoundary>
         </main>
       </div>
 
