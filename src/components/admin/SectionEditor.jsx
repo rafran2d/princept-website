@@ -265,6 +265,14 @@ const ServiceEditor = ({ services = [], onChange }) => {
                   type="textarea"
                 />
               </div>
+
+              <div className="md:col-span-8">
+                <ImageUpload
+                  label="Image (optionnel — utilisée par certains styles visuels)"
+                  value={service.image}
+                  onChange={(url) => updateService(service.id, { image: url })}
+                />
+              </div>
             </div>
           </div>
         ))}
@@ -372,6 +380,46 @@ const GalleryEditor = ({ images = [], onChange }) => {
                 <p className="text-xs admin-text-muted mt-1">
                   Utilisez une URL complète (https://...) pour un lien externe, ou #nom-section pour un lien interne
                 </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium admin-text-secondary mb-2">
+                    Client / Titre (optionnel — utilisé par certains styles visuels)
+                  </label>
+                  <input
+                    type="text"
+                    value={image.clientName || ''}
+                    onChange={(e) => updateImage(image.id, { clientName: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ex: Simply Good Food"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium admin-text-secondary mb-2">
+                    Année (optionnel)
+                  </label>
+                  <input
+                    type="text"
+                    value={image.year || ''}
+                    onChange={(e) => updateImage(image.id, { year: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ex: 2024"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium admin-text-secondary mb-2">
+                  Secteur / description courte (optionnel)
+                </label>
+                <input
+                  type="text"
+                  value={image.category || ''}
+                  onChange={(e) => updateImage(image.id, { category: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Ex: Restauration — site vitrine & commande en ligne"
+                />
               </div>
             </div>
           </div>
@@ -1382,6 +1430,27 @@ const SectionEditor = () => {
 
               {section.type === 'about' && (
                 <>
+                  {/* Style visuel de la section À propos */}
+                  <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <h4 className="text-sm font-medium text-purple-900 mb-3 flex items-center">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mr-2"></div>
+                      Style visuel de la section
+                    </h4>
+                    <select
+                      value={section.aboutVariant || 'classic'}
+                      onChange={(e) => handleChange('aboutVariant', e.target.value)}
+                      className="w-full px-3 py-2 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="classic">Classique (actuel)</option>
+                      <option value="2a">2a — Clair éditorial (↔ hero 1a)</option>
+                      <option value="2b">2b — Nuit minimal (↔ hero 1b)</option>
+                      <option value="2c">2c — Index (↔ hero 1c)</option>
+                    </select>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Change le style visuel de la section À propos, pour l'accorder avec la variante de hero choisie.
+                    </p>
+                  </div>
+
                   {/* Features Management */}
                   <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                     <h4 className="text-sm font-medium text-blue-900 mb-3 flex items-center">
@@ -1680,6 +1749,27 @@ const SectionEditor = () => {
                     </div>
                   </div>
 
+                  {/* Style visuel du Hero */}
+                  <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <h4 className="text-sm font-medium text-purple-900 mb-3 flex items-center">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mr-2"></div>
+                      Style visuel du Hero
+                    </h4>
+                    <select
+                      value={section.heroVariant || 'classic'}
+                      onChange={(e) => handleChange('heroVariant', e.target.value)}
+                      className="w-full px-3 py-2 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="classic">Classique (actuel)</option>
+                      <option value="1a">1a — Clair éditorial</option>
+                      <option value="1b">1b — Nuit minimal</option>
+                      <option value="1c">1c — Index de slides</option>
+                    </select>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Change le style visuel du hero et de l'en-tête sur la page d'accueil, pour comparer les propositions.
+                    </p>
+                  </div>
+
                   {/* Configuration Auto-play */}
                   <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
                     <h4 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
@@ -1721,6 +1811,25 @@ const SectionEditor = () => {
 
               {section.type === 'services' && (
                 <>
+                  {/* Style visuel de la section Services */}
+                  <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <h4 className="text-sm font-medium text-purple-900 mb-3 flex items-center">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mr-2"></div>
+                      Style visuel de la section
+                    </h4>
+                    <select
+                      value={section.servicesVariant || 'classic'}
+                      onChange={(e) => handleChange('servicesVariant', e.target.value)}
+                      className="w-full px-3 py-2 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="classic">Classique (actuel)</option>
+                      <option value="3a">3a — Clair éditorial (↔ hero 1a)</option>
+                    </select>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Change le style visuel de la section Nos services.
+                    </p>
+                  </div>
+
                   {/* Services Management */}
                   <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                     <h4 className="text-sm font-medium text-blue-900 mb-3 flex items-center">
@@ -1849,6 +1958,27 @@ const SectionEditor = () => {
               )}
 
               {section.type === 'contact' && (
+                <>
+                  <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <h4 className="text-sm font-medium text-purple-900 mb-3 flex items-center">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mr-2"></div>
+                      Style visuel de la section
+                    </h4>
+                    <select
+                      value={section.contactVariant || 'classic'}
+                      onChange={(e) => handleChange('contactVariant', e.target.value)}
+                      className="w-full px-3 py-2 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="classic">Classique (actuel)</option>
+                      <option value="5a">5a — Clair éditorial (↔ hero/about/services/galerie 1a/2a/3a/4a)</option>
+                    </select>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Change le style visuel de la section Contactez-nous. La variante 5a masque le bloc infos de contact (email/téléphone/adresse/horaires) au profit d'un formulaire épuré.
+                    </p>
+                  </div>
+                </>
+              )}
+              {section.type === 'contact' && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <div className="flex items-start space-x-3">
                     <div className="flex-shrink-0">
@@ -1873,11 +2003,29 @@ const SectionEditor = () => {
 
               {section.type === 'gallery' && (
                 <>
+                  <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <h4 className="text-sm font-medium text-purple-900 mb-3 flex items-center">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mr-2"></div>
+                      Style visuel de la section
+                    </h4>
+                    <select
+                      value={section.galleryVariant || 'classic'}
+                      onChange={(e) => handleChange('galleryVariant', e.target.value)}
+                      className="w-full px-3 py-2 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="classic">Classique (actuel)</option>
+                      <option value="4a">4a — Clair éditorial (↔ hero/about/services 1a/2a/3a)</option>
+                    </select>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Change le style visuel de la section Notre galerie.
+                    </p>
+                  </div>
+
                   <GalleryEditor
                     images={section.images || []}
                     onChange={(images) => handleChange('images', images)}
                   />
-                  
+
                   <div className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
                     <h4 className="text-sm font-medium admin-text-primary mb-4">Bouton de la galerie</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

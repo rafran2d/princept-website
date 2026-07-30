@@ -5,12 +5,12 @@ import { useFrontendLanguage } from '../LanguageSelector';
 import LanguageSelector from '../LanguageSelector';
 
 // 🚀 Default Header - Design agence : glassmorphism, nav pill, animations
-export const DefaultHeader = ({ theme, settings, navigationItems, scrollToSection }) => {
+export const DefaultHeader = ({ theme, settings, navigationItems, scrollToSection, heroVariant }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { currentLanguage, getActiveLanguages, t } = useFrontendLanguage();
   const currentLangCode = getActiveLanguages().find(l => l.id === currentLanguage)?.code || 'fr';
-  
+
   // Fonction helper pour obtenir une valeur traduite ou une chaîne
   const getText = (value, fallback = '') => {
     if (!value) return fallback;
@@ -20,6 +20,139 @@ export const DefaultHeader = ({ theme, settings, navigationItems, scrollToSectio
     }
     return String(value);
   };
+
+  // Déclinaisons du header pour les propositions de refonte du hero (1a/1b/1c)
+  if (heroVariant === '1a' || heroVariant === '1b' || heroVariant === '1c') {
+    const isDark = heroVariant === '1b';
+    const contactItem = navigationItems?.find((item) => item.type === 'contact') || navigationItems?.[navigationItems.length - 1];
+    const goToContact = () => contactItem && scrollToSection?.(contactItem.type, contactItem.sectionId);
+
+    return (
+      <header className={`fixed top-0 left-0 right-0 z-50 ${isDark ? 'bg-[#1E293B] border-b border-white/10' : 'bg-white border-b border-[#EEF1F6]'}`}>
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo à gauche */}
+            <div
+              className="flex-shrink-0 flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => navigate(`/${currentLangCode}`)}
+            >
+              {settings?.logoUrl && settings.logoUrl.trim() ? (
+                <img
+                  src={settings.logoUrl}
+                  alt={getText(settings.siteName, 'Logo')}
+                  className={`h-10 w-10 rounded-lg object-cover ${isDark ? '' : 'bg-slate-900'}`}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    const textContainer = e.target.parentElement.querySelector('.logo-text-container');
+                    if (textContainer) textContainer.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div className={`logo-text-container flex flex-col leading-tight ${settings?.logoUrl && settings.logoUrl.trim() ? 'hidden' : 'flex'}`}>
+                <span className={`text-[15px] font-heading font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                  {getText(settings?.logoText) || getText(settings?.siteName) || ''}
+                </span>
+                {settings?.siteTagline && (
+                  <span className={`text-[10px] font-medium uppercase tracking-[0.18em] ${isDark ? 'text-white/45' : 'text-slate-400'}`}>
+                    {getText(settings.siteTagline)}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Menu Navigation au centre */}
+            <nav className="hidden lg:flex items-center gap-9">
+              {navigationItems?.map((item, idx) => {
+                const isActiveTab = heroVariant === '1c' && idx === 0;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection?.(item.type, item.sectionId)}
+                    className={`text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors whitespace-nowrap ${
+                      isActiveTab
+                        ? (isDark ? 'text-white' : 'text-slate-900 border-b-2 pb-1')
+                        : (isDark ? 'text-white/55 hover:text-white' : 'text-slate-500 hover:text-slate-900')
+                    }`}
+                    style={isActiveTab && !isDark ? { borderColor: 'var(--color-primary, #2563EB)' } : undefined}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Sélecteur de langue + CTA à droite */}
+            <div className="hidden md:flex items-center gap-5">
+              <span className={`h-5 w-px ${isDark ? 'bg-white/15' : 'bg-slate-200'}`} />
+              <LanguageSelector compact className={isDark ? 'text-white' : 'text-slate-900'} />
+              {heroVariant === '1a' && (
+                <button
+                  onClick={goToContact}
+                  className="px-5 py-2.5 rounded-md text-white text-[13px] font-semibold transition-colors"
+                  style={{ background: '#0F172A' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-primary, #2563EB)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = '#0F172A'; }}
+                >
+                  Démarrer un projet
+                </button>
+              )}
+              {heroVariant === '1b' && (
+                <button
+                  onClick={goToContact}
+                  className="px-5 py-2.5 rounded-md border border-white/25 text-white text-[13px] font-semibold hover:bg-white hover:text-[#1E293B] transition-colors"
+                >
+                  Nous contacter
+                </button>
+              )}
+              {heroVariant === '1c' && (
+                <button
+                  onClick={goToContact}
+                  className="text-[13px] font-semibold"
+                  style={{ color: 'var(--color-primary, #2563EB)' }}
+                >
+                  Devis gratuit
+                </button>
+              )}
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden flex items-center gap-3">
+              <LanguageSelector compact className={isDark ? 'text-white' : 'text-slate-900'} />
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className={`p-2 rounded-lg transition-colors ${isDark ? 'text-white hover:bg-white/10' : 'text-slate-900 hover:bg-slate-100'}`}
+                aria-label="Menu"
+              >
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className={`lg:hidden border-t ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+              <div className={`px-6 py-4 space-y-2 ${isDark ? 'bg-[#1E293B]' : 'bg-white'}`}>
+                {navigationItems?.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      scrollToSection?.(item.type, item.sectionId);
+                      setIsMenuOpen(false);
+                    }}
+                    className={`block w-full text-left px-4 py-3 text-sm font-semibold uppercase tracking-wide rounded-lg transition-colors ${
+                      isDark ? 'text-white/70 hover:text-white hover:bg-white/5' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+    );
+  }
 
   return (
     <>

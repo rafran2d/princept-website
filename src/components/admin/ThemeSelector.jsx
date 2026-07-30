@@ -313,24 +313,17 @@ const ThemeSelector = () => {
 
   // Filtrer les thèmes (inclut les thèmes prédéfinis ET personnalisés)
   const filteredThemes = () => {
-    // Ne garder que le thème "default" - exclure tous les autres thèmes prédéfinis et personnalisés
-    let themes = [];
-    
-    // Ajouter uniquement le thème default
-    if (predefinedThemes.default) {
-      themes.push(predefinedThemes.default);
-    }
-    
-    // Ne pas ajouter les thèmes personnalisés (générés par IA)
-    // themes = [
-    //   ...themes,
-    //   ...customThemes.map(ct => ({
-    //     ...ct,
-    //     id: ct.name,
-    //     category: 'Custom',
-    //     description: ct.label
-    //   }))
-    // ];
+    let themes = Object.values(predefinedThemes);
+
+    themes = [
+      ...themes,
+      ...customThemes.map(ct => ({
+        ...ct,
+        id: ct.name,
+        category: 'Custom',
+        description: ct.label
+      }))
+    ];
 
     if (selectedCategory !== 'all') {
       themes = themes.filter(theme => theme.category === selectedCategory);

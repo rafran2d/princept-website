@@ -12,32 +12,54 @@ class SectionStoreAPI {
     this.initialize();
   }
 
+  // Réessaie isApiReachable() plusieurs fois avant d'abandonner : juste après un
+  // redémarrage (docker/npm run dev), le backend peut mettre 1-2s de plus que le
+  // frontend à répondre. Sans ça, un simple rechargement de page pile à ce moment-là
+  // bascule sur les sections de démo codées en dur (perte apparente de la config).
+  async waitForApi(maxAttempts = 6, delayMs = 500) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      if (await apiService.isApiReachable()) return true;
+      if (attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+    }
+    return false;
+  }
+
   async initialize() {
     try {
 
       this.isLoading = true;
       this.error = null;
-      
-      // Vérifier si l'API est accessible
-      const isApiAvailable = await apiService.isApiReachable();
-      
+
+      // Vérifier si l'API est accessible (avec quelques tentatives)
+      const isApiAvailable = await this.waitForApi();
+
       if (isApiAvailable) {
         await this.loadFromAPI();
       } else {
 
         await this.initializeDefaultSections();
       }
-      
+
       this.initialized = true;
       this.isLoading = false;
       this.notify();
-      
+
 
     } catch (error) {
 
       this.error = error.message;
       this.isLoading = false;
-      await this.initializeDefaultSections();
+
+      // Ne basculer sur les sections de démo que si l'API est vraiment injoignable.
+      // Une erreur ponctuelle (ex: rate-limit, réponse malformée) ne doit pas
+      // remplacer silencieusement les vraies sections par du contenu placeholder.
+      const isApiAvailable = await this.waitForApi(3, 500);
+      if (!isApiAvailable) {
+        await this.initializeDefaultSections();
+      }
+
       this.initialized = true;
       this.notify();
     }

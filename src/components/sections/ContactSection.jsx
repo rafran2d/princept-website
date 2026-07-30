@@ -4,6 +4,7 @@ import { useThemeStyles } from '../../hooks/useThemeStyles';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 import { useFrontendLanguage } from '../LanguageSelector';
 import unifiedEmailService from '../../services/unifiedEmailService';
+import { ContactVariant5a } from './ContactVariants';
 
 const ContactSection = ({ section, useGlobalStyles }) => {
   const { title, description, backgroundColor, textColor, backgroundImage } = section;
@@ -203,6 +204,26 @@ const ContactSection = ({ section, useGlobalStyles }) => {
     
     return { isOpen: false, message: 'Horaires non définis pour aujourd\'hui' };
   };
+
+  // Proposition de refonte "Contactez-nous" (5a uniquement) — rendu dédié, le
+  // layout "classique" ci-dessous n'est pas modifié pour ne rien casser.
+  const contactVariant = isTheme('default') ? (section.contactVariant || 'classic') : 'classic';
+  if (isTheme('default') && contactVariant === '5a') {
+    return (
+      <section id="contact" className="relative overflow-hidden" style={{ background: '#F8FAFC' }}>
+        <ContactVariant5a
+          description={t(description, '')}
+          formData={formData}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          isLoading={isLoading}
+          isSubmitted={isSubmitted}
+          submitError={submitError}
+          submitSuccess={submitSuccess}
+        />
+      </section>
+    );
+  }
 
   const innerWrapperStyle = contactFullScreen
     ? { minHeight: '100vh', minBlockSize: '100dvh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', width: '100%' }

@@ -4,6 +4,7 @@ import { useThemeStyles } from '../../hooks/useThemeStyles';
 import { useSections } from '../../hooks/useSections';
 import { smartNavigate } from '../../utils/navigation';
 import { useFrontendLanguage } from '../LanguageSelector';
+import { HeroVariant1a, HeroVariant1b, HeroVariant1c } from './HeroVariants';
 
 const HeroSlider = ({ section, useGlobalStyles }) => {
   const { t, currentLanguage, getActiveLanguages } = useFrontendLanguage();
@@ -122,6 +123,36 @@ const HeroSlider = ({ section, useGlobalStyles }) => {
     : null;
 
   const isDefaultTheme = getCurrentTheme() === 'default';
+  const heroVariant = isDefaultTheme ? (section.heroVariant || 'classic') : 'classic';
+
+  // Propositions de refonte du hero (1a/1b/1c) — rendu dédié, le hero
+  // "classique" ci-dessous n'est pas modifié pour ne rien casser.
+  if (isDefaultTheme && heroVariant !== 'classic') {
+    const variantBackground = heroVariant === '1b' ? '#1E293B' : heroVariant === '1c' ? '#EEF2F7' : '#F5F7FA';
+    const VariantComponent = heroVariant === '1a' ? HeroVariant1a : heroVariant === '1b' ? HeroVariant1b : HeroVariant1c;
+
+    return (
+      <section id="hero" className={`relative overflow-hidden ${animations}`} style={{ background: variantBackground }}>
+        <VariantComponent
+          slides={slides}
+          currentSlide={currentSlide}
+          title={title}
+          subtitle={subtitle}
+          description={description}
+          buttonText={buttonText}
+          secondaryButtonText={secondaryButtonText}
+          backgroundImage={backgroundImage}
+          hasPrimaryLink={!!currentSlideData.buttonLink}
+          hasSecondaryLink={!!currentSlideData.secondaryButtonLink}
+          onPrimaryClick={() => smartNavigate(currentSlideData.buttonLink, enabledSections, currentLangCode)}
+          onSecondaryClick={() => smartNavigate(currentSlideData.secondaryButtonLink, enabledSections, currentLangCode)}
+          prevSlide={prevSlide}
+          nextSlide={nextSlide}
+          goToSlide={goToSlide}
+        />
+      </section>
+    );
+  }
 
   const getFinalStyles = () => {
     if (isTheme('slack')) {

@@ -4,6 +4,7 @@ import { useThemeStyles } from '../../hooks/useThemeStyles';
 import { useSections } from '../../hooks/useSections';
 import { smartNavigate } from '../../utils/navigation';
 import { useFrontendLanguage } from '../LanguageSelector';
+import { GalleryVariant4a } from './GalleryVariants';
 
 // Fonction pour supprimer les fonds blancs d'une image
 const removeWhiteBackground = (img, threshold = 240) => {
@@ -79,7 +80,7 @@ const GallerySection = ({ section, useGlobalStyles }) => {
   const { title, description, images = [], backgroundColor, textColor, backgroundImage, ctaButtonText, ctaButtonLink } = section;
   const { getClasses, getAnimations, isTheme } = useThemeStyles();
   const { enabledSections } = useSections();
-  const { currentLanguage, getActiveLanguages } = useFrontendLanguage();
+  const { t, currentLanguage, getActiveLanguages } = useFrontendLanguage();
   
   // Obtenir le code de la langue courante pour smartNavigate
   const currentLangCode = getActiveLanguages().find(l => l.id === currentLanguage)?.code || 'fr';
@@ -142,6 +143,33 @@ const GallerySection = ({ section, useGlobalStyles }) => {
   const currentSlideImages = getCurrentSlideImages();
 
   const isDefaultTheme = isTheme('default') || (!isTheme('slack') && !isTheme('airbnb') && !isTheme('medium') && !isTheme('spotify') && !isTheme('netflix') && !isTheme('discord') && !isTheme('notion'));
+
+  // Proposition de refonte "Notre galerie" (4a uniquement) — rendu dédié, le
+  // layout "classique" ci-dessous n'est pas modifié pour ne rien casser.
+  const galleryVariant = isDefaultTheme ? (section.galleryVariant || 'classic') : 'classic';
+  if (isDefaultTheme && galleryVariant === '4a') {
+    const translatedImages = images.map((image) => ({
+      ...image,
+      title: image.clientName || t(image.alt, image.alt) || '',
+      onLinkClick: (e) => {
+        if (image.link && !image.link.startsWith('http')) {
+          e.preventDefault();
+          smartNavigate(image.link, enabledSections, currentLangCode);
+        }
+      }
+    }));
+    const ctaLabel = ctaButtonText ? t(ctaButtonText, ctaButtonText) : 'Voir toute la galerie';
+
+    return (
+      <section id="gallery" className="relative overflow-hidden" style={{ background: '#FFFFFF' }}>
+        <GalleryVariant4a
+          images={translatedImages}
+          ctaLabel={ctaButtonLink ? ctaLabel : null}
+          onCtaClick={ctaButtonLink ? () => smartNavigate(ctaButtonLink, enabledSections, currentLangCode) : undefined}
+        />
+      </section>
+    );
+  }
 
   return (
     <section 

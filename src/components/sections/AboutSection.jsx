@@ -8,6 +8,7 @@ import { useThemeStyles } from '../../hooks/useThemeStyles';
 import { useSections } from '../../hooks/useSections';
 import { smartNavigate } from '../../utils/navigation';
 import { useFrontendLanguage } from '../LanguageSelector';
+import { AboutVariant2a, AboutVariant2b, AboutVariant2c } from './AboutVariants';
 
 const iconMap = {
   User, Smartphone, Zap, Search, Star, Shield, Globe,
@@ -253,6 +254,39 @@ const AboutSection = ({ section, useGlobalStyles }) => {
       ? createPortal(modalElement, document.body)
       : modalElement;
   };
+
+  // Propositions de refonte de la section "À propos" (2a/2b/2c) — rendu dédié,
+  // le layout "classique" ci-dessous n'est pas modifié pour ne rien casser.
+  const aboutVariant = isDefaultTheme ? (section.aboutVariant || 'classic') : 'classic';
+  if (isDefaultTheme && aboutVariant !== 'classic') {
+    const variantBackground = aboutVariant === '2b' ? '#1E293B' : aboutVariant === '2c' ? '#EEF2F7' : '#FFFFFF';
+    const VariantComponent = aboutVariant === '2a' ? AboutVariant2a : aboutVariant === '2b' ? AboutVariant2b : AboutVariant2c;
+    const translatedFeatures = (features || []).map((feature) => ({
+      ...feature,
+      title: t(feature.title, feature.title),
+      description: t(feature.description, feature.description)
+    }));
+
+    return (
+      <section
+        ref={aboutSectionRef}
+        id="about"
+        className={`relative overflow-hidden ${animations}`}
+        style={{ background: variantBackground }}
+      >
+        <VariantComponent
+          title={title}
+          description={description}
+          features={translatedFeatures}
+          onFeatureClick={(feature) => {
+            setSelectedFeature(feature);
+            setIsModalOpen(true);
+          }}
+        />
+        <ModalContent />
+      </section>
+    );
+  }
 
   /* Layout thème default : grille de cartes (comme l'image), apparition une par une en boucle */
   if (isDefaultTheme) {

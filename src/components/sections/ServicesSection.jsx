@@ -8,6 +8,7 @@ import { useThemeStyles } from '../../hooks/useThemeStyles';
 import { useSections } from '../../hooks/useSections';
 import { smartNavigate } from '../../utils/navigation';
 import { useFrontendLanguage } from '../LanguageSelector';
+import { ServicesVariant3a } from './ServicesVariants';
 
 const iconMap = {
   Code, Palette, TrendingUp, Headphones: Headphones, Globe, Settings,
@@ -170,10 +171,36 @@ const ServicesSection = ({ section, useGlobalStyles }) => {
       </div>
     );
 
-    return typeof document !== 'undefined' 
+    return typeof document !== 'undefined'
       ? createPortal(modalElement, document.body)
       : modalElement;
   };
+
+  // Proposition de refonte "Nos services" (3a uniquement) — rendu dédié, le
+  // layout "classique" ci-dessous n'est pas modifié pour ne rien casser.
+  const servicesVariant = isDefaultTheme ? (section.servicesVariant || 'classic') : 'classic';
+  if (isDefaultTheme && servicesVariant === '3a') {
+    const translatedServices = (services || []).map((service) => ({
+      ...service,
+      title: t(service.title, service.title),
+      description: t(service.description, service.description),
+      IconComponent: iconMap[service.icon] || Code
+    }));
+
+    return (
+      <section ref={servicesSectionRef} id="services" className="relative overflow-hidden" style={{ background: backgroundColor || '#F8FAFC' }}>
+        <ServicesVariant3a
+          services={translatedServices}
+          onServiceClick={(service) => {
+            setSelectedService(service);
+            setIsModalOpen(true);
+          }}
+          onCtaClick={() => smartNavigate('#contact', enabledSections, currentLangCode)}
+        />
+        <ModalContent />
+      </section>
+    );
+  }
 
   /* Layout thème default : identité visuelle distincte d’À propos */
   if (isDefaultTheme) {

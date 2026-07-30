@@ -31,6 +31,7 @@ import DefaultPasswordAlert from './DefaultPasswordAlert';
 import EmailProviderSettings from './EmailProviderSettings';
 import PageManagement from './PageManagement';
 import ContentFiller from './ContentFiller';
+import ThemeSelector from './ThemeSelector';
 import { predefinedThemes } from '../../data/themes';
 
 const AdminLayoutContent = () => {
@@ -61,6 +62,7 @@ const AdminLayoutContent = () => {
   const sidebarItems = [
     { id: 'sections', label: 'Sections', icon: LayoutGrid, path: '/admin' },
     { id: 'design', label: 'Design', icon: Palette, path: '/admin/design' },
+    { id: 'themes', label: 'Thèmes', icon: Brush, path: '/admin/themes' },
     { id: 'languages', label: 'Langues', icon: Globe, path: '/admin/languages' },
     { id: 'pages', label: 'Pages', icon: FileText, path: '/admin/pages' },
     { id: 'content', label: 'Générateur', icon: Database, path: '/admin/content' },
@@ -423,6 +425,7 @@ const AdminLayoutContent = () => {
               <SectionEditor key={`editor-${currentPath}-${forceRender}`} />
             } />
             <Route path="design" element={<DesignSettings key={`design-${forceRender}`} />} />
+            <Route path="themes" element={<ThemeSelector key={`themes-${forceRender}`} />} />
             <Route path="languages" element={<LanguageManagement key={`languages-${forceRender}`} />} />
             <Route path="pages" element={<PageManagement key={`pages-${forceRender}`} />} />
             <Route path="content" element={<ContentFiller key={`content-${forceRender}`} />} />

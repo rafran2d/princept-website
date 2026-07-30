@@ -169,6 +169,11 @@ const Frontend = () => {
   const ThemedHeader = themedComponents.header;
   const ThemedFooter = themedComponents.footer;
 
+  // Style de hero choisi pour la page d'accueil (1a/1b/1c), utilisé pour
+  // assortir le header quand une proposition de refonte est active.
+  const heroSectionData = homepageSections.find(section => section.type === 'hero-slider');
+  const heroVariant = heroSectionData?.heroVariant;
+
   return (
     <div className="min-h-screen">
       {/* Scroll progress bar */}
@@ -207,6 +212,7 @@ const Frontend = () => {
           }}
           navigationItems={navigationItems}
           scrollToSection={scrollToSection}
+          heroVariant={heroVariant}
         />
       ) : (
         /* Beachcomber Style Header */
