@@ -63,7 +63,7 @@ const AdminLayoutContent = () => {
   const sidebarItems = [
     { id: 'sections', label: 'Sections', icon: LayoutGrid, path: '/admin' },
     { id: 'design', label: 'Design', icon: Palette, path: '/admin/design' },
-    { id: 'themes', label: 'Thèmes', icon: Brush, path: '/admin/themes' },
+    //{ id: 'themes', label: 'Thèmes', icon: Brush, path: '/admin/themes' },
     { id: 'languages', label: 'Langues', icon: Globe, path: '/admin/languages' },
     { id: 'pages', label: 'Pages', icon: FileText, path: '/admin/pages' },
     { id: 'content', label: 'Générateur', icon: Database, path: '/admin/content' },
